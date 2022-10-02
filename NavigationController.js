@@ -1,4 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AppointmentsTabScreen from './AppointmentsTabScreen';
 import NotificationsTabScreen from './NotificationsTabScreen';
 import PetsTabScreen from './PetsTabScreen';
@@ -8,14 +9,62 @@ import SettingScreen from './SettingScreen';
 import AddPetScreen from './AddPetScreen';
 import AddAppointmentScreen from './AddAppointmentScreen';
 import AddVetScreen from './AddVetScreen';
+import LoginScreen from './LoginScreen';
+import SignupScreen from './SignupScreen';
+import ResetPasswordScreen from './ResetPasswordScreen';
 import { Pressable, Text } from 'react-native';
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign, Ionicons, Fontisto, MaterialIcons, FontAwesome } from '@expo/vector-icons'; 
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 // --------- bugs to be fixed ------------
 // AddAppointmentScreen back button goes to PetTabScreen
 // SettingScreen back button goes to NotificationTabScreen
+
+const AuthenticationNavigator = () => {
+    return(
+        <Stack.Navigator options={{headerShown: false}}>
+            <Stack.Screen name="LoginScreen" component={LoginScreen}/>
+            <Stack.Screen name="SignupScreen" component={SignupScreen}/>
+            <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen}/>
+        </Stack.Navigator>
+    )
+}
+
+export {AuthenticationNavigator};
+
+const TabsNavigator = ({navigation}) => {
+    return(
+        <Tab.Navigator 
+            screenOptions={({ route }) => ({
+                tabBarIcon: ({ color, size }) => {
+                    if (route.name === 'Pets') {
+                        return <MaterialIcons name="pets" size={size} color={color}/>;
+                    } 
+                    else if (route.name === 'Vets') {
+                        return <FontAwesome name="hospital-o" size={size} color={color}/>;
+                    }
+                    else if (route.name === 'Appointments') {
+                        return <Fontisto name="date" size={size} color={color}/>;
+                    }
+                    else {
+                        return <Ionicons name="notifications-outline" size={size} color={color}/>;
+                    }
+                },
+                tabBarActiveTintColor: '#9E2A2B',
+                tabBarInactiveTintColor: 'gray',
+                headerShown: false,
+            })}>
+            <Tab.Screen name="Pets" component={PetsTabScreenNavigator}/>
+            <Tab.Screen name="Vets" component={VetsTabScreenNavigator}/>
+            <Tab.Screen name="Appointments" component={AppointmentsTabScreenNavigator}/>
+            <Tab.Screen name="Notifications" component={NotificationsTabScreenNavigator}/>
+        </Tab.Navigator>
+    )
+}
+
+export {TabsNavigator};
 
 const PetsTabScreenNavigator = ({navigation}) => {
     return(
