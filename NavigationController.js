@@ -3,6 +3,7 @@ import AppointmentsTabScreen from './AppointmentsTabScreen';
 import NotificationsTabScreen from './NotificationsTabScreen';
 import PetsTabScreen from './PetsTabScreen';
 import VetsTabScreen from './VetsTabScreen';
+import PetProfileScreen from './PetProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -10,6 +11,7 @@ const PetsTabScreenNavigator = () => {
     return(
         <Stack.Navigator>
             <Stack.Screen name="PetsTabScreen" component={PetsTabScreen}/>
+            <Stack.Screen name="PetProfileScreen" component={PetProfileScreen}/>
         </Stack.Navigator>
     )
 }
