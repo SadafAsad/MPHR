@@ -19,7 +19,6 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 // --------- bugs to be fixed ------------
-// AddAppointmentScreen back button goes to PetTabScreen
 // SettingScreen back button goes to NotificationTabScreen
 
 const AuthenticationNavigator = () => {
@@ -146,7 +145,7 @@ const AppointmentsTabScreenNavigator = ({navigation}) => {
                 ),
                 headerLeft: () => (
                     <Pressable onPress={ () => {
-                        navigation.navigate("AddPetScreen");
+                        navigation.navigate("AddAppointmentScreen");
                     }}>
                         <AntDesign name="plus" size={20} color="black" />
                     </Pressable>
