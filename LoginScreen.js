@@ -24,7 +24,11 @@ const LoginScreen = ({navigation}) => {
                     autoCapitalize="none"
                     secureTextEntry={true}
                 />
-                <Text style={{color:'#335C67', marginTop:5, fontSize:14}}>Forgot Password?</Text>
+                <Pressable onPress={ () => {
+                    navigation.navigate("ResetPasswordScreen")
+                }}>
+                    <Text style={{fontSize:14, color:'#335C67', marginTop:5}}>Forgot Password?</Text>
+                </Pressable>
             </View>
 
             <View style={{marginTop:20}}>
