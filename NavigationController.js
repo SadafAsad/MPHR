@@ -13,6 +13,10 @@ import { AntDesign } from '@expo/vector-icons';
 
 const Stack = createNativeStackNavigator();
 
+// --------- bugs to be fixed ------------
+// AddAppointmentScreen back button goes to PetTabScreen
+// SettingScreen back button goes to NotificationTabScreen
+
 const PetsTabScreenNavigator = ({navigation}) => {
     return(
         <Stack.Navigator>
