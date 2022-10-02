@@ -1,10 +1,7 @@
-import AppointmentsTabScreen from './AppointmentsTabScreen';
-import NotificationsTabScreen from './NotificationsTabScreen';
-import PetsTabScreenNavigator from './NavigationController';
-import VetsTabScreen from './VetsTabScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons, Fontisto, MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import { PetsTabScreenNavigator, VetsTabScreenNavigator, AppointmentsTabScreenNavigator, NotificationsTabScreenNavigator } from './NavigationController';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,12 +27,13 @@ export default function App() {
             },
             tabBarActiveTintColor: '#9E2A2B',
             tabBarInactiveTintColor: 'gray',
+            headerShown: false,
           })}
         >
           <Tab.Screen name="Pets" component={PetsTabScreenNavigator}/>
-          <Tab.Screen name="Vets" component={VetsTabScreen}/>
-          <Tab.Screen name="Appointments" component={AppointmentsTabScreen}/>
-          <Tab.Screen name="Notifications" component={NotificationsTabScreen}/>
+          <Tab.Screen name="Vets" component={VetsTabScreenNavigator}/>
+          <Tab.Screen name="Appointments" component={AppointmentsTabScreenNavigator}/>
+          <Tab.Screen name="Notifications" component={NotificationsTabScreenNavigator}/>
         </Tab.Navigator>
       }
     </NavigationContainer>

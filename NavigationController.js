@@ -10,11 +10,38 @@ const PetsTabScreenNavigator = () => {
     return(
         <Stack.Navigator>
             <Stack.Screen name="PetsTabScreen" component={PetsTabScreen}/>
+        </Stack.Navigator>
+    )
+}
+
+export {PetsTabScreenNavigator};
+
+const VetsTabScreenNavigator = () => {
+    return(
+        <Stack.Navigator>
             <Stack.Screen name="VetsTabScreen" component={VetsTabScreen}/>
+        </Stack.Navigator>
+    )
+}
+
+export {VetsTabScreenNavigator};
+
+const AppointmentsTabScreenNavigator = () => {
+    return(
+        <Stack.Navigator>
             <Stack.Screen name="AppointmentsTabScreen" component={AppointmentsTabScreen}/>
+        </Stack.Navigator>
+    )
+}
+
+export {AppointmentsTabScreenNavigator};
+
+const NotificationsTabScreenNavigator = () => {
+    return(
+        <Stack.Navigator>
             <Stack.Screen name="NotificationsTabScreen" component={NotificationsTabScreen}/>
         </Stack.Navigator>
     )
 }
 
-export default PetsTabScreenNavigator;
+export {NotificationsTabScreenNavigator};
