@@ -51,7 +51,7 @@ const TabsNavigator = ({navigation}) => {
                         return <Ionicons name="notifications-outline" size={size} color={color}/>;
                     }
                 },
-                tabBarActiveTintColor: '#9E2A2B',
+                tabBarActiveTintColor: '#335C67',
                 tabBarInactiveTintColor: 'gray',
                 headerShown: false,
             })}>

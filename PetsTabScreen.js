@@ -17,7 +17,7 @@ const PetsTabScreen = ({navigation}) => {
                     <Text style={{marginLeft:20, fontSize:18}}>{item.name}</Text>
                     <Text style={{marginLeft:20, fontSize:14}}>Birthday: {item.birthday}</Text>
                 </View>
-                <AntDesign name="right" size={20} color='#9E2A2B' style={{marginRight:20}}/>
+                <AntDesign name="right" size={20} color='#335C67' style={{marginRight:20}}/>
             </View>
         </Pressable>
     );
