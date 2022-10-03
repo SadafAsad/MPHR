@@ -1,11 +1,32 @@
-import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
 const PetsTabScreen = ({navigation}) => {
     const pets = [
-        {id: 1, name: "Bacon", birthday: "2022/03/12"},
-        {id: 2, name: "Leila", birthday: "2022/09/01"}
+        {id: 1, name: "Bacon", birthday: "2022-03-12"},
+        {id: 2, name: "Leila", birthday: "2022-09-01"}
     ];
+
+    function getAge(dateString) {
+        var today = new Date();
+        var birthDate = new Date(dateString);
+        var age = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        var month = 0;
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+            month = birthDate.getMonth();
+        }
+        else {
+            month = m
+        }
+        if (age===0) {
+            return `${month}mon`;
+        }
+        else {
+            return `${age}yr${month}mon`;
+        }
+    }
 
     const renderItem = ( {item} ) => (
         <Pressable onPress={ () => {
@@ -13,11 +34,17 @@ const PetsTabScreen = ({navigation}) => {
         }
         }>
             <View style={styles.pet}>
-                <View>
-                    <Text style={{marginLeft:20, fontSize:18}}>{item.name}</Text>
-                    <Text style={{marginLeft:20, fontSize:14}}>Birthday: {item.birthday}</Text>
+                <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                    <Image source={require('./assets/pet-icon-2.png')} style={styles.img}/>
+                    <View>
+                        <View style={{flexDirection:'row', alignItems:'baseline'}}>
+                            <Text style={{marginLeft:20, fontSize:18}}>{item.name}</Text>
+                            <Text style={{fontSize:14}}> - age: {getAge(item.birthday)}</Text>
+                        </View>
+                        <Text style={{marginLeft:20}}>Caretakers:</Text>
+                    </View>
                 </View>
-                <AntDesign name="right" size={20} color='#335C67' style={{marginRight:20}}/>
+                <AntDesign name="right" size={20} color='#335C67' style={{marginRight:22}}/>
             </View>
         </Pressable>
     );
@@ -52,6 +79,14 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         alignItems: 'center'
     },
+    img: {
+        marginLeft: 22,
+        width: 60,
+        height: 60,
+        borderRadius: '100%',
+        borderWidth: 1,
+        borderColor: 'black',
+    }
 });
 
 export default PetsTabScreen;

@@ -18,7 +18,8 @@
     "react-native": "0.69.6",
     "react-native-paper": "^4.12.4",
     "react-navigation": "^4.4.4",
-    "react-navigation-stack": "^2.10.4"
+    "react-navigation-stack": "^2.10.4",
+    "react-native-web": "~0.18.7"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
