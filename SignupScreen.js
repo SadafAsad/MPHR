@@ -1,9 +1,11 @@
 import { SafeAreaView, StyleSheet, Text, Pressable, View, Image, TextInput } from 'react-native';
 import { StackActions } from '@react-navigation/native';
+import { ProgressBar, MD3Colors } from 'react-native-paper';
 
 const SignupScreen = ({navigation}) => {
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
+            <ProgressBar progress={0.333} color={'#335C67'}/>
             <Image source={require('./assets/MPHR.png')} style={styles.img}/>
             <View style={{marginTop:300}}/>
 

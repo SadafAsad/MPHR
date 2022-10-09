@@ -2,9 +2,12 @@ import { SafeAreaView, StyleSheet, Text, Pressable, Image, View, TextInput } fro
 import { StackActions } from '@react-navigation/native';
 import { useState } from "react";
 import CheckBox from "expo-checkbox";
+import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const LoginScreen = ({navigation}) => {
     const [isSelected, setSelection] = useState(false);
+    const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
 
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
@@ -21,13 +24,19 @@ const LoginScreen = ({navigation}) => {
                 />
 
                 <Text style={{marginBottom:5, fontSize:16, marginTop:20}}>Password</Text>
-                <TextInput 
-                    style={styles.input}
-                    placeholder="Enter password"
-                    keyboardType="default"
-                    autoCapitalize="none"
-                    secureTextEntry={true}
-                />
+                <View style={styles.inputContainer}>
+                    <TextInput 
+                        style={styles.inputField}
+                        placeholder="Enter password"
+                        keyboardType="default"
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        secureTextEntry={passwordVisibility}
+                    />
+                    <Pressable onPress={handlePasswordVisibility}>
+                        <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
+                    </Pressable>
+                </View>
 
                 <View style={{flexDirection:'row', justifyContent:'space-between', alignSelf:'stretch', alignItems:'center', marginTop:15}}>
                     <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
@@ -67,14 +76,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: -100
     },
-    input: {
-        alignSelf: 'center',
-        height: 40,
-        width: 350,
-        borderWidth: 1,
-        padding: 10,
-        borderColor: '#808080',
-    },
     loginPressable: {
         alignSelf: 'center',
         textAlign: 'center',
@@ -103,6 +104,26 @@ const styles = StyleSheet.create({
         padding: 15,
         width: 350,
     },
+    input: {
+        alignSelf: 'center',
+        height: 40,
+        width: 350,
+        borderWidth: 1,
+        padding: 10,
+        borderColor: '#808080',
+    },
+    inputContainer: {
+        height: 40,
+        width: 350,
+        borderWidth: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderColor: '#808080'
+    },
+    inputField: {
+        padding: 10,
+        width: '90%'
+    }
 });
 
 export default LoginScreen;
