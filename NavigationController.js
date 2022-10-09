@@ -24,9 +24,9 @@ const Tab = createBottomTabNavigator();
 const AuthenticationNavigator = () => {
     return(
         <Stack.Navigator options={{headerShown: false}}>
-            <Stack.Screen name="LoginScreen" component={LoginScreen}/>
-            <Stack.Screen name="SignupScreen" component={SignupScreen}/>
-            <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen}/>
+            <Stack.Screen name="Login" component={LoginScreen}/>
+            <Stack.Screen name="Signup" component={SignupScreen}/>
+            <Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
         </Stack.Navigator>
     )
 }
