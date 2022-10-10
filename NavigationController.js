@@ -12,6 +12,7 @@ import AddVetScreen from './AddVetScreen';
 import LoginScreen from './LoginScreen';
 import SignupScreen from './SignupScreen';
 import ResetPasswordScreen from './ResetPasswordScreen';
+import RegistrationStep1 from './Registration';
 import { Pressable, Text } from 'react-native';
 import { AntDesign, Ionicons, Fontisto, MaterialIcons, FontAwesome } from '@expo/vector-icons'; 
 
@@ -25,7 +26,8 @@ const AuthenticationNavigator = () => {
     return(
         <Stack.Navigator options={{headerShown: false}}>
             <Stack.Screen name="Login" component={LoginScreen}/>
-            <Stack.Screen name="Signup" component={SignupScreen}/>
+            {/* <Stack.Screen name="Signup" component={SignupScreen}/> */}
+            <Stack.Screen name="Registration" component={RegistrationStep1}/>
             <Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
         </Stack.Navigator>
     )

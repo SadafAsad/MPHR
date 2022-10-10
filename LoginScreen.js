@@ -61,7 +61,8 @@ const LoginScreen = ({navigation}) => {
                     <Text style={styles.loginPressable}>Log In</Text>
                 </Pressable>
                 <Pressable onPress={() => {
-                    navigation.navigate("Signup")
+                    // navigation.navigate("Signup")
+                    navigation.navigate("Registration")
                 }}>
                     <Text style={styles.signupPressable}>Sign Up</Text>
                 </Pressable>
