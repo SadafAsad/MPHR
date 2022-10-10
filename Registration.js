@@ -1,9 +1,9 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, Pressable, View } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'; 
-import { ProgressBar } from 'react-native-paper';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 import { StackActions } from '@react-navigation/native';
+import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 
 const RegistrationStep1 = ({navigation}) => {
     const [codeIsSent, setCodeSent] = useState(false);
@@ -12,8 +12,24 @@ const RegistrationStep1 = ({navigation}) => {
 
     return (
         <SafeAreaView>
-            <ProgressBar progress={0.333} color={'#335C67'}/>
-            <Text>Registration</Text>
+            
+            <View>
+                <ProgressSteps
+                    borderWidth={3}
+                    activeStepIconBorderColor="#335C67"
+                    activeLabelFontSize={14}
+                    activeLabelColor="black"
+                    labelFontSize={14}
+                    labelColor="black"
+                    completedLabelColor="black"
+                >
+                    <ProgressStep label="Registration" removeBtnRow={true}/>
+                    <ProgressStep label="Profile" removeBtnRow={true}/>
+                    <ProgressStep label="Address" removeBtnRow={true}/>
+                </ProgressSteps>
+            </View>
+
+            <Text style={{marginTop:100}}>Registration</Text>
             <Text>Verify your email to register. It will only take a few minutes.</Text>
             <Text>Enter your email address</Text>
             <TextInput 
@@ -81,7 +97,7 @@ const RegistrationStep1 = ({navigation}) => {
         </SafeAreaView>
     );
 }
-  
+
 const styles = StyleSheet.create({
     input: {
         alignSelf: 'center',
@@ -122,6 +138,13 @@ const styles = StyleSheet.create({
     inputField: {
         padding: 10,
         width: '90%'
+    },
+    progressStyle: {
+        borderWidth: 1,
+        activeStepIconBorderColor: '#335C67',
+        progressBarColor: '#335C67',
+        activeStepIconColor: '#335C67',
+        completedStepIconColor: '#335C67',
     }
 });
 
