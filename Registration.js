@@ -11,15 +11,15 @@ const RegistrationStep1 = ({navigation}) => {
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{flex:1, alignSelf:'center'}}>
             
-            <View>
+            <View style={{height:120}}> 
                 <ProgressSteps
                     borderWidth={3}
                     activeStepIconBorderColor="#335C67"
-                    activeLabelFontSize={14}
+                    activeLabelFontSize={12}
                     activeLabelColor="black"
-                    labelFontSize={14}
+                    labelFontSize={12}
                     labelColor="black"
                     completedLabelColor="black"
                 >
@@ -29,9 +29,9 @@ const RegistrationStep1 = ({navigation}) => {
                 </ProgressSteps>
             </View>
 
-            <Text style={{marginTop:100}}>Registration</Text>
-            <Text>Verify your email to register. It will only take a few minutes.</Text>
-            <Text>Enter your email address</Text>
+            <Text style={{fontWeight:'bold', fontSize:30, marginLeft:22, marginRight:22}}>Registration</Text>
+            <Text style={styles.descTxt}>Verify your email to register. It will only take a few minutes.</Text>
+            <Text style={styles.titleTxt}>Enter your email address</Text>
             <TextInput 
                 style={styles.input}
                 placeholder="example@example.example"
@@ -49,19 +49,24 @@ const RegistrationStep1 = ({navigation}) => {
 
             { codeIsSent && !emailConfirmed && (
                 <View>
-                    <Text>Enter verification code</Text>
-                    <Text>Enter the verification code that was sent to your email.</Text>
-                    <TextInput
-                        style={styles.verificationCode}
-                        placeholder="------"
-                        autoCapitalize="none"
-                    />
-                    <Pressable onPress={ () => {
-                        // send a new verification code
-                    }}>
-                        <Ionicons name="refresh" size={24} color="black"/>
-                        <Text>Send again</Text>
-                    </Pressable>
+                    <Text style={styles.titleTxt}>Enter verification code</Text>
+                    <Text style={styles.descTxt}>Enter the verification code that was sent to your email.</Text>
+                    
+                    <View style={{flexDirection:'row', marginLeft:22, marginTop:5, marginRight:22, alignSelf:'stretch'}}>
+                        <TextInput
+                            style={styles.verificationCode}
+                            placeholder="------"
+                            autoCapitalize="none"
+                        />
+                        <Pressable onPress={ () => {
+                            // send a new verification code
+                        }} style={{flex:1}}>
+                            <View style={{flex:1, flexDirection:'row', alignSelf:'center'}}>
+                                <Ionicons name="refresh" size={24} color="black" style={{alignSelf:'center'}}/>
+                                <Text style={{fontSize:15, alignSelf:'center'}}>Send again</Text>
+                            </View>
+                        </Pressable>
+                    </View>
                     <Pressable onPress={ () => {
                         setEmailConfirmed(true);
                     }} disabled={emailConfirmed}>
@@ -72,7 +77,7 @@ const RegistrationStep1 = ({navigation}) => {
 
             { codeIsSent && emailConfirmed && (
                 <View>
-                    <Text>Set a password</Text>
+                    <Text style={styles.titleTxt}>Set a password</Text>
                     <View style={styles.inputContainer}>
                         <TextInput 
                         style={styles.inputField}
@@ -120,6 +125,7 @@ const styles = StyleSheet.create({
         width: 350,
     },
     verificationCode: {
+        flex:1,
         alignSelf: 'center',
         height: 40,
         width: 175,
@@ -133,7 +139,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        borderColor: '#808080'
+        borderColor: '#808080',
+        alignSelf: 'center'
     },
     inputField: {
         padding: 10,
@@ -145,6 +152,19 @@ const styles = StyleSheet.create({
         progressBarColor: '#335C67',
         activeStepIconColor: '#335C67',
         completedStepIconColor: '#335C67',
+    },
+    titleTxt: {
+        marginTop:20, 
+        marginBottom:5, 
+        marginLeft:22, 
+        marginRight:22
+    },
+    descTxt: {
+        fontSize:15, 
+        color:'#808080', 
+        marginTop:5, 
+        marginLeft:22, 
+        marginRight:22
     }
 });
 
