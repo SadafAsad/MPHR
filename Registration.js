@@ -116,7 +116,7 @@ const Registration = ({navigation}) => {
 const styles = StyleSheet.create({
     input: {
         alignSelf: 'center',
-        height: 40,
+        height: 45,
         width: 350,
         borderWidth: 1,
         padding: 10,
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     },
     disabledInput: {
         alignSelf: 'center',
-        height: 40,
+        height: 45,
         width: 350,
         borderWidth: 1,
         padding: 10,
@@ -146,14 +146,14 @@ const styles = StyleSheet.create({
     verificationCode: {
         flex:1,
         alignSelf: 'center',
-        height: 40,
+        height: 45,
         width: 175,
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
     },
     inputContainer: {
-        height: 40,
+        height: 45,
         width: 350,
         borderWidth: 1,
         flexDirection: 'row',

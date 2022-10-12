@@ -107,14 +107,14 @@ const styles = StyleSheet.create({
     },
     input: {
         alignSelf: 'center',
-        height: 40,
+        height: 45,
         width: 350,
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
     },
     inputContainer: {
-        height: 40,
+        height: 45,
         width: 350,
         borderWidth: 1,
         flexDirection: 'row',
