@@ -12,7 +12,9 @@ import AddVetScreen from './AddVetScreen';
 import LoginScreen from './LoginScreen';
 import SignupScreen from './SignupScreen';
 import ResetPasswordScreen from './ResetPasswordScreen';
-import RegistrationStep1 from './Registration';
+import Registration from './Registration';
+import ProfileInfo from './ProfileInfo';
+import AddressInfo from './AddressInfo';
 import { Pressable, Text } from 'react-native';
 import { AntDesign, Ionicons, Fontisto, MaterialIcons, FontAwesome } from '@expo/vector-icons'; 
 
@@ -27,13 +29,26 @@ const AuthenticationNavigator = () => {
         <Stack.Navigator options={{headerShown: false}}>
             <Stack.Screen name="Login" component={LoginScreen}/>
             {/* <Stack.Screen name="Signup" component={SignupScreen}/> */}
-            <Stack.Screen name="Registration" component={RegistrationStep1}/>
+            <Stack.Screen name="Registration" component={Registration}/>
+            <Stack.Screen name="Profile" component={ProfileInfo}/>
+            <Stack.Screen name="Address" component={AddressInfo}/>
             <Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
         </Stack.Navigator>
     )
 }
 
 export {AuthenticationNavigator};
+
+const CreatingProfileNavigator = () => {
+    return(
+        <Stack.Navigator options={{headerShown: false}}>
+            <Stack.Screen name="Profile" component={ProfileInfo}/>
+            <Stack.Screen name="Address" component={AddressInfo}/>
+        </Stack.Navigator>
+    )
+}
+
+export {CreatingProfileNavigator};
 
 const TabsNavigator = ({navigation}) => {
     return(

@@ -2,10 +2,9 @@ import { SafeAreaView, StyleSheet, Text, TextInput, Pressable, View } from 'reac
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
-import { StackActions } from '@react-navigation/native';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 
-const RegistrationStep1 = ({navigation}) => {
+const Registration = ({navigation}) => {
     const [codeIsSent, setCodeSent] = useState(false);
     const [emailConfirmed, setEmailConfirmed] = useState(false);
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
@@ -29,7 +28,7 @@ const RegistrationStep1 = ({navigation}) => {
                 </ProgressSteps>
             </View>
 
-            <Text style={{fontWeight:'bold', fontSize:30, marginLeft:22, marginRight:22}}>Registration</Text>
+            <Text style={styles.screentitle}>Registration</Text>
             <Text style={styles.descTxt}>Verify your email to register. It will only take a few minutes.</Text>
             <Text style={styles.titleTxt}>Enter your email address</Text>
 
@@ -104,8 +103,7 @@ const RegistrationStep1 = ({navigation}) => {
                         </Pressable>
                     </View>
                     <Pressable onPress={ () => {
-                        // go to next screen
-                        navigation.dispatch(StackActions.replace('TabsNavigator'))
+                        navigation.reset({index:0, routes:[{name: 'Profile'}]});
                     }}>
                         <Text style={styles.PressableStyle}>Next</Text>
                     </Pressable>
@@ -167,13 +165,6 @@ const styles = StyleSheet.create({
         padding: 10,
         width: '90%'
     },
-    progressStyle: {
-        borderWidth: 1,
-        activeStepIconBorderColor: '#335C67',
-        progressBarColor: '#335C67',
-        activeStepIconColor: '#335C67',
-        completedStepIconColor: '#335C67',
-    },
     titleTxt: {
         marginTop:20, 
         marginBottom:5, 
@@ -186,7 +177,13 @@ const styles = StyleSheet.create({
         marginTop:5, 
         marginLeft:22, 
         marginRight:22
+    },
+    screentitle: {
+        fontWeight:'bold', 
+        fontSize:30, 
+        marginLeft:22, 
+        marginRight:22
     }
 });
 
-export default RegistrationStep1;
+export default Registration;
