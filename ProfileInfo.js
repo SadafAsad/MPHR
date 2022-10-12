@@ -28,14 +28,14 @@ const ProfileInfo = ({navigation}) => {
             <TextInput 
                 style={styles.input}
                 placeholder=""
-                keyboardType="email-address"
+                keyboardType="default"
                 autoCapitalize="none"
             />
             <Text style={styles.titleTxt}>Last name</Text>
             <TextInput 
                 style={styles.input}
                 placeholder=""
-                keyboardType="email-address"
+                keyboardType="default"
                 autoCapitalize="none"
             />
             <Text style={styles.titleTxt}>Phone number</Text>
@@ -51,7 +51,7 @@ const ProfileInfo = ({navigation}) => {
 const styles = StyleSheet.create({
     input: {
         alignSelf: 'center',
-        height: 40,
+        height: 45,
         width: 350,
         borderWidth: 1,
         padding: 10,

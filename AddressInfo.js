@@ -1,8 +1,20 @@
 import { SafeAreaView, StyleSheet, Text, View, Pressable, TextInput } from 'react-native';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { StackActions } from '@react-navigation/native';
+import SelectList from 'react-native-dropdown-select-list';
+import { useState } from 'react';
 
 const AddressInfo = ({navigation}) => {
+    const [selectedCountry, setSelectedCountry] = useState("");
+    const [selectedProvince, setSelectedProvince] = useState("");
+
+    const country = [{key:'1',value:'Canada'}];
+    const province = [
+        {key:'1', value:'AB'}, 
+        {key:'2', value:'QC'}, 
+        {key:'3', value:'ON'}
+    ]
+
     return (
         <SafeAreaView style={{flex:1, alignSelf:'center'}}> 
             <View style={{height:120}}> 
@@ -29,26 +41,50 @@ const AddressInfo = ({navigation}) => {
             <TextInput 
                 style={styles.input}
                 placeholder=""
-                keyboardType="email-address"
+                keyboardType="default"
                 autoCapitalize="none"
             />
             <Text style={styles.titleTxt}>Address line 2</Text>
             <TextInput 
                 style={styles.input}
                 placeholder=""
-                keyboardType="email-address"
+                keyboardType="default"
                 autoCapitalize="none"
             />
             <Text style={styles.titleTxt}>City</Text>
             <TextInput 
                 style={styles.input}
                 placeholder=""
-                keyboardType="email-address"
+                keyboardType="default"
                 autoCapitalize="none"
             />
             <Text style={styles.titleTxt}>Country</Text>
+            <SelectList 
+                setSelected={setSelectedCountry} 
+                data={country} 
+                onSelect={() => alert(selectedCountry)}
+                boxStyles={styles.input}
+                dropdownItemStyles={styles.input}
+                dropdownStyles={{borderColor:'transparent'}}
+                maxHeight='100'
+            />
             <Text style={styles.titleTxt}>Province / State</Text>
+            <SelectList 
+                setSelected={setSelectedProvince} 
+                data={province} 
+                onSelect={() => alert(selectedProvince)}
+                boxStyles={styles.input}
+                dropdownItemStyles={styles.input}
+                dropdownStyles={{borderColor:'transparent'}}
+                maxHeight='100'
+            />
             <Text style={styles.titleTxt}>Postal Code</Text>
+            <TextInput 
+                style={styles.input}
+                placeholder=""
+                keyboardType="default"
+                autoCapitalize="none"
+            />
             <Pressable onPress={ () => {
                 navigation.dispatch(StackActions.replace('TabsNavigator'))
             }}>
@@ -61,11 +97,12 @@ const AddressInfo = ({navigation}) => {
 const styles = StyleSheet.create({
     input: {
         alignSelf: 'center',
-        height: 40,
+        height: 45,
         width: 350,
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
+        borderRadius: '0%',
     },
     PressableStyle: {
         alignSelf: 'center',
@@ -97,7 +134,7 @@ const styles = StyleSheet.create({
         fontSize:30, 
         marginLeft:22, 
         marginRight:22
-    }
+    },
 });
 
 export default AddressInfo;
