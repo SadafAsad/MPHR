@@ -1,7 +1,13 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable } from 'react-native';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
+import SelectList from 'react-native-dropdown-select-list';
+import { useState } from 'react';
 
 const ProfileInfo = ({navigation}) => {
+    const [selectedNumCode, setSelectedNumCode] = useState("");
+
+    const numCode = [{key:'1',value:'+1'}];
+
     return (
         <SafeAreaView style={{flex:1, alignSelf:'center'}}> 
             <View style={{height:120}}> 
@@ -39,6 +45,26 @@ const ProfileInfo = ({navigation}) => {
                 autoCapitalize="none"
             />
             <Text style={styles.titleTxt}>Phone number</Text>
+            <View style={{flexDirection:'row', alignItems:'center', width:350, alignSelf:'center'}}>
+                <SelectList 
+                    setSelected={setSelectedNumCode} 
+                    data={numCode} 
+                    onSelect={() => alert(selectedNumCode)}
+                    boxStyles={styles.numCodeInput}
+                    dropdownItemStyles={styles.numCodeInput}
+                    dropdownStyles={{borderColor:'transparent'}}
+                    maxHeight='100'
+                    searchPlaceholder=""
+                    search={false}
+                    placeholder=""
+                />
+                <TextInput 
+                    style={styles.rowInput}
+                    placeholder="(_ _ _)_ _ _-_ _ _"
+                    keyboardType="default"
+                    autoCapitalize="none"
+                />
+            </View>
             <Pressable onPress={ () => {
                 navigation.navigate("Address")
             }}>
@@ -56,6 +82,26 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
+        borderRadius: '0%',
+    },
+    numCodeInput: {
+        alignSelf: 'center',
+        height: 45,
+        width: 55,
+        borderWidth: 1,
+        padding: 10,
+        borderColor: '#808080',
+        borderRadius: '0%',
+    },
+    rowInput: {
+        flex: 1,
+        alignSelf: 'center',
+        height: 45,
+        borderWidth: 1,
+        padding: 10,
+        borderColor: '#808080',
+        borderRadius: '0%',
+        marginLeft: 5
     },
     PressableStyle: {
         alignSelf: 'center',
