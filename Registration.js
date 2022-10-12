@@ -32,12 +32,24 @@ const RegistrationStep1 = ({navigation}) => {
             <Text style={{fontWeight:'bold', fontSize:30, marginLeft:22, marginRight:22}}>Registration</Text>
             <Text style={styles.descTxt}>Verify your email to register. It will only take a few minutes.</Text>
             <Text style={styles.titleTxt}>Enter your email address</Text>
-            <TextInput 
-                style={styles.input}
-                placeholder="example@example.example"
-                keyboardType="email-address"
-                autoCapitalize="none"
-            />
+
+            { !emailConfirmed && (
+                <TextInput 
+                    style={styles.input}
+                    placeholder="example@example.example"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                />
+            )}
+
+            { codeIsSent && emailConfirmed && (
+                <TextInput 
+                    style={styles.disabledInput}
+                    placeholder="example@example.example"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                />
+            )}
 
             { !codeIsSent && (
                 <Pressable onPress={ () => {
@@ -111,6 +123,15 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
+    },
+    disabledInput: {
+        alignSelf: 'center',
+        height: 40,
+        width: 350,
+        borderWidth: 1,
+        padding: 10,
+        borderColor: '#808080',
+        backgroundColor: '#c4c4c4',
     },
     PressableStyle: {
         alignSelf: 'center',
