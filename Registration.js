@@ -1,13 +1,44 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, Pressable, View } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 
 const Registration = ({navigation}) => {
     const [codeIsSent, setCodeSent] = useState(false);
     const [emailConfirmed, setEmailConfirmed] = useState(false);
+    const [resendIsActive, setResendActive] = useState(false);
+    const [timeLeft, setTimeLeft] = useState(null);
+    const [targetTime, setTargetTime] = useState(null);
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
+
+    let resendTimerInterval;
+
+    const triggerTimer = (targetTimeInSeconds = 30) => {
+        setTargetTime(targetTimeInSeconds);
+        setResendActive(false);
+        const finalTime = +new Date() + targetTimeInSeconds*1000;
+        resendTimerInterval = setInterval(() => calculateTimeLeft(finalTime), 1000);
+    }
+
+    const calculateTimeLeft = (finalTime) => {
+        const difference = finalTime - +new Date();
+        if (difference >= 0) {
+            setTimeLeft(Math.round(difference/1000));
+        }
+        else {
+            clearInterval(resendTimerInterval);
+            setResendActive(true);
+            setTimeLeft(null);
+        }
+    }
+
+    // useEffect(() => {
+    //     triggerTimer(30);
+    //     return () => {
+    //         clearInterval(resendTimerInterval);
+    //     }
+    // }, []);
 
     return (
         <SafeAreaView style={{flex:1, alignSelf:'center'}}>
@@ -53,12 +84,16 @@ const Registration = ({navigation}) => {
             { !codeIsSent && (
                 <Pressable onPress={ () => {
                     setCodeSent(true);
+                    triggerTimer(30);
+                    return () => {
+                        clearInterval(resendTimerInterval);
+                    }
                 }} disabled={codeIsSent}>
                     <Text style={styles.PressableStyle}>Send Verification Code</Text>
                 </Pressable>
             )}
 
-            { codeIsSent && !emailConfirmed && (
+            { codeIsSent && resendIsActive && !emailConfirmed && (
                 <View>
                     <Text style={styles.titleTxt}>Enter verification code</Text>
                     <Text style={styles.descTxt}>Enter the verification code that was sent to your email.</Text>
@@ -71,6 +106,10 @@ const Registration = ({navigation}) => {
                         />
                         <Pressable onPress={ () => {
                             // send a new verification code
+                            triggerTimer(30);
+                            return () => {
+                                clearInterval(resendTimerInterval);
+                            }
                         }} style={{flex:1}}>
                             <View style={{flex:1, flexDirection:'row', alignSelf:'center'}}>
                                 <Ionicons name="refresh" size={24} color="black" style={{alignSelf:'center'}}/>
@@ -78,6 +117,38 @@ const Registration = ({navigation}) => {
                             </View>
                         </Pressable>
                     </View>
+                    <Pressable onPress={ () => {
+                        setEmailConfirmed(true);
+                    }} disabled={emailConfirmed}>
+                        <Text style={styles.PressableStyle}>Confirm</Text>
+                    </Pressable>
+                </View>
+            )}
+
+            { codeIsSent && !resendIsActive && !emailConfirmed && (
+                <View>
+                    <Text style={styles.titleTxt}>Enter verification code</Text>
+                    <Text style={styles.descTxt}>Enter the verification code that was sent to your email.</Text>
+                    
+                    <View style={{flexDirection:'row', marginLeft:22, marginTop:5, marginRight:22, alignSelf:'stretch'}}>
+                        <TextInput
+                            style={styles.verificationCode}
+                            placeholder="------"
+                            autoCapitalize="none"
+                        />
+                        <Pressable onPress={ () => {
+                            // !send a new verification code
+                        }} style={{flex:1}} disabled={true}>
+                            <View style={{flex:1, flexDirection:'row', alignSelf:'center'}}>
+                                <Ionicons name="refresh" size={24} color='lightgray' style={{alignSelf:'center'}}/>
+                                <Text style={{fontSize:15, alignSelf:'center', color:'lightgray'}}>Send again</Text>
+                            </View>
+                            <Text style={{alignSelf:'center', fontSize:12}}>
+                                in <Text style={{fontWeight:'bold'}}>{timeLeft || targetTime}</Text> second(s)
+                            </Text>
+                        </Pressable>
+                    </View>
+
                     <Pressable onPress={ () => {
                         setEmailConfirmed(true);
                     }} disabled={emailConfirmed}>
@@ -129,7 +200,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
-        backgroundColor: '#d9d9d9',
+        backgroundColor: 'lightgray',
     },
     PressableStyle: {
         alignSelf: 'center',
