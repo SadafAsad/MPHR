@@ -67,6 +67,7 @@ const AddressInfo = ({navigation}) => {
                 dropdownItemStyles={styles.input}
                 dropdownStyles={{borderColor:'transparent'}}
                 maxHeight='100'
+                placeholder=" "
             />
             <Text style={styles.titleTxt}>Province / State</Text>
             <SelectList 
@@ -77,6 +78,7 @@ const AddressInfo = ({navigation}) => {
                 dropdownItemStyles={styles.input}
                 dropdownStyles={{borderColor:'transparent'}}
                 maxHeight='100'
+                placeholder=" "
             />
             <Text style={styles.titleTxt}>Postal Code</Text>
             <TextInput 

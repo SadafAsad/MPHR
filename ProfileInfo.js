@@ -56,7 +56,7 @@ const ProfileInfo = ({navigation}) => {
                     maxHeight='100'
                     searchPlaceholder=""
                     search={false}
-                    placeholder=""
+                    placeholder=" "
                 />
                 <TextInput 
                     style={styles.rowInput}
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     numCodeInput: {
         alignSelf: 'center',
         height: 45,
-        width: 55,
+        width: 65,
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',

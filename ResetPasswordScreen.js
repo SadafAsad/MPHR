@@ -1,53 +1,136 @@
 import { SafeAreaView, StyleSheet, Text, Pressable, View, TextInput } from 'react-native';
-import { RadioButton } from 'react-native-paper';
 import { useState } from "react";
 import { StackActions } from '@react-navigation/native';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 
 const ResetPasswordScreen = ({navigation}) => {
-    const [checked, setChecked] = useState('');
+    const [codeIsSent, setCodeSent] = useState(false);
+    const [emailConfirmed, setEmailConfirmed] = useState(false);
+    const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
+
 
     return (
-        <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
-            <View>
-                <Text style={{fontSize:20, margin:22}}>We need to verify your identity</Text>
+        <SafeAreaView style={{flex:1, alignSelf:'center'}}>
+            <Text style={styles.screentitle}>Forgot Password</Text>
+            <Text style={styles.titleTxt}>Email address</Text>
 
-                <RadioButton.Group onValueChange={checked => setChecked(checked)} value={checked}>
-                    <RadioButton.Item label="Email" value="Email" />
-                    <RadioButton.Item label="Text" value="Text" />
-                </RadioButton.Group>
+            { !emailConfirmed && (
+                <TextInput 
+                    style={styles.input}
+                    placeholder="example@example.example"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                />
+            )}
 
-                { (checked==='Email') && (
-                    <TextInput 
-                        style={styles.input}
-                        placeholder="Enter email"
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                    />
-                )}
+            { codeIsSent && emailConfirmed && (
+                <TextInput 
+                    style={styles.disabledInput}
+                    placeholder="example@example.example"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                />
+            )}
 
-                { (checked==='Text') && (
-                    <TextInput 
-                        style={styles.input}
-                        placeholder="Enter phone number"
-                        keyboardType="phone-pad"
-                        autoCapitalize="none"
-                    />
-                )}
-            </View>
-
-            <View style={{marginTop:20}}>
+            { !codeIsSent && (
                 <Pressable onPress={ () => {
-                    navigation.dispatch(StackActions.replace('TabsNavigator'))
-                }}>
-                    <Text style={styles.verificationPressable}>Send Verification Code</Text>
+                    setCodeSent(true);
+                }} disabled={codeIsSent}>
+                    <Text style={styles.PressableStyle}>Send Verification Code</Text>
                 </Pressable>
-            </View>
+            )}
+
+            { codeIsSent && !emailConfirmed && (
+                <View>
+                    <Text style={styles.descTxt2}>We just sent you an email with a code</Text>
+                    <Text style={styles.descTxt}>Enter the code to verify your account.</Text>
+                    <Text style={styles.titleTxt}>Verification code</Text>
+
+                    <View style={{flexDirection:'row', marginLeft:22, marginTop:5, marginRight:22, alignSelf:'stretch'}}>
+                        <TextInput
+                            style={styles.verificationCode}
+                            placeholder="------"
+                            autoCapitalize="none"
+                        />
+                        <Pressable onPress={ () => {
+                            // send a new verification code
+                        }} style={{flex:1}}>
+                            <View style={{flex:1, flexDirection:'row', alignSelf:'center'}}>
+                                <Ionicons name="refresh" size={24} color="black" style={{alignSelf:'center'}}/>
+                                <Text style={{fontSize:15, alignSelf:'center'}}>Send again</Text>
+                            </View>
+                        </Pressable>
+                    </View>
+                    <Pressable onPress={ () => {
+                        setEmailConfirmed(true);
+                    }} disabled={emailConfirmed}>
+                        <Text style={styles.PressableStyle}>Confirm</Text>
+                    </Pressable>
+                </View>
+            )}
+
+            { codeIsSent && emailConfirmed && (
+                <View>
+                    <Text style={styles.titleTxt}>New Password</Text>
+                    <View style={styles.inputContainer}>
+                        <TextInput 
+                        style={styles.inputField}
+                        placeholder=""
+                        keyboardType="default"
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        secureTextEntry={passwordVisibility}
+                        />
+                        <Pressable onPress={handlePasswordVisibility}>
+                            <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
+                        </Pressable>
+                    </View>
+
+                    <Text style={styles.titleTxt}>Confirm New Password</Text>
+                    <View style={styles.inputContainer}>
+                        <TextInput 
+                        style={styles.inputField}
+                        placeholder=""
+                        keyboardType="default"
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        secureTextEntry={passwordVisibility}
+                        />
+                        <Pressable onPress={handlePasswordVisibility}>
+                            <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
+                        </Pressable>
+                    </View>
+                    <Pressable onPress={ () => {
+                        navigation.dispatch(StackActions.replace('TabsNavigator'))
+                    }}>
+                        <Text style={styles.PressableStyle}>Update Password</Text>
+                    </Pressable>
+                </View>
+            )}
         </SafeAreaView>
     );
 }
   
 const styles = StyleSheet.create({
-    verificationPressable: {
+    input: {
+        alignSelf: 'center',
+        height: 45,
+        width: 350,
+        borderWidth: 1,
+        padding: 10,
+        borderColor: '#808080',
+    },
+    disabledInput: {
+        alignSelf: 'center',
+        height: 45,
+        width: 350,
+        borderWidth: 1,
+        padding: 10,
+        borderColor: '#808080',
+        backgroundColor: '#d9d9d9',
+    },
+    PressableStyle: {
         alignSelf: 'center',
         textAlign: 'center',
         backgroundColor: '#335C67',
@@ -59,14 +142,56 @@ const styles = StyleSheet.create({
         padding: 15,
         width: 350,
     },
-    input: {
+    verificationCode: {
+        flex:1,
         alignSelf: 'center',
-        height: 40,
-        width: 350,
+        height: 45,
+        width: 175,
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
     },
+    inputContainer: {
+        height: 45,
+        width: 350,
+        borderWidth: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderColor: '#808080',
+        alignSelf: 'center'
+    },
+    inputField: {
+        padding: 10,
+        width: '90%'
+    },
+    titleTxt: {
+        marginTop:20, 
+        marginBottom:5, 
+        marginLeft:22, 
+        marginRight:22
+    },
+    descTxt: {
+        fontSize:15, 
+        color:'#808080', 
+        marginTop:5, 
+        marginLeft:22, 
+        marginRight:22
+    },
+    descTxt2: {
+        fontSize:15, 
+        color:'#808080', 
+        marginTop:5, 
+        marginLeft:22, 
+        marginRight:22,
+        marginTop: 10,
+    },
+    screentitle: {
+        fontWeight:'bold', 
+        fontSize:30, 
+        marginLeft:22, 
+        marginRight:22,
+        marginTop: 22
+    }
 });
 
 export default ResetPasswordScreen;

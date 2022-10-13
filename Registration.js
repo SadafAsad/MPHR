@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
-        backgroundColor: '#c4c4c4',
+        backgroundColor: '#d9d9d9',
     },
     PressableStyle: {
         alignSelf: 'center',
