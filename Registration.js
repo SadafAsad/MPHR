@@ -33,15 +33,8 @@ const Registration = ({navigation}) => {
         }
     }
 
-    // useEffect(() => {
-    //     triggerTimer(30);
-    //     return () => {
-    //         clearInterval(resendTimerInterval);
-    //     }
-    // }, []);
-
     return (
-        <SafeAreaView style={{flex:1, alignSelf:'center'}}>
+        <SafeAreaView style={{flex:1}}>
             
             <View style={{height:120}}> 
                 <ProgressSteps
@@ -188,7 +181,7 @@ const styles = StyleSheet.create({
     input: {
         alignSelf: 'center',
         height: 45,
-        width: 350,
+        width: '90%',
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
@@ -196,7 +189,7 @@ const styles = StyleSheet.create({
     disabledInput: {
         alignSelf: 'center',
         height: 45,
-        width: 350,
+        width: '90%',
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
@@ -212,20 +205,20 @@ const styles = StyleSheet.create({
         marginTop: 22,
         fontSize: 18,
         padding: 15,
-        width: 350,
+        width: '90%',
     },
     verificationCode: {
         flex:1,
         alignSelf: 'center',
         height: 45,
-        width: 175,
+        width: '60%',
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
     },
     inputContainer: {
         height: 45,
-        width: 350,
+        width: '90%',
         borderWidth: 1,
         flexDirection: 'row',
         alignItems: 'center',

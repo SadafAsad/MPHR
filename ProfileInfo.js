@@ -9,7 +9,7 @@ const ProfileInfo = ({navigation}) => {
     const numCode = [{key:'1',value:'+1'}];
 
     return (
-        <SafeAreaView style={{flex:1, alignSelf:'center'}}> 
+        <SafeAreaView style={{flex:1}}> 
             <View style={{height:120}}> 
                 <ProgressSteps
                     borderWidth={3}
@@ -45,7 +45,7 @@ const ProfileInfo = ({navigation}) => {
                 autoCapitalize="none"
             />
             <Text style={styles.titleTxt}>Phone number</Text>
-            <View style={{flexDirection:'row', alignItems:'center', width:350, alignSelf:'center'}}>
+            <View style={{flexDirection:'row', alignItems:'center', width:'90%', alignSelf:'center'}}>
                 <SelectList 
                     setSelected={setSelectedNumCode} 
                     data={numCode} 
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     input: {
         alignSelf: 'center',
         height: 45,
-        width: 350,
+        width: '90%',
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
@@ -87,7 +87,6 @@ const styles = StyleSheet.create({
     numCodeInput: {
         alignSelf: 'center',
         height: 45,
-        width: 65,
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
@@ -113,10 +112,10 @@ const styles = StyleSheet.create({
         marginTop: 22,
         fontSize: 18,
         padding: 15,
-        width: 350,
+        width: '90%',
     },
     titleTxt: {
-        marginTop:20, 
+        marginTop:15, 
         marginBottom:5, 
         marginLeft:22, 
         marginRight:22

@@ -1,71 +1,68 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
 import { StackActions } from '@react-navigation/native';
+import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
+import SelectList from 'react-native-dropdown-select-list';
+import { useState } from 'react';
 
 
 const EditProfileScreen = ({navigation}) => {
+    const [selectedNumCode, setSelectedNumCode] = useState("");
+
+    const numCode = [{key:'1',value:'+1'}];
+
     return (
-        <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
-            
-            <Text style={styles.title}>Profile Info</Text>
-
-            <View style={styles.saveChanges}>
-            <View style={{marginTop:50}}/>
-            <View style={{flex:1, alignItems:'baseline', alignSelf:'center'}}>
-                <Text style={{marginBottom:5, fontSize:16}}>First Name</Text>
+        <SafeAreaView style={{flex:1}}>
+            <Text style={styles.screentitle}>Profile Info</Text>
+            <Text style={styles.titleTxt}>First name</Text>
+            <TextInput 
+                style={styles.input}
+                placeholder=""
+                keyboardType="default"
+                autoCapitalize="none"
+            />
+            <Text style={styles.titleTxt}>Last name</Text>
+            <TextInput 
+                style={styles.input}
+                placeholder=""
+                keyboardType="default"
+                autoCapitalize="none"
+            />
+            <Text style={styles.titleTxt}>Phone number</Text>
+            <View style={{flexDirection:'row', alignItems:'center', width:'90%', alignSelf:'center'}}>
+                <SelectList 
+                    setSelected={setSelectedNumCode} 
+                    data={numCode} 
+                    onSelect={() => alert(selectedNumCode)}
+                    boxStyles={styles.numCodeInput}
+                    dropdownItemStyles={styles.numCodeInput}
+                    dropdownStyles={{borderColor:'transparent'}}
+                    maxHeight='100'
+                    searchPlaceholder=""
+                    search={false}
+                    placeholder=" "
+                />
                 <TextInput 
-                    style={styles.input}
-                    placeholder="Enter first name"
+                    style={styles.rowInput}
+                    placeholder="(_ _ _)_ _ _-_ _ _"
                     keyboardType="default"
                     autoCapitalize="none"
                 />
             </View>
-            <View style={{flex:1, alignItems:'baseline', alignSelf:'center'}}>
-                <Text style={{marginBottom:5, fontSize:16}}>Last Name</Text>
-                <TextInput 
-                    style={styles.input}
-                    placeholder="Enter last name"
-                    keyboardType="default"
-                    autoCapitalize="none"
-                />
-            </View>
-            <View style={{flex:1, alignItems:'baseline', alignSelf:'center'}}>
-                <Text style={{marginBottom:5, fontSize:16}}>Email</Text>
-                <TextInput 
-                    style={styles.input}
-                    placeholder="Enter email"
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                />
-            </View>
-            <View style={{flex:1, alignItems:'baseline', alignSelf:'center'}}>
-                <Text style={{marginBottom:5, fontSize:16}}>Phone Number</Text>
-                <TextInput 
-                    style={styles.input}
-                    placeholder="Enter phone number"
-                    keyboardType="name-phone-pad"
-                    autoCapitalize="none"
-                />
-            </View>
-            
-
-            <View style={{marginTop:10, marginBottom:20}}>
             <Pressable onPress={ () => {
-                    //navigation.dispatch(StackActions.replace('TabsNavigator'))
-                    Alert.alert('Save Changes', 'Confirm',
-                    [  
-                        {  
-                            text: 'Cancel',  
-                            onPress: () => console.log('Cancel Pressed'),  
-                            style: 'cancel',  
-                        },  
-                        {text: 'OK', onPress: () => navigation.navigate('SettingScreen')},  
-                    ]  
-                    );
-                }}>
-                    <Text style={styles.deletePressable}>Update Profile</Text>
-                </Pressable>
-                </View>
-            </View>
+                //navigation.dispatch(StackActions.replace('TabsNavigator'))
+                Alert.alert('Save Changes', 'Confirm',
+                [  
+                    {  
+                        text: 'Cancel',  
+                        onPress: () => console.log('Cancel Pressed'),  
+                        style: 'cancel',  
+                    },  
+                    {text: 'OK', onPress: () => navigation.navigate('SettingScreen')},  
+                ]  
+                );
+            }}>
+                <Text style={styles.PressableStyle}>Update Profile</Text>
+            </Pressable>
                 {/* <View style={styles.deleteAccount}>
                     <Pressable onPress={ () => {
                         //navigation.dispatch(StackActions.replace('TabsNavigator'))
@@ -90,23 +87,34 @@ const EditProfileScreen = ({navigation}) => {
 }
   
 const styles = StyleSheet.create({
-    title: {
-        // textAlign: 'center',
-        alignSelf: 'center',
-        padding: 20,
-        margin: 30,
-        fontWeight: 'bold',
-        fontSize: '35'
-    },
     input: {
         alignSelf: 'center',
-        height: 40,
-        width: 350,
+        height: 45,
+        width: '90%',
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
+        borderRadius: '0%',
     },
-    deletePressable: {
+    numCodeInput: {
+        alignSelf: 'center',
+        height: 45,
+        borderWidth: 1,
+        padding: 10,
+        borderColor: '#808080',
+        borderRadius: '0%',
+    },
+    rowInput: {
+        flex: 1,
+        alignSelf: 'center',
+        height: 45,
+        borderWidth: 1,
+        padding: 10,
+        borderColor: '#808080',
+        borderRadius: '0%',
+        marginLeft: 5
+    },
+    PressableStyle: {
         alignSelf: 'center',
         textAlign: 'center',
         backgroundColor: '#335C67',
@@ -116,21 +124,27 @@ const styles = StyleSheet.create({
         marginTop: 22,
         fontSize: 18,
         padding: 15,
-        width: 350,
+        width: '90%',
     },
-    saveChanges: {
-        // borderRadius: 5,
-        // borderWidth: 1,
-        flex:1, 
-        alignItems:'baseline',
-        alignSelf:'center'
+    titleTxt: {
+        marginTop:20, 
+        marginBottom:5, 
+        marginLeft:22, 
+        marginRight:22
     },
-    deleteAccount: {
-        // borderRadius: 5,
-        // borderWidth: 1,
-        //flex:1, 
-        alignItems:'center',
-        alignSelf:'center'
+    descTxt: {
+        fontSize:15, 
+        color:'#808080', 
+        marginTop:5, 
+        marginLeft:22, 
+        marginRight:22
+    },
+    screentitle: {
+        fontWeight:'bold', 
+        fontSize:30, 
+        marginLeft:22, 
+        marginRight:22,
+        marginTop:22
     }
 });
 

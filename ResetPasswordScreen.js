@@ -11,7 +11,7 @@ const ResetPasswordScreen = ({navigation}) => {
 
 
     return (
-        <SafeAreaView style={{flex:1, alignSelf:'center'}}>
+        <SafeAreaView style={{flex:1}}>
             <Text style={styles.screentitle}>Forgot Password</Text>
             <Text style={styles.titleTxt}>Email address</Text>
 
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     input: {
         alignSelf: 'center',
         height: 45,
-        width: 350,
+        width: '90%',
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     disabledInput: {
         alignSelf: 'center',
         height: 45,
-        width: 350,
+        width: '90%',
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
@@ -140,20 +140,20 @@ const styles = StyleSheet.create({
         marginTop: 22,
         fontSize: 18,
         padding: 15,
-        width: 350,
+        width: '90%',
     },
     verificationCode: {
         flex:1,
         alignSelf: 'center',
         height: 45,
-        width: 175,
+        width: '60%',
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
     },
     inputContainer: {
         height: 45,
-        width: 350,
+        width: '90%',
         borderWidth: 1,
         flexDirection: 'row',
         alignItems: 'center',
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
         width: '90%'
     },
     titleTxt: {
-        marginTop:20, 
+        marginTop:15, 
         marginBottom:5, 
         marginLeft:22, 
         marginRight:22

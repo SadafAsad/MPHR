@@ -16,7 +16,7 @@ const AddressInfo = ({navigation}) => {
     ]
 
     return (
-        <SafeAreaView style={{flex:1, alignSelf:'center'}}> 
+        <SafeAreaView style={{flex:1}}> 
             <View style={{height:120}}> 
                 <ProgressSteps
                     borderWidth={3}
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     input: {
         alignSelf: 'center',
         height: 45,
-        width: 350,
+        width: '90%',
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
@@ -116,10 +116,11 @@ const styles = StyleSheet.create({
         marginTop: 22,
         fontSize: 18,
         padding: 15,
-        width: 350,
+        width: '90%',
+        marginBottom: 22
     },
     titleTxt: {
-        marginTop:20, 
+        marginTop:15, 
         marginBottom:5, 
         marginLeft:22, 
         marginRight:22

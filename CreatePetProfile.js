@@ -8,44 +8,38 @@ const CreatePetProfile = ({navigation}) => {
             
             <Text style={styles.title}>Create Pet Profile</Text>
 
-            <View style={styles.saveChanges}>
-            <View style={{marginTop:50}}/>
-            <View style={{flex:1, alignItems:'baseline', alignSelf:'center'}}>
-                <Text style={{marginBottom:5, fontSize:16, fontWeight: 'bold'}}>Name *</Text>
-                <TextInput 
-                    style={styles.input}
-                    placeholder="Enter name"
-                    keyboardType="default"
-                    autoCapitalize="none"
-                />
-            </View>
-            <View style={{flex:1, alignItems:'baseline', alignSelf:'center'}}>
-                <Text style={{marginBottom:5, fontSize:16, fontWeight: 'bold'}}>Birthday *</Text>
-                <TextInput 
-                    style={styles.input}
-                    placeholder="Birthday"
-                    keyboardType="default"
-                    autoCapitalize="none"
-                />
-            </View>
-            <View style={{flex:1, alignItems:'baseline', alignSelf:'center'}}>
-                <Text style={{marginBottom:5, fontSize:16, fontWeight: 'bold'}}>Sex *</Text>
-                <TextInput  
-                    style={styles.input}
-                    placeholder="Enter email"
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                />
-            </View>
-            <View style={{flex:1, alignItems:'baseline', alignSelf:'center'}}>
-                <Text style={{marginBottom:5, fontSize:16,fontWeight: 'bold'}}>Photo</Text>
-                <TextInput 
-                    style={styles.input}
-                    placeholder="Enter phone number"
-                    keyboardType="name-phone-pad"
-                    autoCapitalize="none"
-                />
-            </View>
+            <Text style={{marginBottom:5, marginLeft:22}}>Name *</Text>
+            <TextInput 
+                style={styles.input}
+                placeholder="Enter name"
+                keyboardType="default"
+                autoCapitalize="none"
+            />
+
+            <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Birthday *</Text>
+            <TextInput 
+                style={styles.input}
+                placeholder="Birthday"
+                keyboardType="default"
+                autoCapitalize="none"
+            />
+
+            <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Sex *</Text>
+            <TextInput  
+                style={styles.input}
+                placeholder="Enter sex"
+                keyboardType="default"
+                autoCapitalize="none"
+            />
+                
+            <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Photo</Text>
+            <TextInput 
+                style={styles.input}
+                placeholder=""
+                keyboardType="default"
+                autoCapitalize="none"
+            />
+
             <View style={{flex:1, alignItems:'baseline', margin: 22}}>
                 <Text style={{marginBottom:15, fontSize:16, fontWeight: 'bold'}}>Regular Clinic</Text>
                 <View style={{flex:1, flexDirection:'row', justifyContent:'space-between', marginRight: 20}}>
@@ -60,9 +54,8 @@ const CreatePetProfile = ({navigation}) => {
                 </View>
             </View>
 
-            <View style={{marginTop:10, marginBottom:20}}>
             <Pressable onPress={ () => {
-                    navigation.navigate("CreatePetProfile2Screen")
+                navigation.navigate("CreatePetProfile2Screen")
                     // Alert.alert('Save Changes', 'Confirm',
                     // [  
                     //     {  
@@ -74,11 +67,8 @@ const CreatePetProfile = ({navigation}) => {
                     // ]  
                     //);
                 }}>
-                    <Text style={styles.deletePressable}>NEXT</Text>
-                </Pressable>
-                </View>
-            </View>
-                
+                <Text style={styles.deletePressable}>NEXT</Text>
+            </Pressable>
            
         </SafeAreaView>
     );
@@ -95,8 +85,8 @@ const styles = StyleSheet.create({
     },
     input: {
         alignSelf: 'center',
-        height: 40,
-        width: 350,
+        height: 45,
+        width: '90%',
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
@@ -111,7 +101,8 @@ const styles = StyleSheet.create({
         marginTop: 22,
         fontSize: 18,
         padding: 15,
-        width: 350,
+        width: '90%',
+        marginBottom:22
     },
     saveChanges: {
         // borderRadius: 5,

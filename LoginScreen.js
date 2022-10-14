@@ -14,8 +14,8 @@ const LoginScreen = ({navigation}) => {
             <Image source={require('./assets/MPHR.png')} style={styles.img}/>
             <View style={{marginTop:300}}/>
 
-            <View style={{flex:1, alignItems:'baseline', alignSelf:'center'}}>
-                <Text style={{marginBottom:5, fontSize:16}}>Email address</Text>
+            <View style={{flex:1, alignItems:'baseline'}}>
+                <Text style={{marginBottom:5, fontSize:16, marginLeft:22}}>Email address</Text>
                 <TextInput 
                     style={styles.input}
                     placeholder="Enter email"
@@ -23,7 +23,7 @@ const LoginScreen = ({navigation}) => {
                     autoCapitalize="none"
                 />
 
-                <Text style={{marginBottom:5, fontSize:16, marginTop:20}}>Password</Text>
+                <Text style={{marginBottom:5, fontSize:16, marginTop:15, marginLeft:22}}>Password</Text>
                 <View style={styles.inputContainer}>
                     <TextInput 
                         style={styles.inputField}
@@ -38,7 +38,7 @@ const LoginScreen = ({navigation}) => {
                     </Pressable>
                 </View>
 
-                <View style={{flexDirection:'row', justifyContent:'space-between', alignSelf:'stretch', alignItems:'center', marginTop:15}}>
+                <View style={{flexDirection:'row', justifyContent:'space-between', alignSelf:'stretch', alignItems:'center', marginTop:15, width:'90%', marginLeft:22}}>
                     <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
                         <CheckBox
                             value={isSelected}
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         marginTop: 22,
         fontSize: 18,
         padding: 15,
-        width: 350,
+        width: '90%',
     },
     signupPressable: {
         alignSelf: 'center',
@@ -103,23 +103,24 @@ const styles = StyleSheet.create({
         marginBottom: 0,
         fontSize: 18,
         padding: 15,
-        width: 350,
+        width: '90%',
     },
     input: {
         alignSelf: 'center',
         height: 45,
-        width: 350,
+        width: '90%',
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
     },
     inputContainer: {
         height: 45,
-        width: 350,
+        width: '90%',
         borderWidth: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        borderColor: '#808080'
+        borderColor: '#808080',
+        alignSelf: 'center'
     },
     inputField: {
         padding: 10,

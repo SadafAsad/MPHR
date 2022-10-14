@@ -12,10 +12,7 @@ const CreatePetProfile2Screen = ({navigation}) => {
             
             <Text style={styles.title}>Create Pet Profile</Text>
 
-            <View style={styles.saveChanges}>
-            <View style={{marginTop:10}}/>
-            <View style={{flex:1, alignItems:'baseline', alignSelf:'center'}}>
-                <Text style={{marginBottom:5, fontSize:16, fontWeight: 'bold'}}>Specie</Text>
+                <Text style={{marginBottom:5, marginLeft:22}}>Specie</Text>
                 
                 <TextInput 
                     style={styles.input}
@@ -23,34 +20,27 @@ const CreatePetProfile2Screen = ({navigation}) => {
                     keyboardType="default"
                     autoCapitalize="none"
                 />
-            </View>
-            <View style={{flex:1, alignItems:'baseline', alignSelf:'center'}}>
-                <Text style={{marginBottom:5, fontSize:16, fontWeight: 'bold'}}>Breed</Text>
+                <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Breed</Text>
                 <TextInput 
                     style={styles.input}
                     placeholder="Birthday"
                     keyboardType="default"
                     autoCapitalize="none"
                 />
-            </View>
-            <View style={{flex:1, alignItems:'baseline', alignSelf:'center'}}>
-                <Text style={{marginBottom:5, fontSize:16, fontWeight: 'bold'}}>Coat Colour</Text>
+                <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Coat Color</Text>
                 <TextInput  
                     style={styles.input}
-                    placeholder="Enter email"
-                    keyboardType="email-address"
+                    placeholder="Enter coat color"
+                    keyboardType="default"
                     autoCapitalize="none"
                 />
-            </View>
-            <View style={{flex:1, alignItems:'baseline', alignSelf:'center'}}>
-                <Text style={{marginBottom:5, fontSize:16,fontWeight: 'bold'}}>Distinguish Mark</Text>
+                <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Distinguish Mark</Text>
                 <TextInput 
                     style={styles.input}
                     placeholder="Enter phone number"
                     keyboardType="name-phone-pad"
                     autoCapitalize="none"
                 />
-            </View>
             <View style={{flex:1, alignItems:'baseline', margin: 22}}>
                 <Text style={{marginBottom:15, fontSize:16, fontWeight: 'bold'}}>Neutering / Castration</Text>
                 <View style={styles.checkedOptions}>
@@ -75,7 +65,7 @@ const CreatePetProfile2Screen = ({navigation}) => {
                 
             </View>
 
-            <View style={{marginTop:10, marginBottom:20}}>
+            <View style={{marginTop:10, marginBottom:22}}>
             <Pressable onPress={ () => {
                     navigation.dispatch(StackActions.replace('TabsNavigator'))
                     // Alert.alert('Save Changes', 'Confirm',
@@ -91,7 +81,6 @@ const CreatePetProfile2Screen = ({navigation}) => {
                 }}>
                     <Text style={styles.deletePressable}>ADD PET</Text>
                 </Pressable>
-                </View>
             </View>
                 
            
@@ -110,8 +99,8 @@ const styles = StyleSheet.create({
     },
     input: {
         alignSelf: 'center',
-        height: 40,
-        width: 350,
+        height: 45,
+        width: '90%',
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
@@ -126,7 +115,7 @@ const styles = StyleSheet.create({
         marginTop: 22,
         fontSize: 18,
         padding: 15,
-        width: 350,
+        width: '90%',
     },
     saveChanges: {
         // borderRadius: 5,

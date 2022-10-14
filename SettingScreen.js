@@ -149,8 +149,8 @@ const styles = StyleSheet.create({
         marginLeft: 22,
         marginRight: 22,
         marginTop: 10,
-        fontSize: 15,
-        padding: 10,
+        fontSize: 18,
+        padding: 15,
         width: '90%',
     },
 });
