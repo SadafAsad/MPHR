@@ -15,6 +15,15 @@ import ResetPasswordScreen from './ResetPasswordScreen';
 import Registration from './Registration';
 import ProfileInfo from './ProfileInfo';
 import AddressInfo from './AddressInfo';
+import EditProfileScreen from './EditProfileScreen';
+import EditAddressScreen from './EditAddressScreen';
+import ChangePasswordScreen from './ChangePasswordScreen';
+import NotificationsSettingScreen from './NotificationsSettingScreen';
+import CheckMailScreen from './CheckMailScreen';
+import CreateNewPasswordScreen from './CreateNewPasswordScreen';
+import DeleteAccountScreen from './DeleteAccountScreen';
+import CreatePetProfile from './CreatePetProfile';
+import CreatePetProfile2Screen from './CreatePetProfile2Screen';
 import { Pressable, Text } from 'react-native';
 import { AntDesign, Ionicons, Fontisto, MaterialIcons, FontAwesome } from '@expo/vector-icons'; 
 
@@ -94,20 +103,33 @@ const PetsTabScreenNavigator = ({navigation}) => {
                     <Pressable onPress={ () => {
                         navigation.navigate("SettingScreen");
                     }}>
-                        <Text>Setting</Text>
-                    </Pressable>
-                ),
-                headerLeft: () => (
-                    <Pressable onPress={ () => {
-                        navigation.navigate("AddPetScreen");
-                    }}>
-                        <AntDesign name="plus" size={20} color="black" />
+                        {/* <Text>Setting</Text> */}
+                        <FontAwesome name="user-circle" size={25} color="black"/>
                     </Pressable>
                 )
+                //,
+                // headerLeft: () => (
+                //     <Pressable onPress={ () => {
+                //         navigation.navigate("AddPetScreen");
+                //     }}>
+                //         <AntDesign name="plus" size={20} color="black" />
+                //     </Pressable>
+                // )
             }}/>
             <Stack.Screen name="PetProfileScreen" component={PetProfileScreen}/>
             <Stack.Screen name="SettingScreen" component={SettingScreen}/>
             <Stack.Screen name="AddPetScreen" component={AddPetScreen}/>
+            <Stack.Screen name="AddVetScreen" component={AddVetScreen}/>
+            <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ title: 'Edit Profile' }}/>
+            <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{ title: 'Change password' }}/>
+            <Stack.Screen name="NotificationsSettingScreen" component={NotificationsSettingScreen} options={{ title: 'Notifications' }}/>
+            <Stack.Screen name="CheckMailScreen" component={CheckMailScreen}/>
+            <Stack.Screen name="CreateNewPasswordScreen" component={CreateNewPasswordScreen}/>
+            <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen}/>
+            <Stack.Screen name="EditAddressScreen" component={EditAddressScreen}/>
+            <Stack.Screen name="Login" component={LoginScreen}/>
+            <Stack.Screen name="CreatePetProfile" component={CreatePetProfile}/>
+            <Stack.Screen name="CreatePetProfile2Screen" component={CreatePetProfile2Screen}/>
         </Stack.Navigator>
     )
 }
@@ -126,7 +148,8 @@ const VetsTabScreenNavigator = ({navigation}) => {
                     <Pressable onPress={ () => {
                         navigation.navigate("SettingScreen");
                     }}>
-                        <Text>Setting</Text>
+                        {/* <Text>Setting</Text> */}
+                        <FontAwesome name="user-circle" size={25} color="black"/>
                     </Pressable>
                 ),
                 headerLeft: () => (
@@ -139,6 +162,14 @@ const VetsTabScreenNavigator = ({navigation}) => {
             }}/>
             <Stack.Screen name="SettingScreen" component={SettingScreen}/>
             <Stack.Screen name="AddVetScreen" component={AddVetScreen}/>
+            <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ title: 'Edit Profile' }}/>
+            <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{ title: 'Change password' }}/>
+            <Stack.Screen name="NotificationsSettingScreen" component={NotificationsSettingScreen} options={{ title: 'Notifications' }}/>
+            <Stack.Screen name="CheckMailScreen" component={CheckMailScreen}/>
+            <Stack.Screen name="CreateNewPasswordScreen" component={CreateNewPasswordScreen}/>
+            <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen}/>
+            <Stack.Screen name="EditAddressScreen" component={EditAddressScreen}/>
+            <Stack.Screen name="Login" component={LoginScreen}/>
         </Stack.Navigator>
     )
 }
@@ -157,7 +188,8 @@ const AppointmentsTabScreenNavigator = ({navigation}) => {
                     <Pressable onPress={ () => {
                         navigation.navigate("SettingScreen");
                     }}>
-                        <Text>Setting</Text>
+                        {/* <Text>Setting</Text> */}
+                        <FontAwesome name="user-circle" size={25} color="black"/>
                     </Pressable>
                 ),
                 headerLeft: () => (
@@ -170,6 +202,14 @@ const AppointmentsTabScreenNavigator = ({navigation}) => {
             }}/>
             <Stack.Screen name="SettingScreen" component={SettingScreen}/>
             <Stack.Screen name="AddAppointmentScreen" component={AddAppointmentScreen}/>
+            <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ title: 'Edit Profile' }}/>
+            <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{ title: 'Change password' }}/>
+            <Stack.Screen name="NotificationsSettingScreen" component={NotificationsSettingScreen} options={{ title: 'Notifications' }}/>
+            <Stack.Screen name="CheckMailScreen" component={CheckMailScreen}/>
+            <Stack.Screen name="CreateNewPasswordScreen" component={CreateNewPasswordScreen}/>
+            <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen}/>
+            <Stack.Screen name="EditAddressScreen" component={EditAddressScreen}/>
+            <Stack.Screen name="Login" component={LoginScreen}/>
         </Stack.Navigator>
     )
 }
@@ -180,7 +220,7 @@ const NotificationsTabScreenNavigator = ({navigation}) => {
     return(
         <Stack.Navigator>
             <Stack.Screen 
-            name="NotificationsTabScreen" 
+            name="NotificationSettingsTabScreen" 
             component={NotificationsTabScreen} 
             options={{
                 title: 'Notifications',
@@ -188,11 +228,21 @@ const NotificationsTabScreenNavigator = ({navigation}) => {
                     <Pressable onPress={ () => {
                         navigation.navigate("SettingScreen");
                     }}>
-                        <Text>Setting</Text>
+                        {/* <Text>Setting</Text> */}
+                        <FontAwesome name="user-circle" size={25} color="black"/>
                     </Pressable>
                 )
             }}/>
             <Stack.Screen name="SettingScreen" component={SettingScreen}/>
+            <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ title: 'Edit Profile' }}/>
+            <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{ title: 'Change password' }}/>
+            <Stack.Screen name="NotificationsSettingScreen" component={NotificationsSettingScreen} options={{ title: 'Notifications' }}/>
+            <Stack.Screen name="CheckMailScreen" component={CheckMailScreen}/>
+            <Stack.Screen name="CreateNewPasswordScreen" component={CreateNewPasswordScreen}/>
+            <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen}/>
+            <Stack.Screen name="EditAddressScreen" component={EditAddressScreen}/>
+            <Stack.Screen name="Login" component={LoginScreen}/>
+            {/* <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ title: 'Edit Profile' }} /> */}
         </Stack.Navigator>
     )
 }

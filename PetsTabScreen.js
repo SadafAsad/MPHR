@@ -1,4 +1,4 @@
-import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
 const PetsTabScreen = ({navigation}) => {
@@ -57,6 +57,25 @@ const PetsTabScreen = ({navigation}) => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <View  style={{marginTop:10, marginBottom:50}}> 
+                <Pressable onPress={ () => {
+                    // navigation.navigate("CheckMailScreen");
+                        //navigation.dispatch(StackActions.replace('CheckMailScreen'))
+                        Alert.alert('Adding new pet', 'Confirm',
+                        [  
+                            {  
+                                text: 'Cancel',  
+                                onPress: () => console.log('Cancel Pressed'),  
+                                style: 'cancel',  
+                            },  
+                            {text: 'OK', onPress: () => navigation.navigate("CreatePetProfile")},  
+                        ]  
+                        );
+                    }}>
+                        <Text style={styles.deletePressable}>Add New Pet</Text>
+                </Pressable>
+
+            </View>
             <FlatList
                 data={pets}
                 keyExtractor={item => item.id}
@@ -86,7 +105,19 @@ const styles = StyleSheet.create({
         borderRadius: '100%',
         borderWidth: 1,
         borderColor: 'black',
-    }
+    },
+    deletePressable: {
+        alignSelf: 'center',
+        textAlign: 'center',
+        backgroundColor: '#335C67',
+        color: '#ffffff',
+        marginLeft: 22,
+        marginRight: 22,
+        marginTop: 22,
+        fontSize: 18,
+        padding: 15,
+        width: '90%',
+    },
 });
 
 export default PetsTabScreen;
