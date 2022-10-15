@@ -3,7 +3,7 @@ import { SafeAreaView, StyleSheet, Text } from 'react-native';
 const VetsTabScreen = () => {
     return (
         <SafeAreaView>
-            <Text>Vets Tab Screen</Text>
+            <Text>Vets Tab Screen!</Text>
         </SafeAreaView>
     );
 }
