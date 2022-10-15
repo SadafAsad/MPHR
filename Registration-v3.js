@@ -3,8 +3,15 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
 import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
+import { sendEmailVerification, updateEmail, createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "./FirebaseApp";
 
 const Registration_v3 = ({navigation}) => {
+    const [emailAddress, onEmailChanged] = useState('');
+    const [key, setKey] = useState('');
+    const [hasError, onHasErrorChanged] = useState(false);
+    const [error, setError] = useState('');
+    const [userCreated, setUserCreated] = useState(false);
     const [codeIsSent, setCodeSent] = useState(false);
     const [emailConfirmed, setEmailConfirmed] = useState(false);
     const [resendIsActive, setResendActive] = useState(false);
@@ -31,6 +38,29 @@ const Registration_v3 = ({navigation}) => {
             setResendActive(true);
             setTimeLeft(null);
             setCodeSent(false);
+        }
+    }
+
+    const generateRandomString = (lenth) => {
+        const char = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+        const random = Array.from(
+            {length: lenth},
+            () => char[Math.floor(Math.random() * char.length)]
+        );
+        const randomKey = random.join("");
+        return randomKey
+    }
+
+    const sendVerificationEmailPressed = async () => {
+        try {
+            onHasErrorChanged(false);
+            generateRandomString(8);
+            const userCredential = await createUserWithEmailAndPassword(auth, emailAddress, generateRandomString(8));
+            setUserCreated(true);
+        } catch (err) {
+            setUserCreated(false);
+            onHasErrorChanged(true);
+            setError(err.message);
         }
     }
 
@@ -64,17 +94,38 @@ const Registration_v3 = ({navigation}) => {
                         placeholder="example@example.example"
                         keyboardType="email-address"
                         autoCapitalize="none"
+                        onChangeText={onEmailChanged}
+                        value={emailAddress}
                     />
                     <Pressable onPress={ () => {
-                        setCodeSent(true);
-                        triggerTimer(30);
-                        return () => {
-                            clearInterval(resendTimerInterval);
-                        }
+                        sendVerificationEmailPressed();
+                        if (!hasError && userCreated) {
+                            updateEmail(auth.currentUser, emailAddress).then(() => {
+                                // Email updated!
+                                // ...
+                            }).catch((error) => {
+                                // An error occurred
+                                // ...
+                            });
+                            sendEmailVerification(auth.currentUser)
+                            .then(() => {
+                                // Email verification sent!
+                                // ...
+                            });
+                            setCodeSent(true);
+                            triggerTimer(30);
+                            return () => {
+                                clearInterval(resendTimerInterval);
+                            }
+                        };
                     }} disabled={codeIsSent}>
                         <Text style={styles.PressableStyle}>Send Verification Email</Text>
                     </Pressable>
                 </View>
+            )}
+
+            { hasError && (
+                <Text style={styles.errorStyle}>{error}</Text>
             )}
 
             { codeIsSent && (
@@ -86,6 +137,7 @@ const Registration_v3 = ({navigation}) => {
                         autoCapitalize="none"
                         editable={false}
                         selectTextOnFocus={false}
+                        value={emailAddress}
                     />
                     <Pressable disabled={true}>
                         <Text style={styles.disabledPressable}>Send Verification Email</Text>
@@ -181,6 +233,11 @@ const styles = StyleSheet.create({
         fontSize:30, 
         marginLeft:22, 
         marginRight:22
+    },
+    errorStyle: {
+        color: '#ff0000',
+        alignSelf: 'center',
+        marginTop: 22
     }
 });
 
