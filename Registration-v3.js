@@ -5,7 +5,7 @@ import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { sendEmailVerification, updateEmail, createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./FirebaseApp";
-import { async } from '@firebase/util';
+import { FontAwesome } from '@expo/vector-icons'; 
 
 const Registration_v3 = ({navigation}) => {
     const [emailAddress, onEmailChanged] = useState('');
@@ -111,15 +111,19 @@ const Registration_v3 = ({navigation}) => {
 
             { codeIsSent && (
                 <View style={{}}>
-                    <TextInput 
-                        style={styles.disabledInput}
-                        placeholder="example@example.example"
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        editable={false}
-                        selectTextOnFocus={false}
-                        value={emailAddress}
-                    />
+                    <View style={styles.inputContainer}>
+                        <FontAwesome name="lock" size={22} color="black" style={{marginLeft:10}}/>
+                        <TextInput 
+                            style={styles.disabledInput}
+                            placeholder="example@example.example"
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            editable={false}
+                            selectTextOnFocus={false}
+                            value={emailAddress}
+                        />
+                    </View>
                     <Pressable disabled={true}>
                         <Text style={styles.disabledPressable}>Send Verification Email</Text>
                     </Pressable>
@@ -145,9 +149,17 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         height: 45,
         width: '90%',
-        borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
+    },
+    inputContainer: {
+        alignSelf: 'center',
+        height: 45,
+        width: '90%',
+        borderWidth: 1,
+        borderColor: '#808080',
+        flexDirection: 'row',
+        alignItems: 'center',
         backgroundColor: 'lightgray',
     },
     PressableStyle: {
@@ -182,19 +194,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
-    },
-    inputContainer: {
-        height: 45,
-        width: '90%',
-        borderWidth: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderColor: '#808080',
-        alignSelf: 'center'
-    },
-    inputField: {
-        padding: 10,
-        width: '90%'
     },
     titleTxt: {
         marginTop:20, 
