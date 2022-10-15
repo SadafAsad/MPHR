@@ -12,7 +12,8 @@ import AddVetScreen from './AddVetScreen';
 import LoginScreen from './LoginScreen';
 import SignupScreen from './SignupScreen';
 import ResetPasswordScreen from './ResetPasswordScreen';
-import Registration from './Registration';
+import Registration_v2 from './Registration-v2';
+import Registration_v3 from './Registration-v3';
 import ProfileInfo from './ProfileInfo';
 import AddressInfo from './AddressInfo';
 import EditProfileScreen from './EditProfileScreen';
@@ -39,7 +40,8 @@ const AuthenticationNavigator = () => {
         <Stack.Navigator options={{headerShown: false}}>
             <Stack.Screen name="Login" component={LoginScreen}/>
             {/* <Stack.Screen name="Signup" component={SignupScreen}/> */}
-            <Stack.Screen name="Registration" component={Registration}/>
+            {/* <Stack.Screen name="Registration_v2" component={Registration_v2}/> */}
+            <Stack.Screen name="Registration" component={Registration_v3}/>
             <Stack.Screen name="Profile" component={ProfileInfo}/>
             <Stack.Screen name="Address" component={AddressInfo}/>
             <Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>

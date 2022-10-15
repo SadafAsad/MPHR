@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 
-const Registration = ({navigation}) => {
+const Registration_v2 = ({navigation}) => {
     const [codeIsSent, setCodeSent] = useState(false);
     const [emailConfirmed, setEmailConfirmed] = useState(false);
     const [resendIsActive, setResendActive] = useState(false);
@@ -250,4 +250,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Registration;
+export default Registration_v2;
