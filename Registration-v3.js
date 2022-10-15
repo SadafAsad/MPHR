@@ -5,16 +5,13 @@ import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { sendEmailVerification, updateEmail, createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./FirebaseApp";
+import { async } from '@firebase/util';
 
 const Registration_v3 = ({navigation}) => {
     const [emailAddress, onEmailChanged] = useState('');
-    const [key, setKey] = useState('');
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, setError] = useState('');
-    const [userCreated, setUserCreated] = useState(false);
     const [codeIsSent, setCodeSent] = useState(false);
-    const [emailConfirmed, setEmailConfirmed] = useState(false);
-    const [resendIsActive, setResendActive] = useState(false);
     const [timeLeft, setTimeLeft] = useState(null);
     const [targetTime, setTargetTime] = useState(null);
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
@@ -23,7 +20,6 @@ const Registration_v3 = ({navigation}) => {
 
     const triggerTimer = (targetTimeInSeconds = 30) => {
         setTargetTime(targetTimeInSeconds);
-        setResendActive(false);
         const finalTime = +new Date() + targetTimeInSeconds*1000;
         resendTimerInterval = setInterval(() => calculateTimeLeft(finalTime), 1000);
     }
@@ -35,7 +31,6 @@ const Registration_v3 = ({navigation}) => {
         }
         else {
             clearInterval(resendTimerInterval);
-            setResendActive(true);
             setTimeLeft(null);
             setCodeSent(false);
         }
@@ -53,12 +48,19 @@ const Registration_v3 = ({navigation}) => {
 
     const sendVerificationEmailPressed = async () => {
         try {
-            onHasErrorChanged(false);
-            generateRandomString(8);
             const userCredential = await createUserWithEmailAndPassword(auth, emailAddress, generateRandomString(8));
-            setUserCreated(true);
+            sendEmailVerification(auth.currentUser)
+                .then(() => {
+                    // Email verification sent!
+                    // ...
+                });
+            onHasErrorChanged(false);
+            setCodeSent(true);
+            triggerTimer(30);
+            return () => {
+                clearInterval(resendTimerInterval);
+            }
         } catch (err) {
-            setUserCreated(false);
             onHasErrorChanged(true);
             setError(err.message);
         }
@@ -97,28 +99,7 @@ const Registration_v3 = ({navigation}) => {
                         onChangeText={onEmailChanged}
                         value={emailAddress}
                     />
-                    <Pressable onPress={ () => {
-                        sendVerificationEmailPressed();
-                        if (!hasError && userCreated) {
-                            updateEmail(auth.currentUser, emailAddress).then(() => {
-                                // Email updated!
-                                // ...
-                            }).catch((error) => {
-                                // An error occurred
-                                // ...
-                            });
-                            sendEmailVerification(auth.currentUser)
-                            .then(() => {
-                                // Email verification sent!
-                                // ...
-                            });
-                            setCodeSent(true);
-                            triggerTimer(30);
-                            return () => {
-                                clearInterval(resendTimerInterval);
-                            }
-                        };
-                    }} disabled={codeIsSent}>
+                    <Pressable onPress={sendVerificationEmailPressed} disabled={codeIsSent}>
                         <Text style={styles.PressableStyle}>Send Verification Email</Text>
                     </Pressable>
                 </View>
