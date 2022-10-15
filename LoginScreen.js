@@ -21,7 +21,7 @@ const LoginScreen = ({navigation}) => {
             await signInWithEmailAndPassword(auth, emailAddress, password);
             navigation.dispatch(StackActions.replace('TabsNavigator'))
         } catch (err) {
-            onErrorChanged(err.message);
+            onErrorChanged("Your email or password is incorrect. Please try again.");
             onHasErrorChanged(true);
         }
     }
@@ -73,11 +73,11 @@ const LoginScreen = ({navigation}) => {
                         <Text style={{fontSize:15, color:'#335C67', alignSelf:'flex-end'}}>Forgot Password?</Text>
                     </Pressable>
                 </View>
-            </View>
 
-            { hasError && (
-            <Text style={styles.errorStyle}>{error}</Text>
-            )}
+                { hasError && (
+                    <Text style={styles.errorStyle}>{error}</Text>
+                )}
+            </View>
 
             <View style={{marginTop:20}}>
                 <Pressable onPress={loginPressed}>
@@ -150,14 +150,9 @@ const styles = StyleSheet.create({
         width: '90%'
     },
     errorStyle: {
-        color: '#000000',
-        backgroundColor: '#FFD884',
-        borderColor: '#FFAE00',
-        borderStyle: 'solid',
-        borderWidth: 1,
-        width: 400,
-        padding: 10,
-        marginTop: 10,
+        color: '#ff0000',
+        alignSelf: 'center',
+        marginTop: 22
     }
 });
 
