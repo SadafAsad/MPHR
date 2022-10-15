@@ -4,10 +4,27 @@ import { useState } from "react";
 import CheckBox from "expo-checkbox";
 import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { auth } from "./FirebaseApp";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginScreen = ({navigation}) => {
+    const [emailAddress, onEmailChanged] = useState('');
+    const [password, onPasswordChanged] = useState('');
+    const [error, onErrorChanged] = useState('');
+    const [hasError, onHasErrorChanged] = useState(false);
     const [isSelected, setSelection] = useState(false);
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
+
+    const loginPressed = async () => {
+        try {
+            onHasErrorChanged(false);
+            await signInWithEmailAndPassword(auth, emailAddress, password);
+            navigation.dispatch(StackActions.replace('TabsNavigator'))
+        } catch (err) {
+            onErrorChanged(err.message);
+            onHasErrorChanged(true);
+        }
+    }
 
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
@@ -21,6 +38,8 @@ const LoginScreen = ({navigation}) => {
                     placeholder="Enter email"
                     keyboardType="email-address"
                     autoCapitalize="none"
+                    onChangeText={onEmailChanged}
+                    value={emailAddress}
                 />
 
                 <Text style={{marginBottom:5, fontSize:16, marginTop:15, marginLeft:22}}>Password</Text>
@@ -32,6 +51,8 @@ const LoginScreen = ({navigation}) => {
                         autoCapitalize="none"
                         autoCorrect={false}
                         secureTextEntry={passwordVisibility}
+                        onChangeText={onPasswordChanged}
+                        value={password}
                     />
                     <Pressable onPress={handlePasswordVisibility}>
                         <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
@@ -54,10 +75,12 @@ const LoginScreen = ({navigation}) => {
                 </View>
             </View>
 
+            { hasError && (
+            <Text style={styles.errorStyle}>{error}</Text>
+            )}
+
             <View style={{marginTop:20}}>
-                <Pressable onPress={ () => {
-                    navigation.dispatch(StackActions.replace('TabsNavigator'))
-                }}>
+                <Pressable onPress={loginPressed}>
                     <Text style={styles.loginPressable}>Log In</Text>
                 </Pressable>
                 <Pressable onPress={() => {
@@ -125,6 +148,16 @@ const styles = StyleSheet.create({
     inputField: {
         padding: 10,
         width: '90%'
+    },
+    errorStyle: {
+        color: '#000000',
+        backgroundColor: '#FFD884',
+        borderColor: '#FFAE00',
+        borderStyle: 'solid',
+        borderWidth: 1,
+        width: 400,
+        padding: 10,
+        marginTop: 10,
     }
 });
 
