@@ -3,7 +3,7 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
 import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
-import { sendEmailVerification, updateEmail, createUserWithEmailAndPassword } from "firebase/auth";
+import { sendEmailVerification, createUserWithEmailAndPassword, ActionCodeSettings } from "firebase/auth";
 import { auth } from "./FirebaseApp";
 import { FontAwesome } from '@expo/vector-icons'; 
 
@@ -48,12 +48,11 @@ const Registration_v3 = ({navigation}) => {
 
     const sendVerificationEmailPressed = async () => {
         try {
-            const userCredential = await createUserWithEmailAndPassword(auth, emailAddress, generateRandomString(8));
-            sendEmailVerification(auth.currentUser)
-                .then(() => {
-                    // Email verification sent!
-                    // ...
-                });
+            await createUserWithEmailAndPassword(auth, emailAddress, generateRandomString(8));
+            sendEmailVerification(auth.currentUser, {
+                handleCodeInApp: true,
+                url: 'https://mphr-fall2022.firebaseapp.com',
+            });
             onHasErrorChanged(false);
             setCodeSent(true);
             triggerTimer(30);
