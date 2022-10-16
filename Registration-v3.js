@@ -87,10 +87,10 @@ const Registration_v3 = ({navigation}) => {
 
             <Text style={styles.screentitle}>Registration</Text>
             <Text style={styles.descTxt}>Verify your email to register. It will only take a few minutes.</Text>
-            <Text style={styles.titleTxt}>Enter your email address</Text>
 
             { !codeIsSent && (
                 <View>
+                    <Text style={styles.titleTxt}>Enter your email address</Text>
                     <TextInput 
                         style={styles.input}
                         placeholder="example@example.example"
@@ -110,7 +110,8 @@ const Registration_v3 = ({navigation}) => {
             )}
 
             { codeIsSent && (
-                <View style={{}}>
+                <View>
+                    <Text style={styles.titleTxt}>Email address</Text>
                     <View style={styles.inputContainer}>
                         <FontAwesome name="lock" size={22} color="black" style={{marginLeft:10}}/>
                         <TextInput 
