@@ -81,7 +81,7 @@ const CreateNewPasswordScreen = ({navigation}) => {
                                 onPress: () => console.log('Cancel Pressed'),  
                                 style: 'cancel',  
                             },  
-                            {text: 'OK', onPress: () => navigation.dispatch(StackActions.replace('Login'))},  //console.log('OK Pressed')
+                            {text: 'OK', onPress: () => navigation.dispatch(StackActions.replace('Authentication'))},  //console.log('OK Pressed')
                         ]  
                         );
                     }}>

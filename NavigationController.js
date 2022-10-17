@@ -133,6 +133,7 @@ const PetsTabScreenNavigator = ({navigation}) => {
             <Stack.Screen name="Authentication" component={AuthenticationNavigator}/>
             <Stack.Screen name="CreatePetProfile" component={CreatePetProfile}/>
             <Stack.Screen name="CreatePetProfile2Screen" component={CreatePetProfile2Screen}/>
+            
         </Stack.Navigator>
     )
 }
@@ -173,6 +174,7 @@ const VetsTabScreenNavigator = ({navigation}) => {
             <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen}/>
             <Stack.Screen name="EditAddressScreen" component={EditAddressScreen}/>
             <Stack.Screen name="Authentication" component={AuthenticationNavigator}/>
+            
         </Stack.Navigator>
     )
 }
