@@ -1,7 +1,17 @@
-import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View, Image, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View, Image, TextInput,} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
 const VetsTabScreen = () => {
+    const [search, setSearch] = useState('');
+    const [filteredDataSource, setFilteredDataSource] = useState([]);
+    const [masterDataSource, setMasterDataSource] = useState([]);
+
+    useEffect(() => {
+            setFilteredDataSource(vets);
+            setMasterDataSource(vets);
+    }, []);
+    
     const vets = [
         {id: 1, name: "Merck Animal Health", address: "16750 route Transcanadienne\nKirkland, Quebec H9H 4M7"},
         {id: 2, name: "Parliament Animal Hospital", address: "584 Parliament St.\nToronto, Ontario M4X 1P8"}
@@ -34,19 +44,41 @@ const VetsTabScreen = () => {
         )
     }
 
+    const searchFilterFunction = (text) => {
+        // Check if searched text is not blank
+        if (text) {
+          const newData = masterDataSource.filter(function (item) {
+            const itemData = item.name
+              ? item.name.toUpperCase()
+              : ''.toUpperCase();
+            const textData = text.toUpperCase();
+            return itemData.indexOf(textData) > -1;
+          });
+          setFilteredDataSource(newData);
+          setSearch(text);
+        } else {
+          setFilteredDataSource(masterDataSource);
+          setSearch(text);
+        }
+      };
+
     return (
         <SafeAreaView style={styles.container}>
             <Text>Vets Tab Screen!</Text>
-
-
-
+            <TextInput
+                style={styles.textInputStyle}
+                onChangeText={(text) => searchFilterFunction(text)}
+                value={search}
+                underlineColorAndroid="transparent"
+                placeholder="Search Here"
+            />
             {/* Vet Lists */}
             <FlatList
-                data={vets}
+                data={filteredDataSource}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
                 ItemSeparatorComponent={ItemDivider}
-                />
+            />
         </SafeAreaView>
     );
 }
@@ -71,17 +103,13 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
     },
-    deletePressable: {
-        alignSelf: 'center',
-        textAlign: 'center',
-        backgroundColor: '#335C67',
-        color: '#ffffff',
-        marginLeft: 22,
-        marginRight: 22,
-        marginTop: 22,
-        fontSize: 18,
-        padding: 15,
-        width: '90%',
+    textInputStyle: {
+      height: 40,
+      borderWidth: 1,
+      paddingLeft: 20,
+      margin: 5,
+      borderColor: '#009688',
+      backgroundColor: '#FFFFFF',
     },
 });
 
