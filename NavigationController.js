@@ -132,9 +132,10 @@ const PetsTabScreenNavigator = ({navigation}) => {
             <Stack.Screen name="CreateNewPasswordScreen" component={CreateNewPasswordScreen}/>
             <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen}/>
             <Stack.Screen name="EditAddressScreen" component={EditAddressScreen}/>
-            <Stack.Screen name="Authentication" component={AuthenticationNavigator}/>
+            <Stack.Screen name="Login" component={LoginScreen}/>
             <Stack.Screen name="CreatePetProfile" component={CreatePetProfile}/>
             <Stack.Screen name="CreatePetProfile2Screen" component={CreatePetProfile2Screen}/>
+            <Stack.Screen name="VetsTabScreen" component={VetsTabScreen}/>
             
         </Stack.Navigator>
     )
@@ -175,7 +176,7 @@ const VetsTabScreenNavigator = ({navigation}) => {
             <Stack.Screen name="CreateNewPasswordScreen" component={CreateNewPasswordScreen}/>
             <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen}/>
             <Stack.Screen name="EditAddressScreen" component={EditAddressScreen}/>
-            <Stack.Screen name="Authentication" component={AuthenticationNavigator}/>
+            {/* <Stack.Screen name="Authentication" component={AuthenticationNavigator}/> */}
             
         </Stack.Navigator>
     )
@@ -216,7 +217,7 @@ const AppointmentsTabScreenNavigator = ({navigation}) => {
             <Stack.Screen name="CreateNewPasswordScreen" component={CreateNewPasswordScreen}/>
             <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen}/>
             <Stack.Screen name="EditAddressScreen" component={EditAddressScreen}/>
-            <Stack.Screen name="Authentication" component={AuthenticationNavigator}/>
+            {/* <Stack.Screen name="Authentication" component={AuthenticationNavigator}/> */}
         </Stack.Navigator>
     )
 }
@@ -248,7 +249,7 @@ const NotificationsTabScreenNavigator = ({navigation}) => {
             <Stack.Screen name="CreateNewPasswordScreen" component={CreateNewPasswordScreen}/>
             <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen}/>
             <Stack.Screen name="EditAddressScreen" component={EditAddressScreen}/>
-            <Stack.Screen name="Authentication" component={AuthenticationNavigator}/>
+            {/* <Stack.Screen name="Authentication" component={AuthenticationNavigator}/> */}
             {/* <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ title: 'Edit Profile' }} /> */}
         </Stack.Navigator>
     )
