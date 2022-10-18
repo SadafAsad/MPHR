@@ -47,7 +47,7 @@ const CreatePetProfile = ({navigation}) => {
                     <Text style={{marginRight:20, marginLeft: 20}}>No regular Clinic</Text>
                     
                     <Pressable onPress={ () => {
-                        navigation.navigate("AddVetScreen");
+                        navigation.navigate("VetsTabScreen");
                     }}>
                         <AntDesign name="plus" size={20} color="black" style={{marginLeft:140}}/>
                     </Pressable>

@@ -104,7 +104,7 @@ const SettingScreen = ({navigation}) => {
                                 onPress: () => console.log('Cancel Pressed'),  
                                 style: 'cancel',  
                             },  
-                            {text: 'OK', onPress: () => navigation.dispatch(StackActions.replace('Authentication'))},  //navigation.navigate("Login")
+                            {text: 'OK', onPress: () => navigation.navigate('Login')},  //navigation.navigate("Login")
                         ]  
                         );
                     }}>

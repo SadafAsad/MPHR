@@ -1,11 +1,18 @@
 import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import { Searchbar } from 'react-native-paper';
+import * as React from 'react';
 
 const PetsTabScreen = ({navigation}) => {
+    const [searchQuery, setSearchQuery] = React.useState('');
+
     const pets = [
         {id: 1, name: "Bacon", birthday: "2022-03-12"},
-        {id: 2, name: "Leila", birthday: "2022-09-01"}
+        {id: 2, name: "Leila", birthday: "2022-09-01"},
+        {id: 3, name: "Honey", birthday: "2022-03-31"}
     ];
+
+    const onChangeSearch = query => setSearchQuery(query);
 
     function getAge(dateString) {
         var today = new Date();
@@ -58,6 +65,7 @@ const PetsTabScreen = ({navigation}) => {
     return (
         <SafeAreaView style={styles.container}>
             <View  style={{marginTop:10, marginBottom:50}}> 
+            <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchBar} />
                 <Pressable onPress={ () => {
                     // navigation.navigate("CheckMailScreen");
                         //navigation.dispatch(StackActions.replace('CheckMailScreen'))
@@ -118,6 +126,10 @@ const styles = StyleSheet.create({
         padding: 15,
         width: '90%',
     },
+    searchBar: {
+        width: '90%',
+        alignSelf: 'center'
+    }
 });
 
 export default PetsTabScreen;
