@@ -1,10 +1,17 @@
 import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const PetsTabScreen = ({navigation}) => {
-    const [searchQuery, setSearchQuery] = React.useState('');
+    const [search, setSearch] = useState('');
+    const [filteredDataSource, setFilteredDataSource] = useState([]);
+    const [masterDataSource, setMasterDataSource] = useState([]);
+
+    useEffect(() => {
+        setFilteredDataSource(pets);
+        setMasterDataSource(pets);
+    }, []);
 
     const pets = [
         {id: 1, name: "Bacon", birthday: "2022-03-12"},
@@ -13,6 +20,24 @@ const PetsTabScreen = ({navigation}) => {
     ];
 
     const onChangeSearch = query => setSearchQuery(query);
+
+    const searchFilterFunction = (text) => {
+        // Check if searched text is not blank
+        if (text) {
+          const newData = masterDataSource.filter(function (item) {
+            const itemData = item.name
+              ? item.name.toUpperCase()
+              : ''.toUpperCase();
+            const textData = text.toUpperCase();
+            return itemData.indexOf(textData) > -1;
+          });
+          setFilteredDataSource(newData);
+          setSearch(text);
+        } else {
+          setFilteredDataSource(masterDataSource);
+          setSearch(text);
+        }
+      };
 
     function getAge(dateString) {
         var today = new Date();
@@ -65,7 +90,7 @@ const PetsTabScreen = ({navigation}) => {
     return (
         <SafeAreaView style={styles.container}>
             <View  style={{marginTop:10, marginBottom:50}}> 
-            <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchBar} />
+            <Searchbar placeholder="Search" onChangeText={(text) => searchFilterFunction(text)} value={search} style={styles.searchBar} />
                 <Pressable onPress={ () => {
                     // navigation.navigate("CheckMailScreen");
                         //navigation.dispatch(StackActions.replace('CheckMailScreen'))
@@ -85,7 +110,7 @@ const PetsTabScreen = ({navigation}) => {
 
             </View>
             <FlatList
-                data={pets}
+                data={filteredDataSource}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
                 ItemSeparatorComponent={ItemDivider}
