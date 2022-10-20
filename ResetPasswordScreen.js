@@ -1,7 +1,7 @@
 import { SafeAreaView, StyleSheet, Text, Pressable, View, TextInput } from 'react-native';
 import { useState } from "react";
 import { StackActions } from '@react-navigation/native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
 import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 
 const ResetPasswordScreen = ({navigation}) => {
@@ -13,24 +13,37 @@ const ResetPasswordScreen = ({navigation}) => {
     return (
         <SafeAreaView style={{flex:1}}>
             <Text style={styles.screentitle}>Forgot Password</Text>
-            <Text style={styles.titleTxt}>Email address</Text>
 
             { !emailConfirmed && (
-                <TextInput 
-                    style={styles.input}
-                    placeholder="example@example.example"
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                />
+                <View>
+                    <Text style={styles.titleTxt}>Email address</Text>
+                    <TextInput 
+                        style={styles.input}
+                        placeholder="example@example.example"
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                    />
+                </View>
             )}
 
             { codeIsSent && emailConfirmed && (
-                <TextInput 
-                    style={styles.disabledInput}
-                    placeholder="example@example.example"
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                />
+                <View>
+                    <Text style={styles.descTxt}>Your email address has been verified. {"\n"}Please set a password for your account.</Text>
+                    <Text style={styles.titleTxt}>Email address</Text>
+                    <View style={styles.disabledInputContainer}>
+                        <FontAwesome name="lock" size={22} color="black" style={{marginLeft:10}}/>
+                        <TextInput 
+                            style={styles.disabledInput}
+                            placeholder="example@example.example"
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            editable={false}
+                            selectTextOnFocus={false}
+                            value={'george@gmail.com'}
+                        />
+                    </View>
+            </View>
             )}
 
             { !codeIsSent && (
@@ -125,10 +138,28 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         height: 45,
         width: '90%',
-        borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
-        backgroundColor: '#d9d9d9',
+    },
+    disabledInputContainer: {
+        alignSelf: 'center',
+        height: 45,
+        width: '90%',
+        borderWidth: 1,
+        borderColor: '#808080',
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'lightgray',
+    },
+    inputContainer: {
+        alignSelf: 'center',
+        height: 45,
+        width: '90%',
+        borderWidth: 1,
+        borderColor: '#808080',
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'lightgray',
     },
     PressableStyle: {
         alignSelf: 'center',

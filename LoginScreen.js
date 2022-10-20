@@ -1,6 +1,6 @@
 import { SafeAreaView, StyleSheet, Text, Pressable, Image, View, TextInput } from 'react-native';
 import { StackActions } from '@react-navigation/native';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CheckBox from "expo-checkbox";
 import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -22,6 +22,8 @@ const LoginScreen = ({navigation}) => {
             navigation.dispatch(StackActions.replace('TabsNavigator'))
         } catch (err) {
             onErrorChanged("Your email or password is incorrect. Please try again.");
+            onEmailChanged("");
+            onPasswordChanged("");
             onHasErrorChanged(true);
         }
     }
@@ -64,6 +66,7 @@ const LoginScreen = ({navigation}) => {
                         <CheckBox
                             value={isSelected}
                             onValueChange={setSelection}
+                            color='#335C67'
                         />
                         <Text style={{marginLeft:5, fontSize:15}}>Remember me</Text>
                     </View>
