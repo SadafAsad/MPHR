@@ -27,6 +27,8 @@ import CreateNewPasswordScreen from './CreateNewPasswordScreen';
 import DeleteAccountScreen from './DeleteAccountScreen';
 import CreatePetProfile from './CreatePetProfile';
 import CreatePetProfile2Screen from './CreatePetProfile2Screen';
+import PetHistoryScreen from './PetHistoryListScreen';
+// import ReportListScreen from './ReportListScreen';
 import { Pressable, Text } from 'react-native';
 import { AntDesign, Ionicons, Fontisto, MaterialIcons, FontAwesome } from '@expo/vector-icons'; 
 
@@ -141,7 +143,7 @@ const PetsTabScreenNavigator = ({navigation}) => {
             <Stack.Screen name="CreatePetProfile" component={CreatePetProfile}/>
             <Stack.Screen name="CreatePetProfile2Screen" component={CreatePetProfile2Screen}/>
             <Stack.Screen name="VetsTabScreen" component={VetsTabScreen}/>
-            
+            <Stack.Screen name="Vaccinations" component={PetHistoryScreen}/>
         </Stack.Navigator>
     )
 }
