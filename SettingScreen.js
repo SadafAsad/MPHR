@@ -3,22 +3,143 @@ import { AntDesign } from '@expo/vector-icons';
 import { Card } from 'react-native-paper'
 import { FontAwesome } from '@expo/vector-icons';
 import { StackActions } from '@react-navigation/native';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CheckBox from "expo-checkbox";
 import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { auth, db, firebaseApp } from './FirebaseApp';
+import { onAuthStateChanged,signOut } from "firebase/auth"
+import { collection, query, where, getDocs, Firestore } from "firebase/firestore";
+//import { db } from "./FirebaseApp"
+//import { collection, doc, getDocs } from "firebase/firestore";
+
 
 const SettingScreen = ({navigation}) => {
+    const [input, setInput] = useState('');
+    const [userData, setUserData] = useState([]);
+    const [isLoggedIn,setIsLoggedIn] = useState(false)
+    const [loggedInUserId, setLoggedInUserId] = useState('')
+    const [listToRender, setListToRender] = useState(null)
+    const [filteredDataSource, setFilteredDataSource] = useState([]);
+    const [masterDataSource, setMasterDataSource] = useState([]);
+    
 
-    // return (
-    //     <SafeAreaView style={styles.screen}>
-    //         <Pressable onPress={() => navigation.navigate("EditProfileScreen")}>
-    //             <Card style={styles.list} >
-    //                 <Text>Edit Profile</Text>
-    //             </Card>
-    //         </Pressable>
-    //     </SafeAreaView>
-    // )
+    // const docRef = doc(db, "profiles", "ARDH73UDUolpCYOrlpHt");
+    // const docSnap = (async() => { await getDoc(docRef); } );
+
+    // if (docSnap.exists()) {
+    //     console.log("Document data:", docSnap.data());
+    //   } else {
+    //     // doc.data() will be undefined in this case
+    //     console.log("No such document!");
+    //   }
+
+
+
+    // useEffect(() => {
+    //     db.collection('profiles').onSnapshot(snapshot => {
+
+    //     })
+
+    // }, []);
+
+    // useEffect(()=>{
+
+    //     const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
+              
+    //       if (userFromFirebaseAuth) {
+    //         console.log('userFromFirebaseAuth: ', userFromFirebaseAuth.email);
+    //         setLoggedInUserId(userFromFirebaseAuth.email)
+    //         setIsLoggedIn(true)
+    //       }
+    //       else {
+    //         setIsLoggedIn(false)
+    //         setLoggedInUserId(null);
+    //         console.log('userFromFirebaseAuth: ', setIsLoggedIn.email);
+    //       }
+    //     })
+    //     return listener
+    //   },[])
+
+
+
+    useEffect(() => {
+        getUserDetails();
+            
+    }, []);
+
+    const getUserDetails = async () => {
+        try {
+            const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
+              
+                if (userFromFirebaseAuth) {
+                  console.log('userFromFirebaseAuth: ', userFromFirebaseAuth.email);
+                  setLoggedInUserId(userFromFirebaseAuth.email)
+                  setIsLoggedIn(true)
+                }
+                else {
+                  setIsLoggedIn(false)
+                  setLoggedInUserId(null);
+                  console.log('userFromFirebaseAuth: ', setIsLoggedIn.email);
+                }
+              })
+              
+            let querySnapshot = await getDocs(collection(db, "profiles"));
+
+            let documents = querySnapshot.docs;
+
+            //FOR TESTING PURPOSES
+            // for (let i = 0; i < documents.length; i++) {
+            //     const currDocument = documents[i]
+            //     console.log(`ID: ${currDocument.id}`)
+            //     console.log(currDocument.data())
+            //     console.log("------")
+            // }
+             console.log(`documents.email is: ${documents[0].data().email}`);
+            for (let i = 0; i < documents.length; i++) {
+                if(documents[i].data().email == loggedInUserId){
+                    setUserData(documents[i]);
+                    console.log('doc is: ', loggedInUserId);
+                    console.log('doc: ', documents[i].data().email)
+                    console.log('doc: ', documents[i].data().first_name)
+                }
+            }
+            //setUserData(documents);
+            console.log('length: ', userData.data().first_name);
+
+        } catch (err) {
+            console.log(`${documents.id}`)    
+            console.log(`${err.message}`)        
+        }
+    }
+
+
+    const renderDetails = ( {item} ) => (
+        
+            <View style={styles.pet}>
+                <View>
+                <View style={{flexDirection:'column', marginLeft:20, alignItems:'baseline'}}>
+                <Text style={{fontSize:14}}>test</Text>
+                            <Text style={{fontSize:18, fontWeight:'bold'}}>{item.data().first_name}{` `}{item.data().last_name}</Text>
+                            <Text style={{fontSize:14}}>{item.data().email}</Text>
+                            <Text style={{fontSize:14}}>{item.data().address_1}</Text>
+                            <Text style={{fontSize:14}}>{item.data().city}{` `}{item.data().province}{`, `}{item.data().country}</Text>
+                            <Text style={{fontSize:14}}>{item.data().phone_number}</Text>
+                        </View> 
+                    
+                </View>
+               
+            </View>
+      
+    );
+    
+
+    // useEffect(() => { 
+       // getUserInfo();
+    // });
+   
+
+    //getUserDetails();
 
     const settingOptions = [
         {id: 1, name: "Edit Profile", component: "EditProfileScreen"},
@@ -59,10 +180,20 @@ const SettingScreen = ({navigation}) => {
             
             <FontAwesome name="user-circle" size={60} color="black"/>
             <View style={{flex:1, margin: 20, paddingLeft: 30}}>
-                <Text style={{marginTop: 10}}>Owner Name</Text>
-                <Text style={{marginTop: 10}}>Owner Email</Text>
+            {/* <Text style={{fontSize:18, fontWeight:'bold'}}>{userData.data().first_name}</Text> */}
+            <FlatList
+                data={userData}
+                keyExtractor={item => item.id}
+                renderItem={renderDetails}
+                ItemSeparatorComponent={ItemDivider}
+            />
+                {/* <Text style={{marginTop: 10}}><FlatList data={listToRender} keyExtractor={(item) => {return item.data().uid}}
+            renderItem={ renderDetails } /></Text>  
+                {/* {renderDetails} */}
+                {/* {userData ? userData.first_name || 'Test' : 'Test'} {userData ? userData.last_name || 'User' : 'User'} */}
+                {/* <Text style={{marginTop: 10}}>Owner Email</Text>
                 <Text style={{marginTop: 10}}>Owner Phone</Text>
-                <Text style={{marginTop: 10}}>Owner Address</Text>
+                <Text style={{marginTop: 10}}>Owner Address</Text> */} 
                 </View>
             </View>
             
@@ -76,7 +207,7 @@ const SettingScreen = ({navigation}) => {
                 ItemSeparatorComponent={ItemDivider}
                 />
 
-<View  style={{marginTop:0, marginBottom:10}}> 
+            <View  style={{marginTop:0, marginBottom:10}}> 
                 <Pressable onPress={ () => {
                     // navigation.navigate("CheckMailScreen");
                         //navigation.dispatch(StackActions.replace('CheckMailScreen'))

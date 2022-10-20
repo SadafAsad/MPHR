@@ -2,16 +2,22 @@ import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image, Alert
 import { AntDesign } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
 import React, { useState, useEffect } from 'react';
+import { onAuthStateChanged,signOut } from "firebase/auth"
+import { auth, db, firebaseApp } from './FirebaseApp';
+import { collection, query, where, getDocs, Firestore } from "firebase/firestore";
 
 const PetsTabScreen = ({navigation}) => {
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
+    const [loggedInUser, setLoggedInUser] = useState('')
+    let petId = String;
 
-    useEffect(() => {
-        setFilteredDataSource(pets);
-        setMasterDataSource(pets);
-    }, []);
+    // useEffect(() => {
+    //     getPetList()
+    //     // setFilteredDataSource(pets);
+    //     // setMasterDataSource(pets);
+    // }, []);
 
     const pets = [
         {id: 1, name: "Bacon", birthday: "2022-03-12"},
@@ -19,14 +25,68 @@ const PetsTabScreen = ({navigation}) => {
         {id: 3, name: "Honey", birthday: "2022-03-31"}
     ];
 
+    useEffect(()=>{
+        const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
+        
+        if (userFromFirebaseAuth) {
+            console.log("userFromFirebaseAuth.uid is:" + userFromFirebaseAuth.email) 
+            
+            setLoggedInUser(userFromFirebaseAuth.email) 
+            
+        }
+        else {
+            setLoggedInUser(null)
+            console.log("No user signed in")
+        }
+        })
+        getPetList();
+        return listener
+    }, [])
+
+    
+
+    const getPetList = async () => {
+        try{
+            
+            console.log("loggedInUser is : " + loggedInUser);
+
+            
+            if(loggedInUser == "george@gmail.com"){
+                petId = "ARDH73UDUolpCYOrlpHt";
+            }
+            else if(loggedInUser == "sadaf@gmail.com"){
+                petId = "YF4WbLiLreezP72q6xHv";
+            }
+
+           
+            let querySnapshot = await getDocs(collection(db, "profiles", petId, "pet_list"));
+            // console.log(db);
+            console.log("loggedInUser is : " + loggedInUser)
+            let documents = querySnapshot.docs
+            console.log(documents.length);
+            for(let i = 0; i < documents.length; i++){
+                const currDocument = documents[i] 
+                console.log(`ID: ${currDocument.id}`)
+                console.log(currDocument.data())
+                console.log("------")
+            }
+            setFilteredDataSource(documents);
+            setMasterDataSource(documents);
+            
+
+        } catch(err){
+            console.log(`${err.message}`);
+        }
+    }
+
     const onChangeSearch = query => setSearchQuery(query);
 
     const searchFilterFunction = (text) => {
         // Check if searched text is not blank
         if (text) {
           const newData = masterDataSource.filter(function (item) {
-            const itemData = item.name
-              ? item.name.toUpperCase()
+            const itemData = item.first_name
+              ? item.first_name.toUpperCase()
               : ''.toUpperCase();
             const textData = text.toUpperCase();
             return itemData.indexOf(textData) > -1;
@@ -38,6 +98,7 @@ const PetsTabScreen = ({navigation}) => {
           setSearch(text);
         }
       };
+
 
     function getAge(dateString) {
         var today = new Date();
@@ -70,8 +131,8 @@ const PetsTabScreen = ({navigation}) => {
                     <Image source={require('./assets/pet-icon-2.png')} style={styles.img}/>
                     <View>
                         <View style={{flexDirection:'row', alignItems:'baseline'}}>
-                            <Text style={{marginLeft:20, fontSize:18}}>{item.name}</Text>
-                            <Text style={{fontSize:14}}> - age: {getAge(item.birthday)}</Text>
+                            <Text style={{marginLeft:20, fontSize:18}}>{item.data().name}</Text>
+                            <Text style={{fontSize:14}}> - age: {getAge(item.data().birthday)}</Text>
                         </View>
                         <Text style={{marginLeft:20}}>Caretakers:</Text>
                     </View>
@@ -86,6 +147,10 @@ const PetsTabScreen = ({navigation}) => {
             <View style={{height: 1, width: "100%", backgroundColor: "#cccccc"}}/>
         )
     }
+
+   
+    
+   
 
     return (
         <SafeAreaView style={styles.container}>

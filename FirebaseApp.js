@@ -11,8 +11,6 @@ import { getFirestore } from "firebase/firestore";
 export const firebaseApp = initializeApp(firebaseConfig);
  
 // 4. @TODO: instantiate any other firebase services here
-export const auth = getAuth(firebaseApp);
+export const auth = getAuth(firebaseApp)
 
-export const db = getFirestore(firebaseApp);
-
-export default firebaseApp;
+export const db = getFirestore(firebaseApp)
