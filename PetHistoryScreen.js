@@ -5,20 +5,19 @@ import { AntDesign } from '@expo/vector-icons';
 import { db } from "./FirebaseApp"
 import { collection, doc, getDocs } from "firebase/firestore";
 
-const VetsTabScreen = () => {
+const PetHistoryScreen = ({navigation}) => {
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
 
     useEffect(() => {
-        // getVetList()
         setFilteredDataSource(vaccinations);
         setMasterDataSource(vaccinations);
     }, []);
 
-    // const getVetList = async () => {
+    // const getHistoryList = async () => {
     //     try {
-    //         let querySnapshot = await getDocs(collection(db, "vet_list"));
+    //         let querySnapshot = await getDocs(collection(db, "vac_list"));
 
     //         let documents = querySnapshot.docs
 
@@ -51,7 +50,7 @@ const VetsTabScreen = () => {
             console.log(`${item.name}`);
         }
         }>
-            <View style={styles.vet}>
+            <View style={styles.histories}>
                 <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
                     <Image source={require('./assets/physical-examination-1.png')} style={styles.img}/>
                     <View>
@@ -94,7 +93,6 @@ const VetsTabScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* <Text>Vets Tab Screen!</Text>    */}
             <TextInput
                 style={styles.textInputStyle}
                 onChangeText={(text) => searchFilterFunction(text)}
@@ -102,7 +100,13 @@ const VetsTabScreen = () => {
                 underlineColorAndroid="transparent"
                 placeholder="Search Here"
             />
-            {/* Vet Lists */}
+            {/* add new vaccination button */}
+            <Pressable onPress={ () => {
+                    navigation.navigate("AddPetHistoryScreen");
+                    }}>
+                        <Text style={styles.addNewButton}>Add New Vaccination</Text>
+                </Pressable>
+            {/* History Lists */}
             <FlatList
                 data={filteredDataSource}
                 keyExtractor={item => item.id}
@@ -118,7 +122,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
-    vet: {
+    histories: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 15,
@@ -143,7 +147,18 @@ const styles = StyleSheet.create({
       borderColor: '#009688',
       backgroundColor: '#FFFFFF',
     },
+    addNewButton: {
+        alignSelf: 'center',
+        textAlign: 'center',
+        backgroundColor: '#335C67',
+        color: '#ffffff',
+        marginLeft: 22,
+        marginRight: 22,
+        fontSize: 18,
+        padding: 15,
+        width: '90%',
+    },
 });
 
-export default VetsTabScreen;
+export default PetHistoryScreen;
 

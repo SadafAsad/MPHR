@@ -27,8 +27,8 @@ import CreateNewPasswordScreen from './CreateNewPasswordScreen';
 import DeleteAccountScreen from './DeleteAccountScreen';
 import CreatePetProfile from './CreatePetProfile';
 import CreatePetProfile2Screen from './CreatePetProfile2Screen';
-import PetHistoryScreen from './PetHistoryListScreen';
-// import ReportListScreen from './ReportListScreen';
+import PetHistoryScreen from './PetHistoryScreen';
+import AddPetHistoryScreen from './AddPetHistoryScreen';
 import { Pressable, Text } from 'react-native';
 import { AntDesign, Ionicons, Fontisto, MaterialIcons, FontAwesome } from '@expo/vector-icons'; 
 
@@ -143,12 +143,44 @@ const PetsTabScreenNavigator = ({navigation}) => {
             <Stack.Screen name="CreatePetProfile" component={CreatePetProfile}/>
             <Stack.Screen name="CreatePetProfile2Screen" component={CreatePetProfile2Screen}/>
             <Stack.Screen name="VetsTabScreen" component={VetsTabScreen}/>
-            <Stack.Screen name="Vaccinations" component={PetHistoryScreen}/>
+            <Stack.Screen name="Vaccinations" component={PetHistoryScreenNavigator}/>
         </Stack.Navigator>
     )
 }
 
 export {PetsTabScreenNavigator};
+
+const PetHistoryScreenNavigator =({navigation}) => {
+    return(
+        <Stack.Navigator>
+            <Stack.Screen 
+            name="PetHistoryScreen" 
+            component={PetHistoryScreen} 
+            options={{
+                title: 'Vaccinations', 
+                headerShown: false
+            }}/>
+            {/* <Stack.Screen name="PetProfileScreen" component={PetProfileScreen}/>
+            <Stack.Screen name="SettingScreen" component={SettingScreen}/>
+            <Stack.Screen name="AddPetScreen" component={AddPetScreen}/>
+            <Stack.Screen name="AddVetScreen" component={AddVetScreen}/>
+            <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ title: 'Edit Profile' }}/>
+            <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{ title: 'Change password' }}/>
+            <Stack.Screen name="NotificationsSettingScreen" component={NotificationsSettingScreen} options={{ title: 'Notifications' }}/>
+            <Stack.Screen name="CheckMailScreen" component={CheckMailScreen}/>
+            <Stack.Screen name="CreateNewPasswordScreen" component={CreateNewPasswordScreen}/>
+            <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen}/>
+            <Stack.Screen name="EditAddressScreen" component={EditAddressScreen}/>
+            <Stack.Screen name="Login" component={LoginScreen}/>
+            <Stack.Screen name="CreatePetProfile" component={CreatePetProfile}/>
+            <Stack.Screen name="CreatePetProfile2Screen" component={CreatePetProfile2Screen}/>
+            <Stack.Screen name="VetsTabScreen" component={VetsTabScreen}/> */}
+            <Stack.Screen name="AddPetHistoryScreen" component={AddPetHistoryScreen} options={{headerShown: false}}/>
+        </Stack.Navigator>
+    )
+}
+
+export {PetHistoryScreenNavigator}
 
 const VetsTabScreenNavigator = ({navigation}) => {
     return(
