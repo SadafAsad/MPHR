@@ -19,6 +19,8 @@ const PetsTabScreen = ({navigation}) => {
     //     // setMasterDataSource(pets);
     // }, []);
 
+    //AsyncStorage.clear();
+
     const pets = [
         {id: 1, name: "Bacon", birthday: "2022-03-12"},
         {id: 2, name: "Leila", birthday: "2022-09-01"},
@@ -39,7 +41,7 @@ const PetsTabScreen = ({navigation}) => {
             console.log("No user signed in")
         }
         })
-        getPetList();
+        console.log("listener is : " + listener);
         return listener
     }, [])
 
@@ -78,6 +80,8 @@ const PetsTabScreen = ({navigation}) => {
             console.log(`${err.message}`);
         }
     }
+
+    
 
     const onChangeSearch = query => setSearchQuery(query);
 
@@ -121,6 +125,11 @@ const PetsTabScreen = ({navigation}) => {
         }
     }
 
+    useEffect(()=>{
+        getPetList(loggedInUser);
+        
+    }, [])
+
     const renderItem = ( {item} ) => (
         <Pressable onPress={ () => {
             navigation.navigate("PetProfileScreen", {pet: item});
@@ -148,9 +157,6 @@ const PetsTabScreen = ({navigation}) => {
         )
     }
 
-   
-    
-   
 
     return (
         <SafeAreaView style={styles.container}>
