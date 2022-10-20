@@ -52,7 +52,7 @@ const PetHistoryScreen = ({navigation}) => {
         }>
             <View style={styles.histories}>
                 <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                    <Image source={require('./assets/physical-examination-1.png')} style={styles.img}/>
+                    <Image source={require('./assets/injection.png')} style={styles.img}/>
                     <View>
                         <View style={{flexDirection:'column', marginLeft:20, alignItems:'baseline'}}>
                             <Text style={{fontSize:18, fontWeight:'bold'}}>{item.name}</Text>

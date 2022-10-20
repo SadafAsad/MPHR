@@ -1,8 +1,31 @@
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert, Platform } from 'react-native';
+// import DatePicker from 'react-native-datepicker';
+// import DatePicker from 'react-native-modern-datepicker';
+// import DateTimePicker from '@react-native-community/datetimepicker';
+import React, {useState} from 'react';
 
 //ADD TO FIRESTORE AFTER ADDING DATA
 
 const AddPetHistory = ({navigation}) => {
+    // const [date, setDate] = useState(new Date())
+    // const [show, setShow] = useState(false)
+    // const [mode, setMode] = useState('date')
+    // const [text, setText] = useState('Empty')
+
+    // const onChange = (event, selectedDate) => {
+    //     const currentDate = selectedDate || date
+    //     setShow(Platform.OS === 'ios')
+    //     setDate(currentDate)
+
+    //     let tempDate = new Date(currentDate)
+    //     let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear()
+    //     console.log(fDate);
+    // }
+
+    // const showMode = (currentMode) => {
+    //     setShow(true)
+    // }
+
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1}}>
             
@@ -17,12 +40,16 @@ const AddPetHistory = ({navigation}) => {
             />
 
             <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Latest Vaccination Date *</Text>
-            <TextInput 
+            
+            <Pressable onPress={() => showMode('date')}>
+                <TextInput 
+                // editable = {false}
                 style={styles.input}
                 placeholder="Enter Vaccination Date"
                 keyboardType="default"
                 autoCapitalize="none"
             />
+            </Pressable>
 
             <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Next Vaccination Date *</Text>
             <TextInput  
@@ -30,6 +57,7 @@ const AddPetHistory = ({navigation}) => {
                 placeholder="Enter Next Vaccination Date"
                 keyboardType="default"
                 autoCapitalize="none"
+                // editable = {false}
             />
             
 
@@ -51,6 +79,7 @@ const AddPetHistory = ({navigation}) => {
            
         </SafeAreaView>
     );
+
 }
   
 const styles = StyleSheet.create({

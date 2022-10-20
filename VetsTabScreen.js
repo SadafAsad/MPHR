@@ -78,8 +78,8 @@ const VetsTabScreen = () => {
         // Check if searched text is not blank
         if (text) {
           const newData = masterDataSource.filter(function (item) {
-            const itemData = item.name
-              ? item.name.toUpperCase()
+            const itemData = item.data().name
+              ? item.data().name.toUpperCase()
               : ''.toUpperCase();
             const textData = text.toUpperCase();
             return itemData.indexOf(textData) > -1;
