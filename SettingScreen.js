@@ -16,10 +16,10 @@ import { collection, query, where, getDocs, Firestore } from "firebase/firestore
 
 const SettingScreen = ({navigation}) => {
     const [input, setInput] = useState('');
-    const [userData, setUserData] = useState([]);
+    const [userData, setUserData] = useState('');
     const [isLoggedIn,setIsLoggedIn] = useState(false)
     const [loggedInUserId, setLoggedInUserId] = useState('')
-    const [listToRender, setListToRender] = useState(null)
+    const [listToRender, setListToRender] = useState([])
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
     
@@ -43,23 +43,23 @@ const SettingScreen = ({navigation}) => {
 
     // }, []);
 
-    // useEffect(()=>{
+    useEffect(()=>{
 
-    //     const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
+        const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
               
-    //       if (userFromFirebaseAuth) {
-    //         console.log('userFromFirebaseAuth: ', userFromFirebaseAuth.email);
-    //         setLoggedInUserId(userFromFirebaseAuth.email)
-    //         setIsLoggedIn(true)
-    //       }
-    //       else {
-    //         setIsLoggedIn(false)
-    //         setLoggedInUserId(null);
-    //         console.log('userFromFirebaseAuth: ', setIsLoggedIn.email);
-    //       }
-    //     })
-    //     return listener
-    //   },[])
+          if (userFromFirebaseAuth) {
+            console.log('userFromFirebaseAuth: ', userFromFirebaseAuth.email);
+            setLoggedInUserId(userFromFirebaseAuth.email)
+            setIsLoggedIn(true)
+          }
+          else {
+            setIsLoggedIn(false)
+            setLoggedInUserId(null);
+            console.log('userFromFirebaseAuth: ', setIsLoggedIn.email);
+          }
+        })
+        return listener
+      },[])
 
 
 
@@ -70,19 +70,19 @@ const SettingScreen = ({navigation}) => {
 
     const getUserDetails = async () => {
         try {
-            const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
+            // const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
               
-                if (userFromFirebaseAuth) {
-                  console.log('userFromFirebaseAuth: ', userFromFirebaseAuth.email);
-                  setLoggedInUserId(userFromFirebaseAuth.email)
-                  setIsLoggedIn(true)
-                }
-                else {
-                  setIsLoggedIn(false)
-                  setLoggedInUserId(null);
-                  console.log('userFromFirebaseAuth: ', setIsLoggedIn.email);
-                }
-              })
+            //     if (userFromFirebaseAuth) {
+            //       console.log('userFromFirebaseAuth: ', userFromFirebaseAuth.email);
+            //       setLoggedInUserId(userFromFirebaseAuth.email)
+            //       setIsLoggedIn(true)
+            //     }
+            //     else {
+            //       setIsLoggedIn(false)
+            //       setLoggedInUserId(null);
+            //       console.log('userFromFirebaseAuth: ', setIsLoggedIn.email);
+            //     }
+            //   })
               
             let querySnapshot = await getDocs(collection(db, "profiles"));
 
@@ -98,7 +98,7 @@ const SettingScreen = ({navigation}) => {
              console.log(`documents.email is: ${documents[0].data().email}`);
             for (let i = 0; i < documents.length; i++) {
                 if(documents[i].data().email == loggedInUserId){
-                    setUserData(documents[i]);
+                    setUserData(documents);
                     console.log('doc is: ', loggedInUserId);
                     console.log('doc: ', documents[i].data().email)
                     console.log('doc: ', documents[i].data().first_name)
@@ -119,7 +119,6 @@ const SettingScreen = ({navigation}) => {
             <View style={styles.pet}>
                 <View>
                 <View style={{flexDirection:'column', marginLeft:20, alignItems:'baseline'}}>
-                <Text style={{fontSize:14}}>test</Text>
                             <Text style={{fontSize:18, fontWeight:'bold'}}>{item.data().first_name}{` `}{item.data().last_name}</Text>
                             <Text style={{fontSize:14}}>{item.data().email}</Text>
                             <Text style={{fontSize:14}}>{item.data().address_1}</Text>
@@ -135,7 +134,7 @@ const SettingScreen = ({navigation}) => {
     
 
     // useEffect(() => { 
-       // getUserInfo();
+    //    getUserInfo();
     // });
    
 
@@ -179,8 +178,8 @@ const SettingScreen = ({navigation}) => {
             <View style={styles.mainView}>
             
             <FontAwesome name="user-circle" size={60} color="black"/>
-            <View style={{flex:1, margin: 20, paddingLeft: 30}}>
-            {/* <Text style={{fontSize:18, fontWeight:'bold'}}>{userData.data().first_name}</Text> */}
+            <View style={{flex:1, margin: 10, paddingLeft: 30}}>
+            {/* <Text style={{fontSize:18, fontWeight:'bold'}}>{userData.first_name}</Text> */}
             <FlatList
                 data={userData}
                 keyExtractor={item => item.id}
