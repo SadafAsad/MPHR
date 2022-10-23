@@ -125,10 +125,10 @@ const PetsTabScreen = ({navigation}) => {
         }
     }
 
-    useEffect(()=>{
-        getPetList(loggedInUser);
+    // useEffect(()=>{
+    //     getPetList(loggedInUser);
         
-    }, [])
+    // }, [])
 
     const renderItem = ( {item} ) => (
         <Pressable onPress={ () => {
@@ -156,7 +156,11 @@ const PetsTabScreen = ({navigation}) => {
             <View style={{height: 1, width: "100%", backgroundColor: "#cccccc"}}/>
         )
     }
-
+    
+    useEffect(()=>{
+        getPetList();
+        
+    }, [])
 
     return (
         <SafeAreaView style={styles.container}>
