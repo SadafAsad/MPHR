@@ -19,7 +19,7 @@ const LoginScreen = ({navigation}) => {
         try {
             onHasErrorChanged(false);
             await signInWithEmailAndPassword(auth, emailAddress, password);
-            navigation.dispatch(StackActions.replace('MainNavigator'))
+            navigation.dispatch(StackActions.replace('MainNavigator'));
         } catch (err) {
             onErrorChanged("Your email or password is incorrect. Please try again.");
             onEmailChanged("");
@@ -30,7 +30,7 @@ const LoginScreen = ({navigation}) => {
 
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
-            <Image source={require('./assets/MPHR.png')} style={styles.img}/>
+            <Image source={require('./assets/mphr-logo.png')} style={styles.img}/>
             <View style={{marginTop:300}}/>
 
             <View style={{flex:1, alignItems:'baseline'}}>
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     img: {
         position: 'absolute',
         alignSelf: 'center',
-        marginTop: -100
+        marginTop: 45
     },
     loginPressable: {
         alignSelf: 'center',

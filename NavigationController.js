@@ -1,19 +1,14 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import AppointmentsTabScreen from './AppointmentsTabScreen';
-import NotificationsTabScreen from './NotificationsTabScreen';
 import PetsTabScreen from './PetsTabScreen';
 import VetsTabScreen from './VetsTabScreen';
 import PetProfileScreen from './PetProfileScreen';
 import SettingScreen from './SettingScreen';
 import AddPetScreen from './AddPetScreen';
-import AddAppointmentScreen from './AddAppointmentScreen';
 import AddVetScreen from './AddVetScreen';
 import LoginScreen from './LoginScreen';
-import SignupScreen from './SignupScreen';
 import ResetPasswordScreen from './ResetPasswordScreen';
 import ResetPasswordScreen_v2 from './ResetPasswordScreen-v2';
-import Registration_v2 from './Registration-v2';
 import Registration_v3 from './Registration-v3';
 import SetPasswordScreen from './SetPasswordScreen';
 import ProfileInfo from './ProfileInfo';
@@ -30,7 +25,7 @@ import CreatePetProfile2Screen from './CreatePetProfile2Screen';
 import PetHistoryScreen from './PetHistoryScreen';
 import AddPetHistoryScreen from './AddPetHistoryScreen';
 import { Pressable, View } from 'react-native';
-import { AntDesign, Ionicons, Fontisto, MaterialIcons, FontAwesome } from '@expo/vector-icons'; 
+import { Ionicons, MaterialIcons } from '@expo/vector-icons'; 
 import { auth } from './FirebaseApp';
 import { signOut } from "firebase/auth";
 
@@ -57,14 +52,11 @@ const AuthenticationNavigator = ({navigation}) => {
             headerTitleStyle:{color:'#000000'}
             }}>
             <Stack.Screen name="Login" component={LoginScreen}/>
-            {/* <Stack.Screen name="Signup" component={SignupScreen}/> */}
-            {/* <Stack.Screen name="Registration" component={Registration_v2}/> */}
             <Stack.Screen name="Registration" component={Registration_v3}/>
             <Stack.Screen name="SetPassword" component={SetPasswordScreen}/>
             <Stack.Screen name="Profile" component={ProfileInfo}/>
             <Stack.Screen name="Address" component={AddressInfo}/>
             <Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
-            {/* <Stack.Screen name="ResetPassword" component={ResetPasswordScreen_v2}/> */}
             <Stack.Screen name="MainNavigator" component={MainNavigator}/>
         </Stack.Navigator>
     )
@@ -95,15 +87,7 @@ const MainNavigator = ({navigation}) => {
                       </Pressable>
                     </View>
                     
-                ),
-                //,
-                // headerLeft: () => (
-                //     <Pressable onPress={ () => {
-                //         navigation.navigate("AddPetScreen");
-                //     }}>
-                //         <AntDesign name="plus" size={20} color="black" />
-                //     </Pressable>
-                // )
+                )
             }}/>
             <Stack.Screen name="PetProfileScreen" component={PetProfileScreen}/>
             <Stack.Screen name="SettingScreen" component={SettingScreen}/>
@@ -116,7 +100,6 @@ const MainNavigator = ({navigation}) => {
             <Stack.Screen name="CreateNewPasswordScreen" component={CreateNewPasswordScreen}/>
             <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen}/>
             <Stack.Screen name="EditAddressScreen" component={EditAddressScreen}/>
-            <Stack.Screen name="Login" component={LoginScreen}/>
             <Stack.Screen name="CreatePetProfile" component={CreatePetProfile}/>
             <Stack.Screen name="CreatePetProfile2Screen" component={CreatePetProfile2Screen}/>
             <Stack.Screen name="VetsTabScreen" component={VetsTabScreen}/>
