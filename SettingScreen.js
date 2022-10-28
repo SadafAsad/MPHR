@@ -43,6 +43,15 @@ const SettingScreen = ({navigation}) => {
 
     // }, []);
 
+    const logoutPressed = async () => {
+        try {
+            await signOut(auth)
+            navigation.dispatch(StackActions.popToTop());          
+        } catch (err) {
+            console.log(`Logout failed: ${err.message}`);
+        }
+    }
+
     useEffect(()=>{
 
         const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
@@ -234,7 +243,7 @@ const SettingScreen = ({navigation}) => {
                                 onPress: () => console.log('Cancel Pressed'),  
                                 style: 'cancel',  
                             },  
-                            {text: 'OK', onPress: () => navigation.navigate('Login')},  //navigation.navigate("Login")
+                            {text: 'OK', onPress:logoutPressed},  //navigation.navigate("Login")
                         ]  
                         );
                     }}>

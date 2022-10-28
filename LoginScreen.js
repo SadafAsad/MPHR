@@ -19,7 +19,7 @@ const LoginScreen = ({navigation}) => {
         try {
             onHasErrorChanged(false);
             await signInWithEmailAndPassword(auth, emailAddress, password);
-            navigation.dispatch(StackActions.replace('TabsNavigator'))
+            navigation.dispatch(StackActions.replace('MainNavigator'))
         } catch (err) {
             onErrorChanged("Your email or password is incorrect. Please try again.");
             onEmailChanged("");

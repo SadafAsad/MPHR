@@ -1,21 +1,42 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Ionicons, Fontisto, MaterialIcons, FontAwesome } from '@expo/vector-icons';
-import { PetsTabScreenNavigator, VetsTabScreenNavigator, AppointmentsTabScreenNavigator, NotificationsTabScreenNavigator, AuthenticationNavigator, TabsNavigator } from './NavigationController';
+import { useState, useEffect } from 'react';
+import { auth } from './FirebaseApp';
+import { onAuthStateChanged } from "firebase/auth";
+import { AuthenticationNavigator, MainNavigator } from './NavigationController';
 
-const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [loggedInUser, setLoggedInUser] = useState(null);
+
+  useEffect(()=>{
+    const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
+        if (userFromFirebaseAuth) {
+          setLoggedInUser(userFromFirebaseAuth);      
+        }
+        else {
+          setLoggedInUser(null);
+        }
+      })
+      return listener
+  }, [])
+
   return (
     <NavigationContainer>
-      {
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="AuthenticationScreen" component={AuthenticationNavigator}/>
-          <Stack.Screen name="TabsNavigator" component={TabsNavigator}/>
-        </Stack.Navigator>
-      }
+      <Stack.Navigator screenOptions={{
+          headerTintColor:'#335C67',
+          headerTitleStyle:{color:'#000000'},
+          headerShown:false
+          }}>
+        {
+          (loggedInUser === null)
+          ?
+          (<Stack.Screen component={AuthenticationNavigator} name="Login"/>)
+          :
+          (<Stack.Screen component={MainNavigator} name="Pets"/>)
+        }
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
