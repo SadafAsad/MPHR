@@ -17,6 +17,7 @@ const Registration_v3 = ({navigation}) => {
     const [targetTime, setTargetTime] = useState(null);
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
     const [loggedInUser, setLoggedInUser] = useState(null);
+    const [verifiedUser, onVerifiedUserChanged] = useState(false);
 
     let resendTimerInterval;
 
@@ -83,7 +84,7 @@ const Registration_v3 = ({navigation}) => {
             }
           })
           return listener
-    }, [])
+    }, [timeLeft])
 
     return (
         <SafeAreaView style={{flex:1}}>

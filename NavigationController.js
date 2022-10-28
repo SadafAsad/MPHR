@@ -1,5 +1,4 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import PetsTabScreen from './PetsTabScreen';
 import VetsTabScreen from './VetsTabScreen';
 import PetProfileScreen from './PetProfileScreen';
@@ -30,7 +29,6 @@ import { auth } from './FirebaseApp';
 import { signOut } from "firebase/auth";
 
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
 
 const logoutPressed = async () => {
     try {
@@ -40,10 +38,6 @@ const logoutPressed = async () => {
         console.log(`Logout failed: ${err.message}`);
     }
 }
-
-// --------- bugs to be fixed ------------
-// SettingScreen back button goes to NotificationTabScreen
-// When logout, stack has screens 'HIGH PRIORITY'
 
 const AuthenticationNavigator = ({navigation}) => {
     return(

@@ -35,9 +35,9 @@ export default function App() {
         {
           (loggedInUser === null)
           ?
-          (<Stack.Screen component={AuthenticationNavigator} name="Login"/>)
+          (<Stack.Screen component={AuthenticationNavigator} name="authentication"/>)
           :
-          (<Stack.Screen component={MainNavigator} name="Pets"/>)
+          (<Stack.Screen component={MainNavigator} name="main"/>)
         }
       </Stack.Navigator>
     </NavigationContainer>
