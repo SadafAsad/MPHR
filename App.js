@@ -13,7 +13,10 @@ export default function App() {
   useEffect(()=>{
     const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
         if (userFromFirebaseAuth) {
-          setLoggedInUser(userFromFirebaseAuth);      
+          if (userFromFirebaseAuth.emailVerified){
+            setLoggedInUser(userFromFirebaseAuth);  
+            console.log('user logged in: '+userFromFirebaseAuth.email) 
+          }   
         }
         else {
           setLoggedInUser(null);

@@ -5,6 +5,7 @@ import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { sendEmailVerification, createUserWithEmailAndPassword, ActionCodeSettings } from "firebase/auth";
 import { auth } from "./FirebaseApp";
+import { onAuthStateChanged } from "firebase/auth";
 import { FontAwesome } from '@expo/vector-icons'; 
 
 const Registration_v3 = ({navigation}) => {
@@ -15,6 +16,7 @@ const Registration_v3 = ({navigation}) => {
     const [timeLeft, setTimeLeft] = useState(null);
     const [targetTime, setTargetTime] = useState(null);
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
+    const [loggedInUser, setLoggedInUser] = useState(null);
 
     let resendTimerInterval;
 
@@ -64,6 +66,24 @@ const Registration_v3 = ({navigation}) => {
             setError(err.message);
         }
     }
+
+    useEffect(()=>{
+        const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
+            if (userFromFirebaseAuth) {
+                console.log('signed up user: '+userFromFirebaseAuth.email); 
+                userFromFirebaseAuth.reload();
+                if (userFromFirebaseAuth.emailVerified){
+                    setLoggedInUser(userFromFirebaseAuth);  
+                    console.log('verified user: '+userFromFirebaseAuth.email);
+                    navigation.navigate("SetPassword", {user: userFromFirebaseAuth}); 
+                }   
+            }
+            else {
+              setLoggedInUser(null);
+            }
+          })
+          return listener
+    }, [])
 
     return (
         <SafeAreaView style={{flex:1}}>

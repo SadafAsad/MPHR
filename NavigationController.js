@@ -60,7 +60,7 @@ const AuthenticationNavigator = () => {
             {/* <Stack.Screen name="Signup" component={SignupScreen}/> */}
             {/* <Stack.Screen name="Registration" component={Registration_v2}/> */}
             <Stack.Screen name="Registration" component={Registration_v3}/>
-            <Stack.Screen name="Set Password" component={SetPasswordScreen}/>
+            <Stack.Screen name="SetPassword" component={SetPasswordScreen}/>
             <Stack.Screen name="Profile" component={ProfileInfo}/>
             <Stack.Screen name="Address" component={AddressInfo}/>
             <Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>

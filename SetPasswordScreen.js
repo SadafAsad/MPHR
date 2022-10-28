@@ -4,9 +4,12 @@ import { useState, useEffect } from 'react';
 import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { auth } from "./FirebaseApp";
+import { updatePassword } from 'firebase/auth';
 
-const SetPasswordScreen = ({navigation}) => {
+const SetPasswordScreen = ({navigation, route}) => {
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
+    const {user} = route.params;
+    const [password, onPasswordChanged] = useState('');
 
     let resendTimerInterval;
 
@@ -27,6 +30,11 @@ const SetPasswordScreen = ({navigation}) => {
             setResendActive(true);
             setTimeLeft(null);
         }
+    }
+
+    const nextPressed = () => {
+        updatePassword(user, password);
+        navigation.reset({index:0, routes:[{name: 'Profile'}]});
     }
 
     return (
@@ -62,7 +70,7 @@ const SetPasswordScreen = ({navigation}) => {
                     autoCorrect={false}
                     editable={false}
                     selectTextOnFocus={false}
-                    // value={auth.currentUser.email}
+                    value={user.email}
                 />
             </View>
 
@@ -75,14 +83,14 @@ const SetPasswordScreen = ({navigation}) => {
                     autoCapitalize="none"
                     autoCorrect={false}
                     secureTextEntry={passwordVisibility}
+                    onChangeText={onPasswordChanged}
+                    // value={emailAddress}
                 />
                 <Pressable onPress={handlePasswordVisibility}>
                     <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
                 </Pressable>
                 </View>
-                <Pressable onPress={ () => {
-                    navigation.reset({index:0, routes:[{name: 'Profile'}]});
-                }}>
+                <Pressable onPress={nextPressed}>
                     <Text style={styles.PressableStyle}>Next</Text>
                 </Pressable>
         </SafeAreaView>
