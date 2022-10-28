@@ -34,7 +34,7 @@ const SetPasswordScreen = ({navigation, route}) => {
 
     const nextPressed = () => {
         updatePassword(user, password);
-        navigation.reset({index:0, routes:[{name: 'Profile'}]});
+        navigation.reset({index:0, routes:[{name: 'Profile', params: {user: user}}]});
     }
 
     return (

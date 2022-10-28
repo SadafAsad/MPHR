@@ -4,9 +4,15 @@ import { StackActions } from '@react-navigation/native';
 import SelectList from 'react-native-dropdown-select-list';
 import { useState } from 'react';
 
-const AddressInfo = ({navigation}) => {
+const AddressInfo = ({navigation, route}) => {
     const [selectedCountry, setSelectedCountry] = useState("");
     const [selectedProvince, setSelectedProvince] = useState("");
+    const [address1, onaddress1Changed] = useState('');
+    const [address2, onaddress2Changed] = useState('');
+    const [city, onCityChanged] = useState('');
+    const [postalcode, onPostalcodeChanged] = useState('');
+
+    const {profile} = route.params;
 
     const country = [{key:'1',value:'Canada'}];
     const province = [
@@ -14,6 +20,25 @@ const AddressInfo = ({navigation}) => {
         {key:'2', value:'QC'}, 
         {key:'3', value:'ON'}
     ]
+
+    // const nextPressed = () => {
+    //     try {
+    //         const query = query(collection(db, "profiles"), profile.id);
+    //         const querySnapshot = await getDocs(query);
+            
+    //         const profileToInsert = {
+    //             userId:user.userId,
+    //             first_name:firstname,
+    //             last_name:lastname,
+    //             phone_number:selectedNumCode+phonenumber
+    //         };
+    //         const insertedProfile = addDoc(collection(db, "profiles"), profileToInsert);
+    //         navigation.navigate("Address", {profile: insertedProfile});
+    //     }
+    //     catch (err) {
+    //         console.log(`${err.message}`);
+    //     }
+    // }
 
     return (
         <SafeAreaView style={{flex:1}}> 
@@ -37,7 +62,7 @@ const AddressInfo = ({navigation}) => {
             </View>
             <Text style={styles.screentitle}>Address Info</Text>
             <Text style={styles.descTxt}>Complete your profile information. It will only take a few minutes.</Text>
-            <Text style={styles.titleTxt}>Address</Text>
+            <Text style={styles.titleTxt}>Address *</Text>
             <TextInput 
                 style={styles.input}
                 placeholder=""
@@ -51,14 +76,14 @@ const AddressInfo = ({navigation}) => {
                 keyboardType="default"
                 autoCapitalize="none"
             />
-            <Text style={styles.titleTxt}>City</Text>
+            <Text style={styles.titleTxt}>City *</Text>
             <TextInput 
                 style={styles.input}
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
             />
-            <Text style={styles.titleTxt}>Country</Text>
+            <Text style={styles.titleTxt}>Country *</Text>
             <SelectList 
                 setSelected={setSelectedCountry} 
                 data={country} 
@@ -69,7 +94,7 @@ const AddressInfo = ({navigation}) => {
                 maxHeight='100'
                 placeholder=" "
             />
-            <Text style={styles.titleTxt}>Province / State</Text>
+            <Text style={styles.titleTxt}>Province / State *</Text>
             <SelectList 
                 setSelected={setSelectedProvince} 
                 data={province} 
@@ -80,7 +105,7 @@ const AddressInfo = ({navigation}) => {
                 maxHeight='100'
                 placeholder=" "
             />
-            <Text style={styles.titleTxt}>Postal Code</Text>
+            <Text style={styles.titleTxt}>Postal Code *</Text>
             <TextInput 
                 style={styles.input}
                 placeholder=""

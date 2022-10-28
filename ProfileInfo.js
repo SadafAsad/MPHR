@@ -2,11 +2,35 @@ import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable } from 'reac
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import SelectList from 'react-native-dropdown-select-list';
 import { useState } from 'react';
+import { db } from './FirebaseApp';
+import { collection, addDoc} from "firebase/firestore"
 
-const ProfileInfo = ({navigation}) => {
+const ProfileInfo = ({navigation, route}) => {
     const [selectedNumCode, setSelectedNumCode] = useState("");
+    const [firstname, onFirstnameChanged] = useState('');
+    const [lastname, onLastnameChanged] = useState('');
+    const [phonenumber, onPhonenumberChanged] = useState('');
+
+    const {user} = route.params;
 
     const numCode = [{key:'1',value:'+1'}];
+
+
+    const nextPressed = () => {
+        try {
+            const profileToInsert = {
+                userId:user.uid,
+                first_name:firstname,
+                last_name:lastname,
+                phone_number:selectedNumCode+phonenumber
+            };
+            const insertedProfile = addDoc(collection(db, "profiles"), profileToInsert);
+            navigation.navigate("Address", {profile: insertedProfile});
+        }
+        catch (err) {
+            console.log(`${err.message}`);
+        }
+    }
 
     return (
         <SafeAreaView style={{flex:1}}> 
@@ -30,21 +54,25 @@ const ProfileInfo = ({navigation}) => {
             </View>
             <Text style={styles.screentitle}>Profile Info</Text>
             <Text style={styles.descTxt}>Fill in your profile information. It will only take a few minutes.</Text>
-            <Text style={styles.titleTxt}>First name</Text>
+            <Text style={styles.titleTxt}>First name *</Text>
             <TextInput 
                 style={styles.input}
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
+                onChangeText={onFirstnameChanged}
+                value={firstname}
             />
-            <Text style={styles.titleTxt}>Last name</Text>
+            <Text style={styles.titleTxt}>Last name *</Text>
             <TextInput 
                 style={styles.input}
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
+                onChangeText={onLastnameChanged}
+                value={lastname}
             />
-            <Text style={styles.titleTxt}>Phone number</Text>
+            <Text style={styles.titleTxt}>Phone number *</Text>
             <View style={{flexDirection:'row', alignItems:'center', width:'90%', alignSelf:'center'}}>
                 <SelectList 
                     setSelected={setSelectedNumCode} 
@@ -63,11 +91,11 @@ const ProfileInfo = ({navigation}) => {
                     placeholder="(_ _ _)_ _ _-_ _ _"
                     keyboardType="default"
                     autoCapitalize="none"
+                    onChangeText={onPhonenumberChanged}
+                    value={phonenumber}
                 />
             </View>
-            <Pressable onPress={ () => {
-                navigation.navigate("Address")
-            }}>
+            <Pressable onPress={nextPressed}>
                 <Text style={styles.PressableStyle}>Next</Text>
             </Pressable>
         </SafeAreaView>
