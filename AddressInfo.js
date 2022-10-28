@@ -1,8 +1,10 @@
-import { SafeAreaView, StyleSheet, Text, View, Pressable, TextInput } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Pressable, TextInput, Alert } from 'react-native';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { StackActions } from '@react-navigation/native';
 import SelectList from 'react-native-dropdown-select-list';
 import { useState } from 'react';
+import { db } from './FirebaseApp';
+import { getDoc, doc, updateDoc } from "firebase/firestore"
 
 const AddressInfo = ({navigation, route}) => {
     const [selectedCountry, setSelectedCountry] = useState("");
@@ -21,24 +23,30 @@ const AddressInfo = ({navigation, route}) => {
         {key:'3', value:'ON'}
     ]
 
-    // const nextPressed = () => {
-    //     try {
-    //         const query = query(collection(db, "profiles"), profile.id);
-    //         const querySnapshot = await getDocs(query);
-            
-    //         const profileToInsert = {
-    //             userId:user.userId,
-    //             first_name:firstname,
-    //             last_name:lastname,
-    //             phone_number:selectedNumCode+phonenumber
-    //         };
-    //         const insertedProfile = addDoc(collection(db, "profiles"), profileToInsert);
-    //         navigation.navigate("Address", {profile: insertedProfile});
-    //     }
-    //     catch (err) {
-    //         console.log(`${err.message}`);
-    //     }
-    // }
+    const nextPressed = async() => {
+        const docRef = doc(db, "profiles", profile);
+        const profileToUpdate = await getDoc(docRef);
+        const updatedProfileData = {
+            userId:profileToUpdate.data().userId,
+            first_name:profileToUpdate.data().first_name,
+            last_name:profileToUpdate.data().last_name,
+            phone_number:profileToUpdate.data().phone_number,
+            address_1: address1,
+            address_2: address2,
+            city: city,
+            country: selectedCountry,
+            province: selectedProvince,
+            postal_code: postalcode
+        };
+        try {
+            updateDoc(docRef, updatedProfileData);
+            // navigation.dispatch(StackActions.replace("MainNavigator"));
+            navigation.dispatch(StackActions.replace('MainNavigator', {user: profileToUpdate.data().userId}));
+        }
+        catch (err) {
+            console.log(`${err.message}`);
+        }
+    }
 
     return (
         <SafeAreaView style={{flex:1}}> 
@@ -68,6 +76,8 @@ const AddressInfo = ({navigation, route}) => {
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
+                onChangeText={onaddress1Changed}
+                value={address1}
             />
             <Text style={styles.titleTxt}>Address line 2</Text>
             <TextInput 
@@ -75,6 +85,8 @@ const AddressInfo = ({navigation, route}) => {
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
+                onChangeText={onaddress2Changed}
+                value={address2}
             />
             <Text style={styles.titleTxt}>City *</Text>
             <TextInput 
@@ -82,6 +94,8 @@ const AddressInfo = ({navigation, route}) => {
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
+                onChangeText={onCityChanged}
+                value={city}
             />
             <Text style={styles.titleTxt}>Country *</Text>
             <SelectList 
@@ -111,10 +125,10 @@ const AddressInfo = ({navigation, route}) => {
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
+                onChangeText={onPostalcodeChanged}
+                value={postalcode}
             />
-            <Pressable onPress={ () => {
-                navigation.dispatch(StackActions.replace('TabsNavigator'))
-            }}>
+            <Pressable onPress={nextPressed}>
                 <Text style={styles.PressableStyle}>Create Account</Text>
             </Pressable>
         </SafeAreaView>

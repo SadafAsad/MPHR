@@ -45,8 +45,8 @@ const SettingScreen = ({navigation}) => {
 
     const logoutPressed = async () => {
         try {
-            await signOut(auth)
-            navigation.dispatch(StackActions.popToTop());          
+            await signOut(auth) 
+            navigation.dispatch(StackActions.replace('AuthenticationNavigator'));        
         } catch (err) {
             console.log(`Logout failed: ${err.message}`);
         }

@@ -16,7 +16,7 @@ const ProfileInfo = ({navigation, route}) => {
     const numCode = [{key:'1',value:'+1'}];
 
 
-    const nextPressed = () => {
+    const nextPressed = async () => {
         try {
             const profileToInsert = {
                 userId:user.uid,
@@ -24,8 +24,9 @@ const ProfileInfo = ({navigation, route}) => {
                 last_name:lastname,
                 phone_number:selectedNumCode+phonenumber
             };
-            const insertedProfile = addDoc(collection(db, "profiles"), profileToInsert);
-            navigation.navigate("Address", {profile: insertedProfile});
+
+            const insertedProfile = await addDoc(collection(db, "profiles"), profileToInsert);
+            navigation.navigate("Address", {profile: insertedProfile.id});
         }
         catch (err) {
             console.log(`${err.message}`);

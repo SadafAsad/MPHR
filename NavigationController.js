@@ -50,7 +50,7 @@ const logoutPressed = async () => {
 // SettingScreen back button goes to NotificationTabScreen
 // When logout, stack has screens 'HIGH PRIORITY'
 
-const AuthenticationNavigator = () => {
+const AuthenticationNavigator = ({navigation}) => {
     return(
         <Stack.Navigator screenOptions={{
             headerTintColor:'#335C67',
@@ -65,6 +65,7 @@ const AuthenticationNavigator = () => {
             <Stack.Screen name="Address" component={AddressInfo}/>
             <Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
             {/* <Stack.Screen name="ResetPassword" component={ResetPasswordScreen_v2}/> */}
+            <Stack.Screen name="MainNavigator" component={MainNavigator}/>
         </Stack.Navigator>
     )
 }
@@ -73,7 +74,10 @@ export {AuthenticationNavigator};
 
 const MainNavigator = ({navigation}) => {
     return(
-        <Stack.Navigator>
+        <Stack.Navigator screenOptions={{
+            headerTintColor:'#335C67',
+            headerTitleStyle:{color:'#000000'}
+            }}>
             <Stack.Screen 
             name="PetsTabScreen" 
             component={PetsTabScreen} 
@@ -117,6 +121,7 @@ const MainNavigator = ({navigation}) => {
             <Stack.Screen name="CreatePetProfile2Screen" component={CreatePetProfile2Screen}/>
             <Stack.Screen name="VetsTabScreen" component={VetsTabScreen}/>
             <Stack.Screen name="Vaccinations" component={PetHistoryScreenNavigator}/>
+            <Stack.Screen name="AuthenticationNavigator" component={AuthenticationNavigator}/>
         </Stack.Navigator>
     )
 }
