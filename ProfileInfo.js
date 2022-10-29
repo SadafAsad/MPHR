@@ -26,7 +26,6 @@ const ProfileInfo = ({navigation, route}) => {
             };
 
             const insertedProfile = await addDoc(collection(db, "profiles"), profileToInsert);
-            // navigation.navigate("Address", {profile: insertedProfile.id});
             navigation.reset({index:0, routes:[{name: 'Address', params: {profile: insertedProfile.id}}]});
         }
         catch (err) {

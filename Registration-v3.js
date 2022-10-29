@@ -1,5 +1,4 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, Pressable, View } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
 import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
@@ -65,26 +64,26 @@ const Registration_v3 = ({navigation}) => {
         } catch (err) {
             onHasErrorChanged(true);
             setError(err.message);
+            console.log(err.message);
         }
     }
 
-    useEffect(()=>{
-        const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
+    const interval = setInterval(function() {
+        onAuthStateChanged(auth, (userFromFirebaseAuth) => {
             if (userFromFirebaseAuth) {
-                console.log('signed up user: '+userFromFirebaseAuth.email); 
                 userFromFirebaseAuth.reload();
                 if (userFromFirebaseAuth.emailVerified){
-                    setLoggedInUser(userFromFirebaseAuth);  
-                    console.log('verified user: '+userFromFirebaseAuth.email);
-                    navigation.reset({index:0, routes:[{name: 'SetPassword', params: {user: userFromFirebaseAuth}}]});
+                    setLoggedInUser(userFromFirebaseAuth);
+                    onVerifiedUserChanged(true);
+                    clearInterval(interval);
                 }   
-            }
-            else {
-              setLoggedInUser(null);
-            }
-          })
-          return listener
-    }, [timeLeft])
+            };
+        })
+    }, 1 * 1000);
+
+    useEffect(()=>{
+        if (verifiedUser){ navigation.reset({index:0, routes:[{name: 'SetPassword', params: {user: loggedInUser}}]}); };
+    }, [verifiedUser])
 
     return (
         <SafeAreaView style={{flex:1}}>
