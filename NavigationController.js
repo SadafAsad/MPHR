@@ -42,7 +42,7 @@ const AuthenticationNavigator = ({navigation}) => {
             <Stack.Screen name="Profile" component={ProfileInfo}/>
             <Stack.Screen name="Address" component={AddressInfo}/>
             <Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
-            <Stack.Screen name="MainNavigator" component={MainNavigator}/>
+            <Stack.Screen name="MainNavigator" component={MainNavigator} options={{header: () => null}}/>
         </Stack.Navigator>
     )
 }
@@ -96,7 +96,7 @@ const MainNavigator = ({navigation}) => {
             <Stack.Screen name="CreatePetProfile2Screen" component={CreatePetProfile2Screen}/>
             <Stack.Screen name="VetsTabScreen" component={VetsTabScreen}/>
             <Stack.Screen name="Vaccinations" component={PetHistoryScreenNavigator}/>
-            <Stack.Screen name="AuthenticationNavigator" component={AuthenticationNavigator}/>
+            <Stack.Screen name="AuthenticationNavigator" component={AuthenticationNavigator} options={{header: () => null}}/>
         </Stack.Navigator>
     )
 }
