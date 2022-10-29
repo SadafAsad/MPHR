@@ -41,7 +41,7 @@ const AuthenticationNavigator = ({navigation}) => {
             <Stack.Screen name="SetPassword" component={SetPasswordScreen}/>
             <Stack.Screen name="Profile" component={ProfileInfo}/>
             <Stack.Screen name="Address" component={AddressInfo}/>
-            <Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
+            <Stack.Screen name="ResetPassword" component={ResetPasswordScreen_v2}/>
             <Stack.Screen name="MainNavigator" component={MainNavigator} options={{header: () => null}}/>
         </Stack.Navigator>
     )

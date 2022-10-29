@@ -3,8 +3,9 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
 import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
-import { sendEmailVerification,  } from "firebase/auth";
-import { auth } from "./FirebaseApp";
+import { sendEmailVerification, onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "./FirebaseApp";
+import { collection, getDoc, query, where, doc } from "firebase/firestore";
 import { FontAwesome } from '@expo/vector-icons'; 
 
 const ResetPasswordScreen_v2 = ({navigation}) => {
@@ -14,6 +15,8 @@ const ResetPasswordScreen_v2 = ({navigation}) => {
     const [codeIsSent, setCodeSent] = useState(false);
     const [timeLeft, setTimeLeft] = useState(null);
     const [targetTime, setTargetTime] = useState(null);
+    const [isVerified, setIsVerified] = useState(false);
+    const [loggedInUser, setLoggedInUser] = useState(null);
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
 
     let resendTimerInterval;
@@ -46,7 +49,14 @@ const ResetPasswordScreen_v2 = ({navigation}) => {
             //     .catch((error) => {
             //         console.log('Error fetching user data:', error);
             //     });
-            sendEmailVerification(emailAddress, {
+
+            // const docRef = query(collection(db, "Users"), where("email", "==",emailAddress));
+            const docRef = doc(db, "Users", 'IgOOQaJ22Ohr1twPZ93jtimCMpN2');
+            const userToUpdate = await getDoc(docRef);
+            const userData = userToUpdate.data();
+            console.log(userData);
+            // console.log(userData.email);
+            sendEmailVerification(userToUpdate, {
                 handleCodeInApp: true,
                 url: 'https://mphr-fall2022.firebaseapp.com',
             });
@@ -59,17 +69,66 @@ const ResetPasswordScreen_v2 = ({navigation}) => {
         } catch (err) {
             onHasErrorChanged(true);
             setError(err.message);
+            console.log(err.message);
         }
     }
+
+    const updatePasswordPressed = async() => {
+        // updatePassword(user, password);
+        // navigation.reset({index:0, routes:[{name: 'Profile', params: {user: user}}]});
+
+        // const docRef = doc(db, "profiles", profile);
+        // const profileToUpdate = await getDoc(docRef);
+        // const updatedProfileData = {
+        //     userId:profileToUpdate.data().userId,
+        //     first_name:profileToUpdate.data().first_name,
+        //     last_name:profileToUpdate.data().last_name,
+        //     phone_number:profileToUpdate.data().phone_number,
+        //     address_1: address1,
+        //     address_2: address2,
+        //     city: city,
+        //     country: selectedCountry,
+        //     province: selectedProvince,
+        //     postal_code: postalcode
+        // };
+        // try {
+        //     updateDoc(docRef, updatedProfileData);
+        //     navigation.reset({index:0, routes:[{name: 'MainNavigator', params: {user: profileToUpdate.data().userId}}], key:null});
+        // }
+        // catch (err) {
+        //     console.log(`${err.message}`);
+        // }
+    }
+
+    useEffect(()=>{
+        // const docRef = query(collection(db, "Users"), where("email", "==",emailAddress));
+        // const docRef = doc(db, "Users", emailAddress);
+        // const userToUpdate = await getDoc(docRef);
+        // const userData = userToUpdate.data();
+        const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
+            if (userFromFirebaseAuth) {
+                console.log('signed up user: '+userFromFirebaseAuth.email); 
+                userFromFirebaseAuth.reload();
+                if (userFromFirebaseAuth.emailVerified){
+                    setLoggedInUser(userFromFirebaseAuth);  
+                    console.log('verified user: '+userFromFirebaseAuth.email);
+                    setIsVerified(true);
+                }   
+            }
+            else {
+              setLoggedInUser(null);
+            }
+          })
+          return listener
+    }, [timeLeft])
 
     return (
         <SafeAreaView style={{flex:1}}>
 
-            <Text style={styles.screentitle}>Forgot Password</Text>
-            <Text style={styles.descTxt}>Verify your email to change your password.</Text>
-
-            { !codeIsSent && (
+            { !codeIsSent && !isVerified && (
                 <View>
+                    <Text style={styles.screentitle}>Forgot Password</Text>
+                    <Text style={styles.descTxt}>Verify your email to change your password.</Text>
                     <Text style={styles.titleTxt}>Enter your email address</Text>
                     <TextInput 
                         style={styles.input}
@@ -91,8 +150,10 @@ const ResetPasswordScreen_v2 = ({navigation}) => {
 
             { codeIsSent && (
                 <View>
+                    <Text style={styles.screentitle}>Forgot Password</Text>
+                    <Text style={styles.descTxt}>Verify your email to change your password.</Text>
                     <Text style={styles.titleTxt}>Email address</Text>
-                    <View style={styles.inputContainer}>
+                    <View style={styles.disabledInputContainer}>
                         <FontAwesome name="lock" size={22} color="black" style={{marginLeft:10}}/>
                         <TextInput 
                             style={styles.disabledInput}
@@ -111,6 +172,45 @@ const ResetPasswordScreen_v2 = ({navigation}) => {
                     <Text style={{alignSelf:'center', fontSize:13, marginTop:22}}>
                         Try again in <Text style={{fontWeight:'bold'}}>{timeLeft || targetTime}</Text> second(s)
                     </Text>
+                </View>
+            )}
+
+            { isVerified && (
+                <View>
+                    <Text style={styles.screentitle}>Set New Password</Text>
+                    <Text style={styles.descTxt}>Your email has been successfully verified. Please set a new password</Text>
+                    <Text style={styles.titleTxt}>New Password</Text>
+                    <View style={styles.inputContainer}>
+                        <TextInput 
+                        style={styles.inputField}
+                        placeholder=""
+                        keyboardType="default"
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        secureTextEntry={passwordVisibility}
+                        />
+                        <Pressable onPress={handlePasswordVisibility}>
+                            <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
+                        </Pressable>
+                    </View>
+
+                    <Text style={styles.titleTxt}>Confirm New Password</Text>
+                    <View style={styles.inputContainer}>
+                        <TextInput 
+                        style={styles.inputField}
+                        placeholder=""
+                        keyboardType="default"
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        secureTextEntry={passwordVisibility}
+                        />
+                        <Pressable onPress={handlePasswordVisibility}>
+                            <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
+                        </Pressable>
+                    </View>
+                    <Pressable onPress={updatePasswordPressed}>
+                        <Text style={styles.PressableStyle}>Update Password</Text>
+                    </Pressable>
                 </View>
             )}
         </SafeAreaView>
@@ -133,7 +233,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderColor: '#808080',
     },
-    inputContainer: {
+    disabledInputContainer: {
         alignSelf: 'center',
         height: 45,
         width: '90%',
@@ -142,6 +242,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: 'lightgray',
+    },
+    inputContainer: {
+        alignSelf: 'center',
+        height: 45,
+        width: '90%',
+        borderWidth: 1,
+        borderColor: '#808080',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    inputField: {
+        padding: 10,
+        width: '90%'
     },
     PressableStyle: {
         alignSelf: 'center',
