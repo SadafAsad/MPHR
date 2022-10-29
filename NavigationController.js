@@ -30,20 +30,11 @@ import { signOut } from "firebase/auth";
 
 const Stack = createNativeStackNavigator();
 
-const logoutPressed = async () => {
-    try {
-        await signOut(auth)
-        navigation.dispatch(StackActions.popToTop());          
-    } catch (err) {
-        console.log(`Logout failed: ${err.message}`);
-    }
-}
-
 const AuthenticationNavigator = ({navigation}) => {
     return(
         <Stack.Navigator screenOptions={{
             headerTintColor:'#335C67',
-            headerTitleStyle:{color:'#000000'}
+            headerTitleStyle:{color:'#000000'},
             }}>
             <Stack.Screen name="Login" component={LoginScreen}/>
             <Stack.Screen name="Registration" component={Registration_v3}/>
@@ -62,7 +53,7 @@ const MainNavigator = ({navigation}) => {
     return(
         <Stack.Navigator screenOptions={{
             headerTintColor:'#335C67',
-            headerTitleStyle:{color:'#000000'}
+            headerTitleStyle:{color:'#000000'},
             }}>
             <Stack.Screen 
             name="PetsTabScreen" 
@@ -76,7 +67,14 @@ const MainNavigator = ({navigation}) => {
                       }}>
                           <Ionicons name="settings-sharp" size={24} color='#335C67' style={{marginRight:15}}/>
                       </Pressable>
-                      <Pressable onPress={logoutPressed}>
+                      <Pressable onPress={ async () => {
+                            try {
+                                await signOut(auth);
+                                navigation.reset({index:0, routes:[{name: 'AuthenticationNavigator'}], key:null});      
+                            } catch (err) {
+                                console.log(`Logout failed: ${err.message}`);
+                            }
+                      }}>
                           <MaterialIcons name="logout" size={24} color='#335C67' />
                       </Pressable>
                     </View>

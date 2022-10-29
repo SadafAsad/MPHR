@@ -76,7 +76,7 @@ const Registration_v3 = ({navigation}) => {
                 if (userFromFirebaseAuth.emailVerified){
                     setLoggedInUser(userFromFirebaseAuth);  
                     console.log('verified user: '+userFromFirebaseAuth.email);
-                    navigation.navigate("SetPassword", {user: userFromFirebaseAuth}); 
+                    navigation.reset({index:0, routes:[{name: 'SetPassword', params: {user: userFromFirebaseAuth}}]});
                 }   
             }
             else {

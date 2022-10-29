@@ -46,7 +46,7 @@ const SettingScreen = ({navigation}) => {
     const logoutPressed = async () => {
         try {
             await signOut(auth) 
-            navigation.dispatch(StackActions.replace('AuthenticationNavigator'));        
+            navigation.reset({index:0, routes:[{name: 'AuthenticationNavigator'}], key:null}); 
         } catch (err) {
             console.log(`Logout failed: ${err.message}`);
         }

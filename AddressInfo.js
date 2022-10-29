@@ -40,8 +40,7 @@ const AddressInfo = ({navigation, route}) => {
         };
         try {
             updateDoc(docRef, updatedProfileData);
-            // navigation.dispatch(StackActions.replace("MainNavigator"));
-            navigation.dispatch(StackActions.replace('MainNavigator', {user: profileToUpdate.data().userId}));
+            navigation.reset({index:0, routes:[{name: 'MainNavigator', params: {user: profileToUpdate.data().userId}}], key:null});
         }
         catch (err) {
             console.log(`${err.message}`);
