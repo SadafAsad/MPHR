@@ -3,7 +3,6 @@ import PetsTabScreen from './PetsScreen';
 import VetsTabScreen from './VetsTabScreen';
 import PetProfileScreen from './PetProfileScreen';
 import SettingScreen from './SettingScreen';
-import AddPetScreen from './AddPetScreen';
 import AddVetScreen from './AddVetScreen';
 import LoginScreen from './LoginScreen';
 import ResetPasswordScreen_v2 from './ResetPasswordScreen-v2';
@@ -82,7 +81,6 @@ const MainNavigator = ({navigation}) => {
             }}/>
             <Stack.Screen name="PetProfileScreen" component={PetProfileScreen}/>
             <Stack.Screen name="SettingScreen" component={SettingScreen}/>
-            <Stack.Screen name="AddPetScreen" component={AddPetScreen}/>
             <Stack.Screen name="AddVetScreen" component={AddVetScreen}/>
             <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ title: 'Edit Profile' }}/>
             <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{ title: 'Change password' }}/>

@@ -5,7 +5,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { db } from "./FirebaseApp"
 import { collection, doc, getDocs } from "firebase/firestore";
 
-const VetsTabScreen = () => {
+const VetsTabScreen = ({navigation, route}) => {
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
@@ -44,10 +44,15 @@ const VetsTabScreen = () => {
         {id: 2, name: "Parliament Animal Hospital", address: "584 Parliament St.\nToronto, Ontario M4X 1P8"}
     ];
 
+    const vetSelected = (vetId) => {
+        route.params.onSelect({ selectedVet: vetId });
+        navigation.goBack();
+    }
+
     const renderItem = ( {item} ) => (
         <Pressable onPress={ () => {
             //maybe add navigation for details (not yet confirmed)
-            console.log(`${item.name}`);
+            vetSelected(item.id);
         }
         }>
             <View style={styles.vet}>

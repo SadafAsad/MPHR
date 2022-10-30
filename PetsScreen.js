@@ -23,7 +23,6 @@ const PetsScreen = ({navigation}) => {
 
     useEffect(()=>{
         const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
-        
         if (userFromFirebaseAuth) {
             setLoggedInUser(userFromFirebaseAuth);
             getUserPets(); 
@@ -33,7 +32,7 @@ const PetsScreen = ({navigation}) => {
         }
         })
         return listener
-    })
+    }, [])
 
     const getUserPets = async () => {
         try {

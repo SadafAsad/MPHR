@@ -1,35 +1,88 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
 import { StackActions } from '@react-navigation/native';
+import SelectList from 'react-native-dropdown-select-list';
 import { AntDesign, Ionicons, Fontisto, MaterialIcons, FontAwesome5 } from '@expo/vector-icons'; 
+import { useState, useEffect } from 'react';
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from './FirebaseApp';
 
 const CreatePetProfile = ({navigation}) => {
+    const [loggedInUser, setLoggedInUser] = useState(null);
+    const [pet_name, onPetnameChanged] = useState('');
+    const [pet_birthday, onPetbirthdayChanged] = useState('');
+    const [pet_gender, onPetgenderChanged] = useState('');
+
+    const vet = { selectedVet: null };
+    const onSelectedVet = data => {
+        vet.selectedVet = data;
+    };
+
+    const gender = [
+        {key:'1', value:'Male'}, 
+        {key:'2', value:'Female'}
+    ]
+
+    useEffect(()=>{
+        const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
+        if (userFromFirebaseAuth) {
+            setLoggedInUser(userFromFirebaseAuth);
+        }
+        else {
+            setLoggedInUser(null);
+        }
+        })
+        return listener
+    }, [])
+
+    const nextPressed = async () => {
+        const petToInsert = {
+            userId:loggedInUser.uid,
+            name:pet_name,
+            birthday:pet_birthday,
+            regular_clinic:vet.selectedVet
+        };
+        console.log("user id: " + petToInsert.userId);
+        console.log("pet name: " + petToInsert.name);
+        console.log("pet birthday: " + petToInsert.birthday);
+        console.log("clinic id: " + petToInsert.regular_clinic);
+        // navigation.reset({index:0, routes:[{name: 'CreatePetProfile2Screen', params: {pet_profile: petToInsert}}]});
+    }
+
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
             
             <Text style={styles.title}>Create Pet Profile</Text>
 
-            <Text style={{marginBottom:5, marginLeft:22}}>Name *</Text>
+            <Text style={{marginBottom:5, marginLeft:22}}>Pet Name *</Text>
             <TextInput 
                 style={styles.input}
                 placeholder="Enter name"
                 keyboardType="default"
                 autoCapitalize="none"
+                onChangeText={onPetnameChanged}
+                value={pet_name}
             />
 
-            <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Birthday *</Text>
+            <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Pet Birthday *</Text>
             <TextInput 
                 style={styles.input}
                 placeholder="Birthday"
                 keyboardType="default"
                 autoCapitalize="none"
+                onChangeText={onPetbirthdayChanged}
+                value={pet_birthday}
             />
 
-            <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Sex *</Text>
-            <TextInput  
-                style={styles.input}
-                placeholder="Enter sex"
-                keyboardType="default"
-                autoCapitalize="none"
+            <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Pet Gender *</Text>
+            <SelectList 
+                setSelected={onPetgenderChanged} 
+                data={gender} 
+                onSelect={() => alert(pet_gender)}
+                boxStyles={styles.input}
+                dropdownItemStyles={styles.input}
+                dropdownStyles={{borderColor:'transparent'}}
+                maxHeight='100'
+                placeholder=" "
             />
                 
             <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Photo</Text>
@@ -47,26 +100,14 @@ const CreatePetProfile = ({navigation}) => {
                     <Text style={{marginRight:20, marginLeft: 20}}>No regular Clinic</Text>
                     
                     <Pressable onPress={ () => {
-                        navigation.navigate("VetsTabScreen");
+                        navigation.navigate("VetsTabScreen", {onSelect: onSelectedVet});
                     }}>
                         <AntDesign name="plus" size={20} color="black" style={{marginLeft:140}}/>
                     </Pressable>
                 </View>
             </View>
 
-            <Pressable onPress={ () => {
-                navigation.navigate("CreatePetProfile2Screen")
-                    // Alert.alert('Save Changes', 'Confirm',
-                    // [  
-                    //     {  
-                    //         text: 'Cancel',  
-                    //         onPress: () => console.log('Cancel Pressed'),  
-                    //         style: 'cancel',  
-                    //     },  
-                    //     {text: 'OK', onPress: () => console.log('OK Pressed')},  
-                    // ]  
-                    //);
-                }}>
+            <Pressable onPress={nextPressed}>
                 <Text style={styles.deletePressable}>NEXT</Text>
             </Pressable>
            
@@ -90,6 +131,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
+        borderRadius: '0%',
     },
     deletePressable: {
         alignSelf: 'center',
