@@ -1,5 +1,5 @@
 import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image, Alert } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
 import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged,signOut } from "firebase/auth"
@@ -10,7 +10,7 @@ const PetsScreen = ({navigation}) => {
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
-    const [loggedInUser, setLoggedInUser] = useState('')
+    const [loggedInUser, setLoggedInUser] = useState(null);
     let petId = String;
 
     // useEffect(() => {
@@ -21,31 +21,30 @@ const PetsScreen = ({navigation}) => {
 
     //AsyncStorage.clear();
 
-    const pets = [
-        {id: 1, name: "Bacon", birthday: "2022-03-12"},
-        {id: 2, name: "Leila", birthday: "2022-09-01"},
-        {id: 3, name: "Honey", birthday: "2022-03-31"}
-    ];
-
     useEffect(()=>{
         const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
         
         if (userFromFirebaseAuth) {
-            console.log("userFromFirebaseAuth.uid is:" + userFromFirebaseAuth.email) 
-            
-            setLoggedInUser(userFromFirebaseAuth.email) 
-            
+            setLoggedInUser(userFromFirebaseAuth);
+            getUserPets(); 
         }
         else {
-            setLoggedInUser(null)
-            console.log("No user signed in")
+            setLoggedInUser(null);
         }
         })
-        console.log("listener is : " + listener);
         return listener
-    }, [])
+    })
 
-    
+    const getUserPets = async () => {
+        try {
+            const docRef = query(collection(db, "pets"), where("userId", "==",loggedInUser.uid));
+            const querySnapshot = await getDocs(docRef);
+            const documents = querySnapshot.docs;
+            setFilteredDataSource(documents);
+        } catch (err) {
+            console.log(`${err.message}`)        
+        }
+    }
 
     const getPetList = async () => {
         try{
@@ -81,7 +80,15 @@ const PetsScreen = ({navigation}) => {
         }
     }
 
-    
+    // useEffect(()=>{
+    //     getPetList(loggedInUser);
+        
+    // }, [])
+
+    // useEffect(()=>{
+    //     getPetList();
+        
+    // }, [])
 
     const onChangeSearch = query => setSearchQuery(query);
 
@@ -125,11 +132,6 @@ const PetsScreen = ({navigation}) => {
         }
     }
 
-    // useEffect(()=>{
-    //     getPetList(loggedInUser);
-        
-    // }, [])
-
     const renderItem = ( {item} ) => (
         <Pressable onPress={ () => {
             navigation.navigate("PetProfileScreen", {pet: item});
@@ -137,7 +139,7 @@ const PetsScreen = ({navigation}) => {
         }>
             <View style={styles.pet}>
                 <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                    <Image source={require('./assets/pet-icon-2.png')} style={styles.img}/>
+                    <Image source={require('./assets/paw.png')} style={styles.img}/>
                     <View>
                         <View style={{flexDirection:'row', alignItems:'baseline'}}>
                             <Text style={{marginLeft:20, fontSize:18}}>{item.data().name}</Text>
@@ -156,19 +158,12 @@ const PetsScreen = ({navigation}) => {
             <View style={{height: 1, width: "100%", backgroundColor: "#cccccc"}}/>
         )
     }
-    
-    useEffect(()=>{
-        getPetList();
-        
-    }, [])
 
     return (
         <SafeAreaView style={styles.container}>
-            <View  style={{marginTop:10, marginBottom:50}}> 
+            <View  style={{marginTop:10, marginBottom:10}}> 
             <Searchbar placeholder="Search" onChangeText={(text) => searchFilterFunction(text)} value={search} style={styles.searchBar} />
                 <Pressable onPress={ () => {
-                    // navigation.navigate("CheckMailScreen");
-                        //navigation.dispatch(StackActions.replace('CheckMailScreen'))
                         Alert.alert('Adding new pet', 'Confirm',
                         [  
                             {  
@@ -209,6 +204,8 @@ const styles = StyleSheet.create({
     img: {
         marginLeft: 22,
         width: 60,
+        // max_width: 50,
+        // max_height: 10,
         height: 60,
         borderRadius: '100%',
         borderWidth: 1,
@@ -228,7 +225,8 @@ const styles = StyleSheet.create({
     },
     searchBar: {
         width: '90%',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        elevation: 1
     }
 });
 
