@@ -1,12 +1,11 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import PetsTabScreen from './PetsTabScreen';
+import PetsTabScreen from './PetsScreen';
 import VetsTabScreen from './VetsTabScreen';
 import PetProfileScreen from './PetProfileScreen';
 import SettingScreen from './SettingScreen';
 import AddPetScreen from './AddPetScreen';
 import AddVetScreen from './AddVetScreen';
 import LoginScreen from './LoginScreen';
-import ResetPasswordScreen from './ResetPasswordScreen';
 import ResetPasswordScreen_v2 from './ResetPasswordScreen-v2';
 import Registration_v3 from './Registration-v3';
 import SetPasswordScreen from './SetPasswordScreen';

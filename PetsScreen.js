@@ -6,7 +6,7 @@ import { onAuthStateChanged,signOut } from "firebase/auth"
 import { auth, db, firebaseApp } from './FirebaseApp';
 import { collection, query, where, getDocs, Firestore } from "firebase/firestore";
 
-const PetsTabScreen = ({navigation}) => {
+const PetsScreen = ({navigation}) => {
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
@@ -232,4 +232,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default PetsTabScreen;
+export default PetsScreen;
