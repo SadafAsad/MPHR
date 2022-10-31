@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert, } from 'react-native';
-import { StackActions } from '@react-navigation/native';
-import { AntDesign, Ionicons, Fontisto, MaterialIcons, FontAwesome5 } from '@expo/vector-icons'; 
+import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { db } from './FirebaseApp';
 import { collection, addDoc} from "firebase/firestore";
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const CreatePetProfile2Screen = ({navigation, route}) => {
     const [checked, setChecked] = React.useState('first');

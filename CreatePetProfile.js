@@ -1,7 +1,6 @@
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert, Image } from 'react-native';
-import { StackActions } from '@react-navigation/native';
+import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Image } from 'react-native';
 import SelectList from 'react-native-dropdown-select-list';
-import { AntDesign, Ionicons, Fontisto, MaterialIcons, FontAwesome5, FontAwesome } from '@expo/vector-icons'; 
+import { AntDesign, MaterialIcons, FontAwesome5, FontAwesome } from '@expo/vector-icons'; 
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from './FirebaseApp';
@@ -55,7 +54,6 @@ const CreatePetProfile = ({navigation}) => {
             regular_clinic:vet_id
         };
         navigation.navigate('CreatePetProfile2Screen', {pet_profile: petToInsert});
-        // navigation.reset({index:0, routes:[{name: 'CreatePetProfile2Screen', params: {pet_profile: petToInsert}}]});
     }
 
     return (
