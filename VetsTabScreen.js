@@ -44,15 +44,21 @@ const VetsTabScreen = ({navigation, route}) => {
         {id: 2, name: "Parliament Animal Hospital", address: "584 Parliament St.\nToronto, Ontario M4X 1P8"}
     ];
 
-    const vetSelected = (vetId) => {
-        route.params.onSelect({ selectedVet: vetId });
+    const vetSelected = (vet) => {
+        const vetData = {
+            id: vet.id,
+            name: vet.data().name,
+            street: vet.data().street_address,
+            city: vet.data().city_address
+        }
+        route.params.onSelect({selectedVet: vetData});
         navigation.goBack();
     }
 
     const renderItem = ( {item} ) => (
         <Pressable onPress={ () => {
             //maybe add navigation for details (not yet confirmed)
-            vetSelected(item.id);
+            vetSelected(item);
         }
         }>
             <View style={styles.vet}>

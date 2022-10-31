@@ -3,41 +3,78 @@ import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert, } fr
 import { StackActions } from '@react-navigation/native';
 import { AntDesign, Ionicons, Fontisto, MaterialIcons, FontAwesome5 } from '@expo/vector-icons'; 
 import { RadioButton } from 'react-native-paper';
+import { db } from './FirebaseApp';
+import { collection, addDoc} from "firebase/firestore";
+import { useState, useEffect } from 'react';
 
-const CreatePetProfile2Screen = ({navigation}) => {
+const CreatePetProfile2Screen = ({navigation, route}) => {
     const [checked, setChecked] = React.useState('first');
+    const [pet_specie, onSpecieChanged] = useState('');
+    const [pet_breed, onBreedChanged] = useState('');
+    const [coat_color, onColorChanged] = useState('');
+
+    const {pet_profile} = route.params;
+
+    const addPetPressed = async () => {
+        try {
+            const petToInsert = {
+                userId:pet_profile.userId,
+                name:pet_profile.name,
+                birthday:pet_profile.birthday,
+                regular_clinic:pet_profile.regular_clinic,
+                specie:pet_specie,
+                breed:pet_breed,
+                coat_color:coat_color,
+                mark:"",
+                neutering:"",
+            };
+            const insertedPet = await addDoc(collection(db, "pets"), petToInsert);
+            navigation.pop(2);
+        }
+        catch (err) {
+            console.log(`${err.message}`);
+        }
+    }
 
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
             
             <Text style={styles.title}>Create Pet Profile</Text>
 
-                <Text style={{marginBottom:5, marginLeft:22}}>Specie</Text>
-                
+                <Text style={{marginBottom:5, marginLeft:22}}>Pet Specie</Text>
                 <TextInput 
                     style={styles.input}
-                    placeholder="Enter name"
+                    placeholder=""
                     keyboardType="default"
                     autoCapitalize="none"
+                    onChangeText={onSpecieChanged}
+                    value={pet_specie}
                 />
-                <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Breed</Text>
+
+                <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Pet Breed</Text>
                 <TextInput 
                     style={styles.input}
-                    placeholder="Birthday"
+                    placeholder=""
                     keyboardType="default"
                     autoCapitalize="none"
+                    onChangeText={onBreedChanged}
+                    value={pet_breed}
                 />
-                <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Coat Color</Text>
+
+                <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Pet Coat Color</Text>
                 <TextInput  
                     style={styles.input}
-                    placeholder="Enter coat color"
+                    placeholder=""
                     keyboardType="default"
                     autoCapitalize="none"
+                    onChangeText={onColorChanged}
+                    value={coat_color}
                 />
-                <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Distinguish Mark</Text>
+
+                <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Pet Distinguish Mark</Text>
                 <TextInput 
                     style={styles.input}
-                    placeholder="Enter phone number"
+                    placeholder=""
                     keyboardType="name-phone-pad"
                     autoCapitalize="none"
                 />
@@ -66,19 +103,7 @@ const CreatePetProfile2Screen = ({navigation}) => {
             </View>
 
             <View style={{marginTop:10, marginBottom:22}}>
-            <Pressable onPress={ () => {
-                    navigation.dispatch(StackActions.replace('TabsNavigator'))
-                    // Alert.alert('Save Changes', 'Confirm',
-                    // [  
-                    //     {  
-                    //         text: 'Cancel',  
-                    //         onPress: () => console.log('Cancel Pressed'),  
-                    //         style: 'cancel',  
-                    //     },  
-                    //     {text: 'OK', onPress: () => console.log('OK Pressed')},  
-                    // ]  
-                    //);
-                }}>
+            <Pressable onPress={addPetPressed}>
                     <Text style={styles.deletePressable}>ADD PET</Text>
                 </Pressable>
             </View>

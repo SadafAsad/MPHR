@@ -11,10 +11,23 @@ const CreatePetProfile = ({navigation}) => {
     const [pet_name, onPetnameChanged] = useState('');
     const [pet_birthday, onPetbirthdayChanged] = useState('');
     const [pet_gender, onPetgenderChanged] = useState('');
+    const [vet_id, setVetId] = useState(null);
+    const [vet_name, setVetName] = useState('');
+    const [vet_street, setVetStreet] = useState('');
+    const [vet_city, setVetCity] = useState('');
 
-    const vet = { selectedVet: null };
     const onSelectedVet = data => {
-        vet.selectedVet = data;
+        var count = 0;
+        for (const [key, value] of Object.entries(data)) {
+            for (const [key2, value2] of Object.entries(value)) {
+                // console.log(`${key2}: ${value2}`);
+                if (count==0) { setVetId(value2); }
+                else if (count==1) { setVetName(value2); }
+                else if (count==2) { setVetStreet(value2); }
+                else if (count==3) { setVetCity(value2); }
+                count = count+1;
+            }
+        }
     };
 
     const gender = [
@@ -34,25 +47,14 @@ const CreatePetProfile = ({navigation}) => {
         return listener
     }, [])
 
-    const nextPressed = async () => {
-        var clinic_id = null;
-        for (const [key, value] of Object.entries(vet)) {
-            for (const [key2, value2] of Object.entries(value)) {
-                console.log(`${key2}: ${value2}`);
-                clinic_id = value2;
-            }
-            console.log(`${key}: ${value}`);
-        }
+    const nextPressed = () => {
         const petToInsert = {
             userId:loggedInUser.uid,
             name:pet_name,
             birthday:pet_birthday,
-            regular_clinic:clinic_id
+            regular_clinic:vet_id
         };
-        console.log("user id: " + petToInsert.userId);
-        console.log("pet name: " + petToInsert.name);
-        console.log("pet birthday: " + petToInsert.birthday);
-        console.log("clinic id: " + petToInsert.regular_clinic);
+        navigation.navigate('CreatePetProfile2Screen', {pet_profile: petToInsert});
         // navigation.reset({index:0, routes:[{name: 'CreatePetProfile2Screen', params: {pet_profile: petToInsert}}]});
     }
 
@@ -64,7 +66,7 @@ const CreatePetProfile = ({navigation}) => {
             <Text style={{marginBottom:5, marginLeft:22}}>Pet Name *</Text>
             <TextInput 
                 style={styles.input}
-                placeholder="Enter name"
+                placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
                 onChangeText={onPetnameChanged}
@@ -74,7 +76,7 @@ const CreatePetProfile = ({navigation}) => {
             <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Pet Birthday *</Text>
             <TextInput 
                 style={styles.input}
-                placeholder="Birthday"
+                placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
                 onChangeText={onPetbirthdayChanged}
@@ -101,7 +103,7 @@ const CreatePetProfile = ({navigation}) => {
                 autoCapitalize="none"
             />
 
-            { vet.selectedVet==null && (
+            { vet_id==null && (
                 <View style={{flex:1, alignItems:'baseline', margin: 22}}>
                     <Text style={{marginBottom:15, fontSize:16, fontWeight: 'bold'}}>Regular Clinic</Text>
                     <View style={{flexDirection:'row', justifyContent:'space-between', marginRight: 20, alignSelf:'stretch', alignItems:'center'}}>
@@ -118,16 +120,16 @@ const CreatePetProfile = ({navigation}) => {
                 </View>
             )}
 
-            { !vet.selectedVet==null && (
+            { !(vet_id==null) && (
                 <View style={{flex:1, alignItems:'baseline', margin:22}}>
                     <Text style={{marginBottom:15, fontSize:16, fontWeight: 'bold'}}>Regular Clinic</Text>
-                    <View style={{flexDirection:'row', justifyContent:'space-between', marginRight: 15, alignSelf:'stretch', alignItems:'center'}}>
+                    <View style={{flexDirection:'row', justifyContent:'space-between', marginRight: 10, alignSelf:'stretch', alignItems:'center'}}>
                         <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
                             <Image source={require('./assets/physical-examination-1.png')} style={styles.img}/>
                             <View style={{marginRight:20, marginLeft: 20}}>
-                                <Text style={{fontWeight: 'bold'}}>Clinic Name</Text>
-                                <Text>Clinic Street Address</Text>
-                                <Text>Clinic City Address</Text>
+                                <Text style={{fontWeight: 'bold'}}>{vet_name}</Text>
+                                <Text>{vet_street}</Text>
+                                <Text>{vet_city}</Text>
                             </View>
                         </View>
                         <View style={{flexDirection:'row', justifyContent:'space-between', alignSelf:'center', alignItems:'center'}}>
