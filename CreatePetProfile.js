@@ -59,9 +59,18 @@ const CreatePetProfile = ({navigation}) => {
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
             
-            <Text style={styles.title}>Create Pet Profile</Text>
+            <View style={styles.imgView}>
+                <Image source={require('./assets/paw.png')} style={styles.img}/>
+            </View>
 
-            <Text style={{marginBottom:5, marginLeft:22}}>Pet Name *</Text>
+            <Pressable>
+                <View style={{flexDirection:'row', alignItems:'center', alignSelf:'center', marginTop:15}}>
+                    <MaterialIcons name="file-upload" size={24} color='#335C67' />
+                    <Text style={{color:'#335C67', fontWeight:'bold'}}>Upload photo</Text>
+                </View>
+            </Pressable>
+
+            <Text style={{marginBottom:5, marginLeft:22, marginTop:30}}>Pet Name *</Text>
             <TextInput 
                 style={styles.input}
                 placeholder=""
@@ -123,7 +132,9 @@ const CreatePetProfile = ({navigation}) => {
                     <Text style={{marginBottom:15, fontSize:16, fontWeight: 'bold'}}>Regular Clinic</Text>
                     <View style={{flexDirection:'row', justifyContent:'space-between', marginRight: 10, alignSelf:'stretch', alignItems:'center'}}>
                         <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                            <Image source={require('./assets/physical-examination-1.png')} style={styles.img}/>
+                            <View style={styles.smallImgView}>
+                                <Image source={require('./assets/physical-examination-1.png')} style={styles.img}/>
+                            </View>
                             <View style={{marginRight:20, marginLeft: 20}}>
                                 <Text style={{fontWeight: 'bold'}}>{vet_name}</Text>
                                 <Text>{vet_street}</Text>
@@ -191,12 +202,27 @@ const styles = StyleSheet.create({
         alignItems:'center',
         alignSelf:'center'
     },
-    img: {
+    imgView: {
+        width: 150,
+        height: 150,
+        borderRadius: '100%',
+        borderWidth: 1,
+        borderColor: 'black',
+        alignSelf: 'center',
+        marginTop: 22
+    },
+    smallImgView: {
         width: 60,
         height: 60,
         borderRadius: '100%',
         borderWidth: 1,
         borderColor: 'black',
+        alignSelf: 'center'
+    },
+    img: {
+        width:'100%', 
+        height:undefined, 
+        aspectRatio:1
     },
 });
 

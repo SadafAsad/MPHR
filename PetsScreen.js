@@ -141,7 +141,9 @@ const PetsScreen = ({navigation}) => {
         }>
             <View style={styles.pet}>
                 <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                    <Image source={require('./assets/paw.png')} style={styles.img}/>
+                    <View style={styles.imgView}>
+                        <Image source={require('./assets/paw.png')} style={styles.img}/>
+                    </View>
                     <View>
                         <View style={{flexDirection:'row', alignItems:'baseline'}}>
                             <Text style={{marginLeft:20, fontSize:18}}>{item.data().name}</Text>
@@ -195,14 +197,18 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     img: {
-        marginLeft: 22,
+        width:'100%', 
+        height:undefined, 
+        aspectRatio:1
+    },
+    imgView: {
         width: 60,
-        // max_width: 50,
-        // max_height: 10,
         height: 60,
         borderRadius: '100%',
         borderWidth: 1,
         borderColor: 'black',
+        alignSelf: 'center',
+        marginLeft: 22
     },
     deletePressable: {
         alignSelf: 'center',
