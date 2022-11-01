@@ -26,6 +26,7 @@ const CreatePetProfile2Screen = ({navigation, route}) => {
                 userId:pet_profile.userId,
                 name:pet_profile.name,
                 birthday:pet_profile.birthday,
+                gender:pet_profile.gender,
                 regular_clinic:pet_profile.regular_clinic,
                 specie:pet_specie,
                 breed:pet_breed,

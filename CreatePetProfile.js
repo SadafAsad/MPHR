@@ -51,6 +51,7 @@ const CreatePetProfile = ({navigation}) => {
             userId:loggedInUser.uid,
             name:pet_name,
             birthday:pet_birthday,
+            gender:pet_gender,
             regular_clinic:vet_id
         };
         navigation.navigate('CreatePetProfile2Screen', {pet_profile: petToInsert});
@@ -94,7 +95,7 @@ const CreatePetProfile = ({navigation}) => {
             <SelectList 
                 setSelected={onPetgenderChanged} 
                 data={gender} 
-                onSelect={() => alert(pet_gender)}
+                onSelect={() => {onPetgenderChanged(gender[pet_gender-1].value)}}
                 boxStyles={styles.input}
                 dropdownItemStyles={styles.input}
                 dropdownStyles={{borderColor:'transparent'}}
