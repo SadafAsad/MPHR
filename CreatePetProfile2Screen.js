@@ -1,19 +1,26 @@
 import * as React from 'react';
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable } from 'react-native';
-import { RadioButton } from 'react-native-paper';
+import CheckBox from "expo-checkbox";
 import { db } from './FirebaseApp';
 import { collection, addDoc} from "firebase/firestore";
 import { useState } from 'react';
+import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
 
 const CreatePetProfile2Screen = ({navigation, route}) => {
-    const [checked, setChecked] = React.useState('first');
     const [pet_specie, onSpecieChanged] = useState('');
     const [pet_breed, onBreedChanged] = useState('');
     const [coat_color, onColorChanged] = useState('');
+    const [mark, onMarkChanged] = useState('');
+    const [isSpayed, setSpayed] = useState(false);
+    const [isIntact, setIntact] = useState(false);
 
     const {pet_profile} = route.params;
 
     const addPetPressed = async () => {
+        var castration = "";
+        if (isSpayed) { castration = 'Neutered' }
+        else if (isIntact) { castration = 'Intact' };
+
         try {
             const petToInsert = {
                 userId:pet_profile.userId,
@@ -23,8 +30,8 @@ const CreatePetProfile2Screen = ({navigation, route}) => {
                 specie:pet_specie,
                 breed:pet_breed,
                 coat_color:coat_color,
-                mark:"",
-                neutering:"",
+                mark:mark,
+                neutering:castration,
             };
             const insertedPet = await addDoc(collection(db, "pets"), petToInsert);
             navigation.reset({index:0, routes:[{name: 'PetsTabScreen'}]});
@@ -35,11 +42,10 @@ const CreatePetProfile2Screen = ({navigation, route}) => {
     }
 
     return (
-        <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
-            
-            <Text style={styles.title}>Create Pet Profile</Text>
+        <SafeAreaView style={{flex:1, backgroundColor:'#fff', justifyContent:'space-between'}}>
 
-                <Text style={{marginBottom:5, marginLeft:22}}>Pet Specie</Text>
+            <View>
+                <Text style={{marginBottom:5, marginLeft:22, marginTop:22}}>Pet Specie</Text>
                 <TextInput 
                     style={styles.input}
                     placeholder=""
@@ -69,44 +75,54 @@ const CreatePetProfile2Screen = ({navigation, route}) => {
                     value={coat_color}
                 />
 
-                <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Pet Distinguish Mark</Text>
+                <View style={{alignItems:'baseline', margin: 22}}>
+                    <Text style={{marginBottom:15, fontSize:16}}>Neutering / Castration</Text>
+                    <View style={{flexDirection:'row', alignItems:'center'}}>
+                        <CheckBox
+                            value={isSpayed}
+                            onValueChange={() => {
+                                setSpayed(!isSpayed);
+                                setIntact(false);
+                            }}
+                            color='#335C67'
+                            style={{borderRadius:'100%'}}
+                        />
+                        <Text style={{marginLeft:5, fontSize:15}}>Spayed or Neutered</Text>
+                    </View>
+                    <View style={{flexDirection:'row', alignItems:'center', marginTop:10}}>
+                        <CheckBox
+                            value={isIntact}
+                            onValueChange={() => {
+                                setSpayed(false);
+                                setIntact(!isIntact);
+                            }}
+                            color='#335C67'
+                            style={{borderRadius:'100%'}}
+                        />
+                        <Text style={{marginLeft:5, fontSize:15}}>Intact</Text>
+                    </View>
+                </View>
+
+                <Text style={{marginBottom:5, marginLeft:22}}>Pet Distinguish Mark</Text>
                 <TextInput 
-                    style={styles.input}
+                    style={styles.txtInput}
                     placeholder=""
                     keyboardType="name-phone-pad"
                     autoCapitalize="none"
+                    multiline={true}
+                    numberOfLines={10}
+                    onChangeText={onMarkChanged}
+                    value={mark}
                 />
-            <View style={{flex:1, alignItems:'baseline', margin: 22}}>
-                <Text style={{marginBottom:15, fontSize:16, fontWeight: 'bold'}}>Neutering / Castration</Text>
-                <View style={styles.checkedOptions}>
-                <Text style={{marginBottom:5, fontSize:16,}}>Spayed Or Neutered</Text>
-                <RadioButton
-                    value="Spayed Or Neutered"
-                    status={ checked === 'first' ? 'checked' : 'unchecked' }
-                    onPress={() => setChecked('first') }
-                    style= {{margin: 20, padding:20}}
-                />
-                </View>
-                <View style={styles.checkedOptions}>
-                <Text style={{marginBottom:5, fontSize:16}}>Intact</Text>
-                <RadioButton
-                    value="Intact"
-                    status={ checked === 'second' ? 'checked' : 'unchecked' }
-                    onPress={() => setChecked('second')}
-                    style={{width:'90%'}}
-                />
-                
-                </View>
-                
-            </View>
 
+            </View>
+            
             <View style={{marginTop:10, marginBottom:22}}>
-            <Pressable onPress={addPetPressed}>
+                <Pressable onPress={addPetPressed}>
                     <Text style={styles.deletePressable}>ADD PET</Text>
                 </Pressable>
             </View>
                 
-           
         </SafeAreaView>
     );
 }
@@ -127,6 +143,15 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
+    },
+    txtInput: {
+        alignSelf: 'center',
+        height: 150,
+        width: '90%',
+        borderWidth: 1,
+        padding: 10,
+        borderColor: '#808080',
+        textAlignVertical: 'top'
     },
     deletePressable: {
         alignSelf: 'center',

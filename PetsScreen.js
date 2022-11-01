@@ -166,18 +166,9 @@ const PetsScreen = ({navigation}) => {
             <View  style={{marginTop:10, marginBottom:10}}> 
             <Searchbar placeholder="Search" onChangeText={(text) => searchFilterFunction(text)} value={search} style={styles.searchBar} />
                 <Pressable onPress={ () => {
-                        Alert.alert('Adding new pet', 'Confirm',
-                        [  
-                            {  
-                                text: 'Cancel',  
-                                onPress: () => console.log('Cancel Pressed'),  
-                                style: 'cancel',  
-                            },  
-                            {text: 'OK', onPress: () => navigation.navigate("CreatePetProfile")},  
-                        ]  
-                        );
-                    }}>
-                        <Text style={styles.deletePressable}>Add New Pet</Text>
+                    navigation.navigate("CreatePetProfile")
+                }}>
+                    <Text style={styles.deletePressable}>Add New Pet</Text>
                 </Pressable>
 
             </View>

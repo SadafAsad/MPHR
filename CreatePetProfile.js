@@ -74,7 +74,7 @@ const CreatePetProfile = ({navigation}) => {
             <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Pet Birthday *</Text>
             <TextInput 
                 style={styles.input}
-                placeholder=""
+                placeholder="YY-MM-DD"
                 keyboardType="default"
                 autoCapitalize="none"
                 onChangeText={onPetbirthdayChanged}
