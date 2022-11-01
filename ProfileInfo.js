@@ -2,8 +2,6 @@ import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable } from 'reac
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import SelectList from 'react-native-dropdown-select-list';
 import { useState } from 'react';
-import { db } from './FirebaseApp';
-import { collection, addDoc} from "firebase/firestore"
 
 const ProfileInfo = ({navigation, route}) => {
     const [selectedNumCode, setSelectedNumCode] = useState("");
@@ -16,21 +14,14 @@ const ProfileInfo = ({navigation, route}) => {
     const numCode = [{key:'1',value:'+1'}];
 
 
-    const nextPressed = async () => {
-        try {
-            const profileToInsert = {
-                userId:user.uid,
-                first_name:firstname,
-                last_name:lastname,
-                phone_number:selectedNumCode+phonenumber
-            };
-
-            const insertedProfile = await addDoc(collection(db, "profiles"), profileToInsert);
-            navigation.reset({index:0, routes:[{name: 'Address', params: {profile: insertedProfile.id}}]});
-        }
-        catch (err) {
-            console.log(`${err.message}`);
-        }
+    const nextPressed = () => {
+        const profileToInsert = {
+            userId:user.uid,
+            first_name:firstname,
+            last_name:lastname,
+            phone_number:selectedNumCode+phonenumber
+        };
+        navigation.navigate('Address', {profile: profileToInsert});
     }
 
     return (
@@ -78,7 +69,7 @@ const ProfileInfo = ({navigation, route}) => {
                 <SelectList 
                     setSelected={setSelectedNumCode} 
                     data={numCode} 
-                    onSelect={() => alert(selectedNumCode)}
+                    onSelect={() => {setSelectedNumCode(numCode[selectedNumCode-1].value)}}
                     boxStyles={styles.numCodeInput}
                     dropdownItemStyles={styles.numCodeInput}
                     dropdownStyles={{borderColor:'transparent'}}

@@ -1,10 +1,9 @@
-import { SafeAreaView, StyleSheet, Text, View, Pressable, TextInput, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Pressable, TextInput } from 'react-native';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
-import { StackActions } from '@react-navigation/native';
 import SelectList from 'react-native-dropdown-select-list';
 import { useState } from 'react';
 import { db } from './FirebaseApp';
-import { getDoc, doc, updateDoc } from "firebase/firestore"
+import { collection, addDoc } from "firebase/firestore";
 
 const AddressInfo = ({navigation, route}) => {
     const [selectedCountry, setSelectedCountry] = useState("");
@@ -24,27 +23,47 @@ const AddressInfo = ({navigation, route}) => {
     ]
 
     const nextPressed = async() => {
-        const docRef = doc(db, "profiles", profile);
-        const profileToUpdate = await getDoc(docRef);
-        const updatedProfileData = {
-            userId:profileToUpdate.data().userId,
-            first_name:profileToUpdate.data().first_name,
-            last_name:profileToUpdate.data().last_name,
-            phone_number:profileToUpdate.data().phone_number,
-            address_1: address1,
-            address_2: address2,
-            city: city,
-            country: selectedCountry,
-            province: selectedProvince,
-            postal_code: postalcode
-        };
         try {
-            updateDoc(docRef, updatedProfileData);
-            navigation.reset({index:0, routes:[{name: 'MainNavigator', params: {user: profileToUpdate.data().userId}}], key:null});
+            const profileToInsert = {
+                userId:profile.userId,
+                first_name:profile.first_name,
+                last_name:profile.last_name,
+                phone_number:profile.phone_number,
+                address_1: address1,
+                address_2: address2,
+                city: city,
+                country: selectedCountry,
+                province: selectedProvince,
+                postal_code: postalcode
+            };
+            const insertedProfile = await addDoc(collection(db, "profiles"), profileToInsert);
+            navigation.reset({index:0, routes:[{name: 'MainNavigator', params: {user: profileToInsert.userId}}], key:null});
         }
         catch (err) {
             console.log(`${err.message}`);
         }
+        // UPDATE EXAMPLE CODE -WORKED
+        // const docRef = doc(db, "profiles", profile);
+        // const profileToUpdate = await getDoc(docRef);
+        // const updatedProfileData = {
+        //     userId:profileToUpdate.data().userId,
+        //     first_name:profileToUpdate.data().first_name,
+        //     last_name:profileToUpdate.data().last_name,
+        //     phone_number:profileToUpdate.data().phone_number,
+        //     address_1: address1,
+        //     address_2: address2,
+        //     city: city,
+        //     country: selectedCountry,
+        //     province: selectedProvince,
+        //     postal_code: postalcode
+        // };
+        // try {
+        //     updateDoc(docRef, updatedProfileData);
+        //     navigation.reset({index:0, routes:[{name: 'MainNavigator', params: {user: profileToUpdate.data().userId}}], key:null});
+        // }
+        // catch (err) {
+        //     console.log(`${err.message}`);
+        // }
     }
 
     return (
@@ -100,7 +119,7 @@ const AddressInfo = ({navigation, route}) => {
             <SelectList 
                 setSelected={setSelectedCountry} 
                 data={country} 
-                onSelect={() => alert(selectedCountry)}
+                onSelect={() => {setSelectedCountry(country[selectedCountry-1].value)}}
                 boxStyles={styles.input}
                 dropdownItemStyles={styles.input}
                 dropdownStyles={{borderColor:'transparent'}}
@@ -111,7 +130,7 @@ const AddressInfo = ({navigation, route}) => {
             <SelectList 
                 setSelected={setSelectedProvince} 
                 data={province} 
-                onSelect={() => alert(selectedProvince)}
+                onSelect={() => {setSelectedProvince(province[selectedProvince-1].value)}}
                 boxStyles={styles.input}
                 dropdownItemStyles={styles.input}
                 dropdownStyles={{borderColor:'transparent'}}
