@@ -5,12 +5,14 @@ import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged } from "firebase/auth"
 import { auth, db } from './FirebaseApp';
 import { collection, query, where, getDocs, Firestore } from "firebase/firestore";
+import { useIsFocused } from '@react-navigation/native';
 
 const PetsScreen = ({navigation}) => {
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
     const [loggedInUser, setLoggedInUser] = useState(null);
+    const isFocused = useIsFocused();
     let petId = String;
 
     useEffect(()=>{
@@ -27,7 +29,7 @@ const PetsScreen = ({navigation}) => {
 
     useEffect(()=>{
         getUserPets();
-    }, [loggedInUser])
+    }, [loggedInUser, isFocused])
 
     const getUserPets = async () => {
         try {

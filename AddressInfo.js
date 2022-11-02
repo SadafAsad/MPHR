@@ -37,7 +37,7 @@ const AddressInfo = ({navigation, route}) => {
                 postal_code: postalcode
             };
             const insertedProfile = await addDoc(collection(db, "profiles"), profileToInsert);
-            navigation.reset({index:0, routes:[{name: 'MainNavigator', params: {user: profileToInsert.userId}}], key:null});
+            navigation.reset({index:0, routes:[{name: 'MainNavigator'}], key:null});
         }
         catch (err) {
             console.log(`${err.message}`);

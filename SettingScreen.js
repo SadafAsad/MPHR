@@ -5,12 +5,15 @@ import { useEffect, useState } from "react";
 import { auth, db } from './FirebaseApp';
 import { onAuthStateChanged,signOut } from "firebase/auth"
 import { collection, query, where, getDocs } from "firebase/firestore";
+import { useIsFocused } from '@react-navigation/native';
 
 
-const SettingScreen = ({navigation}) => {
+const SettingScreen = ({navigation, route}) => {
     const [userData, setUserData] = useState([]);
     const [loggedInUser, setLoggedInUser] = useState('');
-    
+    const [userProfileToSend, setUserProfileToSend] = useState(null);
+
+    const isFocused = useIsFocused();
     // const settingOptions = [
     //     {id: 1, name: "Edit Profile", component: "EditProfileScreen"},
     //     {id: 2, name: "Edit Address", component: "EditAddressScreen"},
@@ -43,13 +46,14 @@ const SettingScreen = ({navigation}) => {
 
     useEffect(()=>{
         getUserDetails();
-    }, [loggedInUser])
+    }, [loggedInUser, isFocused])
 
     const getUserDetails = async () => {
         try {
             const docRef = query(collection(db, "profiles"), where("userId", "==",loggedInUser.uid));
             const querySnapshot = await getDocs(docRef);
             const userProfile = querySnapshot.docs[0];
+            setUserProfileToSend(userProfile.id);
             const user = [
                 userProfile.data().first_name+' '+userProfile.data().last_name,
                 loggedInUser.email,
@@ -119,10 +123,10 @@ const SettingScreen = ({navigation}) => {
             </View>
 
             <View>
-                <Pressable onPress={ () => {navigation.navigate("EditProfileScreen")}}>
+                <Pressable onPress={ () => {navigation.navigate("EditProfileScreen", {userProfile: userProfileToSend})}}>
                     <Text style={styles.pressableStyle}>EDIT PROFILE</Text>
                 </Pressable>
-                <Pressable onPress={ () => {navigation.navigate("EditAddressScreen")}}>
+                <Pressable onPress={ () => {navigation.navigate("EditAddressScreen", {userProfile: userProfileToSend})}}>
                     <Text style={styles.pressableStyle}>EDIT ADDRESS</Text>
                 </Pressable>
                 <Pressable onPress={ () => {navigation.navigate("ChangePasswordScreen")}}>

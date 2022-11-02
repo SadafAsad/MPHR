@@ -105,13 +105,13 @@ const MainNavigator = ({navigation}) => {
                 )
             }}/>
             <Stack.Screen name="AddVetScreen" component={AddVetScreen}/>
-            <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{title:'Edit Profile'}}/>
+            <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{title:'Profile Info'}}/>
             <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{title:'Change Password'}}/>
             <Stack.Screen name="NotificationsSettingScreen" component={NotificationsSettingScreen} options={{title:'Notifications'}}/>
             <Stack.Screen name="CheckMailScreen" component={CheckMailScreen}/>
             <Stack.Screen name="CreateNewPasswordScreen" component={CreateNewPasswordScreen}/>
             <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen} options={{title:'Delete Account'}}/>
-            <Stack.Screen name="EditAddressScreen" component={EditAddressScreen} options={{title:'Edit Address'}}/>
+            <Stack.Screen name="EditAddressScreen" component={EditAddressScreen} options={{title:'Address Info'}}/>
             <Stack.Screen name="CreatePetProfile" component={CreatePetProfile} options={{title:'Add Pet'}}/>
             <Stack.Screen name="CreatePetProfile2Screen" component={CreatePetProfile2Screen} options={{title:'Add Pet'}}/>
             <Stack.Screen name="VetsScreen" component={VetsScreen} options={{title:'Veterinary Clinics'}}/>

@@ -2,37 +2,88 @@ import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } fro
 import { StackActions } from '@react-navigation/native';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import SelectList from 'react-native-dropdown-select-list';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { db } from './FirebaseApp';
+import { updateDoc, getDoc, doc } from "firebase/firestore";
 
 
-const EditProfileScreen = ({navigation}) => {
+const EditProfileScreen = ({navigation, route}) => {
     const [selectedNumCode, setSelectedNumCode] = useState("");
+    const [firstname, onFirstnameChanged] = useState('');
+    const [lastname, onLastnameChanged] = useState('');
+    const [phonenumber, onPhonenumberChanged] = useState('');
+    const [userProfileData, setUserProfileData] = useState(null);
+    const [docRef, setDocRef] = useState(null);
 
     const numCode = [{key:'1',value:'+1'}];
 
+    const {userProfile} = route.params;
+
+    useEffect(() => {
+        async function getProfile() {
+            const docRef = doc(db, "profiles", userProfile);
+            const profileToUpdate = await getDoc(docRef);
+            setDocRef(docRef);
+            setUserProfileData(profileToUpdate.data());
+
+            onFirstnameChanged(profileToUpdate.data().first_name);
+            onLastnameChanged(profileToUpdate.data().last_name);
+            onPhonenumberChanged(profileToUpdate.data().phone_number.slice(-10));
+        }
+        getProfile();
+    }, [])
+
+    const updateProfilePressed = async () => {
+        const updatedProfileData = {
+            userId:userProfileData.userId,
+            first_name:firstname,
+            last_name:lastname,
+            phone_number:phonenumber,
+            address_1: userProfileData.address_1,
+            address_2: userProfileData.address_2,
+            city: userProfileData.city,
+            country: userProfileData.country,
+            province: userProfileData.province,
+            postal_code: userProfileData.postal_code
+        };
+        try {
+            updateDoc(docRef, updatedProfileData);
+            navigation.goBack();
+        }
+        catch (err) {
+            console.log(`${err.message}`);
+        }
+    }
+
     return (
         <SafeAreaView style={{flex:1}}>
-            <Text style={styles.screentitle}>Profile Info</Text>
+            <Text style={styles.screentitle}>Profile</Text>
             <Text style={styles.titleTxt}>First name</Text>
             <TextInput 
                 style={styles.input}
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
+                onChangeText={onFirstnameChanged}
+                value={firstname}
             />
+
             <Text style={styles.titleTxt}>Last name</Text>
             <TextInput 
                 style={styles.input}
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
+                onChangeText={onLastnameChanged}
+                value={lastname}
             />
+
             <Text style={styles.titleTxt}>Phone number</Text>
             <View style={{flexDirection:'row', alignItems:'center', width:'90%', alignSelf:'center'}}>
                 <SelectList 
                     setSelected={setSelectedNumCode} 
                     data={numCode} 
-                    onSelect={() => alert(selectedNumCode)}
+                    onSelect={() => {setSelectedNumCode(numCode[selectedNumCode-1].value)}}
                     boxStyles={styles.numCodeInput}
                     dropdownItemStyles={styles.numCodeInput}
                     dropdownStyles={{borderColor:'transparent'}}
@@ -46,42 +97,14 @@ const EditProfileScreen = ({navigation}) => {
                     placeholder="(_ _ _)_ _ _-_ _ _"
                     keyboardType="default"
                     autoCapitalize="none"
+                    onChangeText={onPhonenumberChanged}
+                    value={phonenumber}
                 />
             </View>
-            <Pressable onPress={ () => {
-                //navigation.dispatch(StackActions.replace('TabsNavigator'))
-                Alert.alert('Save Changes', 'Confirm',
-                [  
-                    {  
-                        text: 'Cancel',  
-                        onPress: () => console.log('Cancel Pressed'),  
-                        style: 'cancel',  
-                    },  
-                    {text: 'OK', onPress: () => navigation.navigate('SettingScreen')},  
-                ]  
-                );
-            }}>
-                <Text style={styles.PressableStyle}>Update Profile</Text>
+
+            <Pressable onPress={updateProfilePressed}>
+                <Text style={styles.PressableStyle}>UPDATE PROFILE</Text>
             </Pressable>
-                {/* <View style={styles.deleteAccount}>
-                    <Pressable onPress={ () => {
-                        //navigation.dispatch(StackActions.replace('TabsNavigator'))
-                        Alert.alert('Delete Account', 'Confirm',
-                        [  
-                            {  
-                                text: 'Cancel',  
-                                onPress: () => console.log('Cancel Pressed'),  
-                                style: 'cancel',  
-                            },  
-                            {text: 'OK', onPress: () => console.log('OK Pressed')},  
-                        ]  
-                        );
-                    }}>
-                        <Text style={styles.deletePressable}>Delete My Account</Text>
-                    </Pressable>
-               
-                </View> */}
-           
         </SafeAreaView>
     );
 }
@@ -122,9 +145,10 @@ const styles = StyleSheet.create({
         marginLeft: 22,
         marginRight: 22,
         marginTop: 22,
-        fontSize: 18,
-        padding: 15,
+        fontSize: 15,
+        padding: 12,
         width: '90%',
+        fontWeight: 'bold'
     },
     titleTxt: {
         marginTop:20, 
