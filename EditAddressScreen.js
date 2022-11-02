@@ -121,7 +121,12 @@ const EditAddressScreen = ({navigation, route}) => {
                 onChangeText={onPostalcodeChanged}
                 value={postalcode}
             />
-            <Pressable onPress={updateAddressPressed}>
+            <Pressable onPress={() => {
+                Alert.alert('UPDATE ADDRESS', 'Are you sure you want to update your address?', [  
+                    {text: 'NO', onPress: () => console.log('NO Pressed'), style:'cancel'},  
+                    {text: 'YES', onPress: () => updateAddressPressed()}
+                ]);
+            }}>
                 <Text style={styles.PressableStyle}>UPDATE ADDRESS</Text>
             </Pressable>
         </SafeAreaView>

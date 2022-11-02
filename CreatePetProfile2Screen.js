@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
 import CheckBox from "expo-checkbox";
 import { db } from './FirebaseApp';
 import { collection, addDoc} from "firebase/firestore";
@@ -119,7 +119,12 @@ const CreatePetProfile2Screen = ({navigation, route}) => {
             </View>
             
             <View style={{marginTop:10, marginBottom:22}}>
-                <Pressable onPress={addPetPressed}>
+                <Pressable onPress={() => {
+                    Alert.alert('ADD PET', 'Are you sure you want to add the pet?', [  
+                        {text: 'NO', onPress: () => console.log('NO Pressed'), style:'cancel'},  
+                        {text: 'YES', onPress: () => addPetPressed()}
+                    ]);
+                }}>
                     <Text style={styles.pressableStyle}>ADD PET</Text>
                 </Pressable>
             </View>

@@ -22,7 +22,7 @@ const AddressInfo = ({navigation, route}) => {
         {key:'3', value:'ON'}
     ]
 
-    const nextPressed = async() => {
+    const createAccountPressed = async() => {
         try {
             const profileToInsert = {
                 userId:profile.userId,
@@ -124,7 +124,7 @@ const AddressInfo = ({navigation, route}) => {
                 onChangeText={onPostalcodeChanged}
                 value={postalcode}
             />
-            <Pressable onPress={nextPressed}>
+            <Pressable onPress={createAccountPressed}>
                 <Text style={styles.PressableStyle}>CREATE ACCOUNT</Text>
             </Pressable>
         </SafeAreaView>

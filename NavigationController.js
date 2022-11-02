@@ -88,7 +88,7 @@ const MainNavigator = ({navigation}) => {
             <Stack.Screen name="Settings" component={SettingScreen} options={{
                 headerRight: () => (
                     <Pressable onPress={ () => {
-                        Alert.alert('Logout', 'Are you sure you want to logout?', [  
+                        Alert.alert('LOGOUT', 'Are you sure you want to logout?', [  
                             {text: 'NO', onPress: () => console.log('NO Pressed'), style:'cancel'},  
                             {text: 'YES', onPress: async () => {
                                 try {

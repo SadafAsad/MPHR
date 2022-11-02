@@ -100,7 +100,12 @@ const EditProfileScreen = ({navigation, route}) => {
                 />
             </View>
 
-            <Pressable onPress={updateProfilePressed}>
+            <Pressable onPress={() => {
+                Alert.alert('UPDATE PROFILE', 'Are you sure you want to update your profile?', [  
+                    {text: 'NO', onPress: () => console.log('NO Pressed'), style:'cancel'},  
+                    {text: 'YES', onPress: () => updateProfilePressed()}
+                ]);
+            }}>
                 <Text style={styles.PressableStyle}>UPDATE PROFILE</Text>
             </Pressable>
         </SafeAreaView>
