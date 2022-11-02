@@ -8,7 +8,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
 
 
-const SettingScreen = ({navigation, route}) => {
+const SettingScreen = ({navigation}) => {
     const [userData, setUserData] = useState([]);
     const [loggedInUser, setLoggedInUser] = useState('');
     const [userProfileToSend, setUserProfileToSend] = useState(null);
@@ -132,7 +132,7 @@ const SettingScreen = ({navigation, route}) => {
                 <Pressable onPress={ () => {navigation.navigate("ChangePasswordScreen")}}>
                     <Text style={styles.pressableStyle}>CHANGE PASSWORD</Text>
                 </Pressable>
-                <Pressable onPress={ () => {navigation.navigate("DeleteAccountScreen")}}>
+                <Pressable onPress={ () => {navigation.navigate("DeleteAccountScreen", {user: loggedInUser.uid})}}>
                     <Text style={styles.pressableStyle}>DELETE ACCOUNT</Text>
                 </Pressable>
             </View>

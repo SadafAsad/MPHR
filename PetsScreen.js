@@ -2,7 +2,7 @@ import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image, Alert
 import { AntDesign } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
 import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged } from "firebase/auth"
+import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from './FirebaseApp';
 import { collection, query, where, getDocs, Firestore } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
