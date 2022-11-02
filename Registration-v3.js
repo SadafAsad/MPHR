@@ -109,7 +109,7 @@ const Registration_v3 = ({navigation}) => {
 
             { !codeIsSent && (
                 <View>
-                    <Text style={styles.titleTxt}>Enter your email address</Text>
+                    <Text style={styles.titleTxt}>Enter your email *</Text>
                     <TextInput 
                         style={styles.input}
                         placeholder="example@example.example"
@@ -119,7 +119,7 @@ const Registration_v3 = ({navigation}) => {
                         value={emailAddress}
                     />
                     <Pressable onPress={sendVerificationEmailPressed} disabled={codeIsSent}>
-                        <Text style={styles.PressableStyle}>Send Verification Email</Text>
+                        <Text style={styles.PressableStyle}>SEND VERIFICATION EMAIL</Text>
                     </Pressable>
                 </View>
             )}
@@ -190,9 +190,10 @@ const styles = StyleSheet.create({
         marginLeft: 22,
         marginRight: 22,
         marginTop: 22,
-        fontSize: 18,
-        padding: 15,
+        fontSize: 15,
+        padding: 12,
         width: '90%',
+        fontWeight: 'bold'
     },
     disabledPressable: {
         alignSelf: 'center',
@@ -202,9 +203,10 @@ const styles = StyleSheet.create({
         marginLeft: 22,
         marginRight: 22,
         marginTop: 22,
-        fontSize: 18,
-        padding: 15,
+        fontSize: 15,
+        padding: 12,
         width: '90%',
+        fontWeight: 'bold'
     },
     verificationCode: {
         flex:1,

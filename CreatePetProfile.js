@@ -102,19 +102,11 @@ const CreatePetProfile = ({navigation}) => {
                 maxHeight='100'
                 placeholder=" "
             />
-                
-            <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Photo</Text>
-            <TextInput 
-                style={styles.input}
-                placeholder=""
-                keyboardType="default"
-                autoCapitalize="none"
-            />
 
             { vet_id==null && (
-                <View style={{flex:1, alignItems:'baseline', margin: 22}}>
+                <View style={{flex:1, alignItems:'baseline', margin:22}}>
                     <Text style={{marginBottom:15, fontSize:16, fontWeight: 'bold'}}>Regular Clinic</Text>
-                    <View style={{flexDirection:'row', justifyContent:'space-between', marginRight: 20, alignSelf:'stretch', alignItems:'center'}}>
+                    <View style={{flexDirection:'row', justifyContent:'space-between', alignSelf:'stretch', alignItems:'center'}}>
                         <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
                             <FontAwesome5 name="clinic-medical" size={24} color="black" />
                             <Text style={{marginRight:20, marginLeft: 20}}>No regular Clinic</Text>
@@ -151,7 +143,7 @@ const CreatePetProfile = ({navigation}) => {
             )}
 
             <Pressable onPress={nextPressed}>
-                <Text style={styles.deletePressable}>NEXT</Text>
+                <Text style={styles.pressableStyle}>NEXT</Text>
             </Pressable>
            
         </SafeAreaView>
@@ -176,18 +168,23 @@ const styles = StyleSheet.create({
         borderColor: '#808080',
         borderRadius: '0%',
     },
-    deletePressable: {
+    pressableStyle: {
         alignSelf: 'center',
         textAlign: 'center',
         backgroundColor: '#335C67',
-        color: '#ffffff',
+        color: '#fff',
+        // backgroundColor: '#ffffff',
+        // color: '#335C67',
+        // borderColor: '#335C67',
+        // borderStyle: 'solid',
+        // borderWidth: 1,
         marginLeft: 22,
         marginRight: 22,
         marginTop: 22,
-        fontSize: 18,
-        padding: 15,
+        fontSize: 15,
+        padding: 12,
         width: '90%',
-        marginBottom:22
+        fontWeight: 'bold'
     },
     saveChanges: {
         // borderRadius: 5,
@@ -210,7 +207,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         alignSelf: 'center',
-        marginTop: 22
+        marginTop: 22,
+        padding: 30
     },
     smallImgView: {
         width: 60,
@@ -218,7 +216,8 @@ const styles = StyleSheet.create({
         borderRadius: '100%',
         borderWidth: 1,
         borderColor: 'black',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        padding: 8
     },
     img: {
         width:'100%', 

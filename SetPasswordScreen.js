@@ -74,7 +74,7 @@ const SetPasswordScreen = ({navigation, route}) => {
                 />
             </View>
 
-            <Text style={styles.titleTxt}>Set a password</Text>
+            <Text style={styles.titleTxt}>Set a password *</Text>
             <View style={styles.inputContainer}>
                 <TextInput 
                     style={styles.inputField}
@@ -84,14 +84,13 @@ const SetPasswordScreen = ({navigation, route}) => {
                     autoCorrect={false}
                     secureTextEntry={passwordVisibility}
                     onChangeText={onPasswordChanged}
-                    // value={emailAddress}
                 />
                 <Pressable onPress={handlePasswordVisibility}>
                     <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
                 </Pressable>
                 </View>
                 <Pressable onPress={nextPressed}>
-                    <Text style={styles.PressableStyle}>Next</Text>
+                    <Text style={styles.PressableStyle}>NEXT</Text>
                 </Pressable>
         </SafeAreaView>
     );
@@ -114,9 +113,10 @@ const styles = StyleSheet.create({
         marginLeft: 22,
         marginRight: 22,
         marginTop: 22,
-        fontSize: 18,
-        padding: 15,
+        fontSize: 15,
+        padding: 12,
         width: '90%',
+        fontWeight: 'bold'
     },
     verificationCode: {
         flex:1,

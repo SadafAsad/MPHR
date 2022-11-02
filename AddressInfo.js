@@ -147,7 +147,7 @@ const AddressInfo = ({navigation, route}) => {
                 value={postalcode}
             />
             <Pressable onPress={nextPressed}>
-                <Text style={styles.PressableStyle}>Create Account</Text>
+                <Text style={styles.PressableStyle}>CREATE ACCOUNT</Text>
             </Pressable>
         </SafeAreaView>
     );
@@ -171,10 +171,11 @@ const styles = StyleSheet.create({
         marginLeft: 22,
         marginRight: 22,
         marginTop: 22,
-        fontSize: 18,
-        padding: 15,
+        fontSize: 15,
+        padding: 12,
         width: '90%',
-        marginBottom: 22
+        marginBottom: 22,
+        fontWeight: 'bold'
     },
     titleTxt: {
         marginTop:15, 

@@ -34,7 +34,7 @@ const LoginScreen = ({navigation}) => {
             <View style={{marginTop:300}}/>
 
             <View style={{flex:1, alignItems:'baseline'}}>
-                <Text style={{marginBottom:5, fontSize:16, marginLeft:22}}>Email address</Text>
+                <Text style={{marginBottom:5, fontSize:15, marginLeft:22}}>Email address</Text>
                 <TextInput 
                     style={styles.input}
                     placeholder="Enter email"
@@ -44,7 +44,7 @@ const LoginScreen = ({navigation}) => {
                     value={emailAddress}
                 />
 
-                <Text style={{marginBottom:5, fontSize:16, marginTop:15, marginLeft:22}}>Password</Text>
+                <Text style={{marginBottom:5, fontSize:15, marginTop:15, marginLeft:22}}>Password</Text>
                 <View style={styles.inputContainer}>
                     <TextInput 
                         style={styles.inputField}
@@ -84,12 +84,12 @@ const LoginScreen = ({navigation}) => {
 
             <View style={{marginTop:20}}>
                 <Pressable onPress={loginPressed}>
-                    <Text style={styles.loginPressable}>Log In</Text>
+                    <Text style={styles.loginPressable}>LOGIN</Text>
                 </Pressable>
                 <Pressable onPress={() => {
                     navigation.navigate("Registration")
                 }}>
-                    <Text style={styles.signupPressable}>Sign Up</Text>
+                    <Text style={styles.signupPressable}>CREATE ACCOUNT</Text>
                 </Pressable>
             </View>
         </SafeAreaView>
@@ -110,9 +110,10 @@ const styles = StyleSheet.create({
         marginLeft: 22,
         marginRight: 22,
         marginTop: 22,
-        fontSize: 18,
-        padding: 15,
+        fontSize: 15,
+        padding: 12,
         width: '90%',
+        fontWeight: 'bold'
     },
     signupPressable: {
         alignSelf: 'center',
@@ -126,9 +127,10 @@ const styles = StyleSheet.create({
         marginRight: 22,
         marginTop: 22,
         marginBottom: 0,
-        fontSize: 18,
-        padding: 15,
+        fontSize: 15,
+        padding: 12,
         width: '90%',
+        fontWeight: 'bold'
     },
     input: {
         alignSelf: 'center',

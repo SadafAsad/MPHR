@@ -88,7 +88,7 @@ const ProfileInfo = ({navigation, route}) => {
                 />
             </View>
             <Pressable onPress={nextPressed}>
-                <Text style={styles.PressableStyle}>Next</Text>
+                <Text style={styles.PressableStyle}>NEXT</Text>
             </Pressable>
         </SafeAreaView>
     );
@@ -130,9 +130,10 @@ const styles = StyleSheet.create({
         marginLeft: 22,
         marginRight: 22,
         marginTop: 22,
-        fontSize: 18,
-        padding: 15,
+        fontSize: 15,
+        padding: 12,
         width: '90%',
+        fontWeight: 'bold'
     },
     titleTxt: {
         marginTop:15, 

@@ -85,8 +85,8 @@ const CreatePetProfile2Screen = ({navigation, route}) => {
                                 setSpayed(!isSpayed);
                                 setIntact(false);
                             }}
-                            color='#335C67'
-                            style={{borderRadius:'100%'}}
+                            style={{borderRadius:'100%', borderWidth:1}}
+                            color={isSpayed ? '#335C67' : undefined}
                         />
                         <Text style={{marginLeft:5, fontSize:15}}>Spayed or Neutered</Text>
                     </View>
@@ -97,8 +97,8 @@ const CreatePetProfile2Screen = ({navigation, route}) => {
                                 setSpayed(false);
                                 setIntact(!isIntact);
                             }}
-                            color='#335C67'
-                            style={{borderRadius:'100%'}}
+                            style={{borderRadius:'100%', borderWidth:1}}
+                            color={isIntact ? '#335C67' : undefined}
                         />
                         <Text style={{marginLeft:5, fontSize:15}}>Intact</Text>
                     </View>
@@ -120,7 +120,7 @@ const CreatePetProfile2Screen = ({navigation, route}) => {
             
             <View style={{marginTop:10, marginBottom:22}}>
                 <Pressable onPress={addPetPressed}>
-                    <Text style={styles.deletePressable}>ADD PET</Text>
+                    <Text style={styles.pressableStyle}>ADD PET</Text>
                 </Pressable>
             </View>
                 
@@ -154,17 +154,23 @@ const styles = StyleSheet.create({
         borderColor: '#808080',
         textAlignVertical: 'top'
     },
-    deletePressable: {
+    pressableStyle: {
         alignSelf: 'center',
         textAlign: 'center',
         backgroundColor: '#335C67',
-        color: '#ffffff',
+        color: '#fff',
+        // backgroundColor: '#ffffff',
+        // color: '#335C67',
+        // borderColor: '#335C67',
+        // borderStyle: 'solid',
+        // borderWidth: 1,
         marginLeft: 22,
         marginRight: 22,
         marginTop: 22,
-        fontSize: 18,
-        padding: 15,
+        fontSize: 15,
+        padding: 12,
         width: '90%',
+        fontWeight: 'bold'
     },
     saveChanges: {
         // borderRadius: 5,

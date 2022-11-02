@@ -1,9 +1,9 @@
 import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image, Alert } from 'react-native';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
 import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged,signOut } from "firebase/auth"
-import { auth, db, firebaseApp } from './FirebaseApp';
+import { onAuthStateChanged } from "firebase/auth"
+import { auth, db } from './FirebaseApp';
 import { collection, query, where, getDocs, Firestore } from "firebase/firestore";
 
 const PetsScreen = ({navigation}) => {
@@ -12,14 +12,6 @@ const PetsScreen = ({navigation}) => {
     const [masterDataSource, setMasterDataSource] = useState([]);
     const [loggedInUser, setLoggedInUser] = useState(null);
     let petId = String;
-
-    // useEffect(() => {
-    //     getPetList()
-    //     // setFilteredDataSource(pets);
-    //     // setMasterDataSource(pets);
-    // }, []);
-
-    //AsyncStorage.clear();
 
     useEffect(()=>{
         const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
@@ -48,50 +40,6 @@ const PetsScreen = ({navigation}) => {
         }
     }
 
-    const getPetList = async () => {
-        try{
-            
-            console.log("loggedInUser is : " + loggedInUser);
-
-            
-            if(loggedInUser == "george@gmail.com"){
-                petId = "ARDH73UDUolpCYOrlpHt";
-            }
-            else if(loggedInUser == "sadaf@gmail.com"){
-                petId = "YF4WbLiLreezP72q6xHv";
-            }
-
-           
-            let querySnapshot = await getDocs(collection(db, "profiles", petId, "pet_list"));
-            // console.log(db);
-            console.log("loggedInUser is : " + loggedInUser)
-            let documents = querySnapshot.docs
-            console.log(documents.length);
-            for(let i = 0; i < documents.length; i++){
-                const currDocument = documents[i] 
-                console.log(`ID: ${currDocument.id}`)
-                console.log(currDocument.data())
-                console.log("------")
-            }
-            setFilteredDataSource(documents);
-            setMasterDataSource(documents);
-            
-
-        } catch(err){
-            console.log(`${err.message}`);
-        }
-    }
-
-    // useEffect(()=>{
-    //     getPetList(loggedInUser);
-        
-    // }, [])
-
-    // useEffect(()=>{
-    //     getPetList();
-        
-    // }, [])
-
     const onChangeSearch = query => setSearchQuery(query);
 
     const searchFilterFunction = (text) => {
@@ -110,7 +58,7 @@ const PetsScreen = ({navigation}) => {
           setFilteredDataSource(masterDataSource);
           setSearch(text);
         }
-      };
+    };
 
 
     function getAge(dateString) {
@@ -170,7 +118,7 @@ const PetsScreen = ({navigation}) => {
                 <Pressable onPress={ () => {
                     navigation.navigate("CreatePetProfile")
                 }}>
-                    <Text style={styles.deletePressable}>Add New Pet</Text>
+                    <Text style={styles.pressableStyle}>ADD PET</Text>
                 </Pressable>
 
             </View>
@@ -208,19 +156,26 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         alignSelf: 'center',
-        marginLeft: 22
+        marginLeft: 22,
+        padding: 8
     },
-    deletePressable: {
+    pressableStyle: {
         alignSelf: 'center',
         textAlign: 'center',
         backgroundColor: '#335C67',
-        color: '#ffffff',
+        color: '#fff',
+        // backgroundColor: '#ffffff',
+        // color: '#335C67',
+        // borderColor: '#335C67',
+        // borderStyle: 'solid',
+        // borderWidth: 1,
         marginLeft: 22,
         marginRight: 22,
         marginTop: 22,
-        fontSize: 18,
-        padding: 15,
+        fontSize: 15,
+        padding: 12,
         width: '90%',
+        fontWeight: 'bold'
     },
     searchBar: {
         width: '90%',
