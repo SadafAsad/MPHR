@@ -61,7 +61,7 @@ const MainNavigator = ({navigation}) => {
                 headerRight: () => (
                     <View style={{flexDirection:'row'}}>
                       <Pressable onPress={ () => {
-                          navigation.navigate("SettingScreen");
+                          navigation.navigate("Settings");
                       }}>
                           <Ionicons name="settings-sharp" size={24} color='#335C67' style={{marginRight:15}}/>
                       </Pressable>
@@ -80,7 +80,7 @@ const MainNavigator = ({navigation}) => {
                 )
             }}/>
             <Stack.Screen name="PetProfileScreen" component={PetProfileScreen}/>
-            <Stack.Screen name="SettingScreen" component={SettingScreen}/>
+            <Stack.Screen name="Settings" component={SettingScreen}/>
             <Stack.Screen name="AddVetScreen" component={AddVetScreen}/>
             <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ title: 'Edit Profile' }}/>
             <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{ title: 'Change password' }}/>

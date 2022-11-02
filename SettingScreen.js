@@ -1,40 +1,33 @@
 import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { Card } from 'react-native-paper'
 import { FontAwesome } from '@expo/vector-icons';
-import { StackActions } from '@react-navigation/native';
 import { useEffect, useState } from "react";
-import CheckBox from "expo-checkbox";
-import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { auth, db, firebaseApp } from './FirebaseApp';
+import { auth, db } from './FirebaseApp';
 import { onAuthStateChanged,signOut } from "firebase/auth"
-import { collection, query, where, getDocs, Firestore } from "firebase/firestore";
-//import { db } from "./FirebaseApp"
-//import { collection, doc, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 
 const SettingScreen = ({navigation}) => {
     const [userData, setUserData] = useState([]);
     const [loggedInUser, setLoggedInUser] = useState('');
     
-    const settingOptions = [
-        {id: 1, name: "Edit Profile", component: "EditProfileScreen"},
-        {id: 2, name: "Edit Address", component: "EditAddressScreen"},
-        {id: 3, name: "Change password", component: "ChangePasswordScreen"},
-        {id: 4, name: "Delete Account", component: "DeleteAccountScreen"},
-        {id: 5, name: "Notifications", component: "NotificationsSettingScreen"}
+    // const settingOptions = [
+    //     {id: 1, name: "Edit Profile", component: "EditProfileScreen"},
+    //     {id: 2, name: "Edit Address", component: "EditAddressScreen"},
+    //     {id: 3, name: "Change password", component: "ChangePasswordScreen"},
+    //     {id: 4, name: "Delete Account", component: "DeleteAccountScreen"},
+    //     {id: 5, name: "Notifications", component: "NotificationsSettingScreen"}
 
-    ];
+    // ];
 
-    const logoutPressed = async () => {
-        try {
-            await signOut(auth) 
-            navigation.reset({index:0, routes:[{name: 'AuthenticationNavigator'}], key:null}); 
-        } catch (err) {
-            console.log(`Logout failed: ${err.message}`);
-        }
-    }
+    // const logoutPressed = async () => {
+    //     try {
+    //         await signOut(auth) 
+    //         navigation.reset({index:0, routes:[{name: 'AuthenticationNavigator'}], key:null}); 
+    //     } catch (err) {
+    //         console.log(`Logout failed: ${err.message}`);
+    //     }
+    // }
 
     useEffect(()=>{
         const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
@@ -69,61 +62,77 @@ const SettingScreen = ({navigation}) => {
         }
     }
 
-
-    const renderDetails = ( {item} ) => (
+    // const renderDetails = ( {item} ) => (
         
-            <View style={styles.pet}>
-                <View>
-                <View style={{flexDirection:'column', marginLeft:20, alignItems:'baseline'}}>
-                            <Text style={{fontSize:18, fontWeight:'bold'}}>{item.data().first_name}{` `}{item.data().last_name}</Text>
-                            <Text style={{fontSize:14}}>{item.data().email}</Text>
-                            <Text style={{fontSize:14}}>{item.data().address_1}</Text>
-                            <Text style={{fontSize:14}}>{item.data().city}{` `}{item.data().province}{`, `}{item.data().country}</Text>
-                            <Text style={{fontSize:14}}>{item.data().phone_number}</Text>
-                        </View> 
+    //         <View style={styles.pet}>
+    //             <View>
+    //             <View style={{flexDirection:'column', marginLeft:20, alignItems:'baseline'}}>
+    //                         <Text style={{fontSize:18, fontWeight:'bold'}}>{item.data().first_name}{` `}{item.data().last_name}</Text>
+    //                         <Text style={{fontSize:14}}>{item.data().email}</Text>
+    //                         <Text style={{fontSize:14}}>{item.data().address_1}</Text>
+    //                         <Text style={{fontSize:14}}>{item.data().city}{` `}{item.data().province}{`, `}{item.data().country}</Text>
+    //                         <Text style={{fontSize:14}}>{item.data().phone_number}</Text>
+    //                     </View> 
                     
-                </View>
+    //             </View>
                
-            </View>
+    //         </View>
       
-    )
+    // )
 
-    const renderItem = ( {item} ) => (
-        <Pressable onPress={() => {
-            navigation.navigate(item.component)
-        }}>
-            <View style={styles.pet}>
-                <View>
-                    <Text style={{marginLeft:20, fontSize:18}}>{item.name}</Text>
-                </View>
-                <AntDesign name="right" size={20} color='#335C67' style={{marginRight:20}}/>
-            </View>
-        </Pressable>
-    )
+    // const renderItem = ( {item} ) => (
+    //     <Pressable onPress={() => {
+    //         navigation.navigate(item.component)
+    //     }}>
+    //         <View style={styles.pet}>
+    //             <View>
+    //                 <Text style={{marginLeft:20, fontSize:18}}>{item.name}</Text>
+    //             </View>
+    //             <AntDesign name="right" size={20} color='#335C67' style={{marginRight:20}}/>
+    //         </View>
+    //     </Pressable>
+    // )
 
-    const ItemDivider = () => {
-        return (
-            <View style={{height: 1, width: "100%", backgroundColor: "#cccccc"}}/>
-        )
-    }
+    // const ItemDivider = () => {
+    //     return (
+    //         <View style={{height: 1, width: "100%", backgroundColor: "#cccccc"}}/>
+    //     )
+    // }
     
     return (
         <SafeAreaView style={styles.container}>
             
-            <View style={{flex:2, margin: 20, paddingLeft: 0,}}>
-                <View style={styles.mainView}>
-                    <FontAwesome name="user-circle" size={60} color="black"/>
-                    <View style={{flex:1, margin: 10, paddingLeft: 30}}>
-                        <Text>{userData[0]}</Text>
-                        <Text>Email: {userData[1]}</Text>
-                        <Text>Phone: {userData[2]}</Text>
-                        <Text>Addres: {userData[3]}</Text>
-                    </View>
+            <View style={styles.mainView}>
+                <FontAwesome name="user-circle" size={60} color="black"/>
+                <View style={{flex:1, margin: 10, paddingLeft: 30}}>
+                    <Text style={{fontWeight:'bold'}}>{userData[0]}</Text>
+                    <Text style={{color:'dimgray', fontWeight:'bold'}}>Email: 
+                        <Text style={{color:'gray', fontWeight:'normal'}}>{userData[1]}</Text>
+                    </Text>
+                    <Text style={{color:'dimgray', fontWeight:'bold'}}>Phone: 
+                        <Text style={{color:'gray', fontWeight:'normal'}}>{userData[2]}</Text>
+                    </Text>
+                    <Text style={{color:'dimgray', fontWeight:'bold'}}>Addres: 
+                        <Text style={{color:'gray', fontWeight:'normal'}}>{userData[3]}</Text>
+                    </Text>
                 </View>
             </View>
-            
 
-            <FlatList style={{marginTop:0}}
+            <View>
+                <Pressable onPress={ () => {navigation.navigate("EditProfileScreen")}}>
+                    <Text style={styles.pressableStyle}>EDIT PROFILE</Text>
+                </Pressable>
+                <Pressable onPress={ () => {navigation.navigate("EditAddressScreen")}}>
+                    <Text style={styles.pressableStyle}>EDIT ADDRESS</Text>
+                </Pressable>
+                <Pressable onPress={ () => {navigation.navigate("ChangePasswordScreen")}}>
+                    <Text style={styles.pressableStyle}>CHANGE PASSWORD</Text>
+                </Pressable>
+                <Pressable onPress={ () => {navigation.navigate("DeleteAccountScreen")}}>
+                    <Text style={styles.pressableStyle}>DELETE ACCOUNT</Text>
+                </Pressable>
+            </View>
+            {/* <FlatList style={{marginTop:0}}
                 data={settingOptions}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
@@ -160,7 +169,7 @@ const SettingScreen = ({navigation}) => {
                     }}>
                         <Text style={styles.deletePressable}>Sign Out</Text>
                 </Pressable>
-            </View>
+            </View> */}
         </SafeAreaView>
     );
 
@@ -171,36 +180,45 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
-    pet: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 15,
-        marginBottom: 15,
-        alignItems: 'center'
-    },
+    // pet: {
+    //     flexDirection: 'row',
+    //     justifyContent: 'space-between',
+    //     marginTop: 15,
+    //     marginBottom: 15,
+    //     alignItems: 'center'
+    // },
     mainView: {
-        borderRadius: 5,
-        borderWidth: 1,
-        margin: 10,
-        paddingLeft:50,
-        flex:1,
         flexDirection:'row',
         alignItems:'center',
         justifyContent:'center',
-        alignSelf: 'center',
+        padding: 22
         
     },
-    deletePressable: {
+    // deletePressable: {
+    //     alignSelf: 'center',
+    //     textAlign: 'center',
+    //     backgroundColor: '#335C67',
+    //     color: '#ffffff',
+    //     marginLeft: 22,
+    //     marginRight: 22,
+    //     marginTop: 10,
+    //     fontSize: 18,
+    //     padding: 15,
+    //     width: '90%',
+    // },
+    pressableStyle: {
         alignSelf: 'center',
         textAlign: 'center',
-        backgroundColor: '#335C67',
-        color: '#ffffff',
-        marginLeft: 22,
-        marginRight: 22,
+        backgroundColor: '#ffffff',
+        color: '#335C67',
+        borderColor: '#335C67',
+        borderStyle: 'solid',
+        borderWidth: 1,
         marginTop: 10,
-        fontSize: 18,
-        padding: 15,
+        fontSize: 15,
+        padding: 10,
         width: '90%',
+        fontWeight: 'bold'
     },
 });
 
