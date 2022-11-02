@@ -35,7 +35,7 @@ const CreatePetProfile2Screen = ({navigation, route}) => {
                 neutering:castration,
             };
             const insertedPet = await addDoc(collection(db, "pets"), petToInsert);
-            navigation.reset({index:0, routes:[{name: 'PetsTabScreen'}]});
+            navigation.reset({index:0, routes:[{name: 'PetsScreen'}]});
         }
         catch (err) {
             console.log(`${err.message}`);

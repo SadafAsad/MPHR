@@ -5,7 +5,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { db } from "./FirebaseApp"
 import { collection, doc, getDocs } from "firebase/firestore";
 
-const VetsTabScreen = ({navigation, route}) => {
+const VetsScreen = ({navigation, route}) => {
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
@@ -156,4 +156,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default VetsTabScreen;
+export default VetsScreen;

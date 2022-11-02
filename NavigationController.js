@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import PetsTabScreen from './PetsScreen';
-import VetsTabScreen from './VetsTabScreen';
+import PetsScreen from './PetsScreen';
+import VetsScreen from './VetsScreen';
 import PetProfileScreen from './PetProfileScreen';
 import SettingScreen from './SettingScreen';
 import AddVetScreen from './AddVetScreen';
@@ -21,7 +21,7 @@ import CreatePetProfile from './CreatePetProfile';
 import CreatePetProfile2Screen from './CreatePetProfile2Screen';
 import PetHistoryScreen from './PetHistoryScreen';
 import AddPetHistoryScreen from './AddPetHistoryScreen';
-import { Pressable, View } from 'react-native';
+import { Pressable, View, Alert } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'; 
 import { auth } from './FirebaseApp';
 import { signOut } from "firebase/auth";
@@ -36,10 +36,10 @@ const AuthenticationNavigator = ({navigation}) => {
             }}>
             <Stack.Screen name="Login" component={LoginScreen}/>
             <Stack.Screen name="Registration" component={Registration_v3}/>
-            <Stack.Screen name="SetPassword" component={SetPasswordScreen}/>
+            <Stack.Screen name="SetPassword" component={SetPasswordScreen} options={{title:'Registration'}}/>
             <Stack.Screen name="Profile" component={ProfileInfo}/>
             <Stack.Screen name="Address" component={AddressInfo}/>
-            <Stack.Screen name="ResetPassword" component={ResetPasswordScreen_v2}/>
+            <Stack.Screen name="ResetPassword" component={ResetPasswordScreen_v2} options={{title:'Reset Password'}}/>
             <Stack.Screen name="MainNavigator" component={MainNavigator} options={{header: () => null}}/>
         </Stack.Navigator>
     )
@@ -54,8 +54,8 @@ const MainNavigator = ({navigation}) => {
             headerTitleStyle:{color:'#000000'},
             }}>
             <Stack.Screen 
-            name="PetsTabScreen" 
-            component={PetsTabScreen} 
+            name="PetsScreen" 
+            component={PetsScreen} 
             options={{
                 title: 'Pets',
                 headerRight: () => (
@@ -65,13 +65,18 @@ const MainNavigator = ({navigation}) => {
                       }}>
                           <Ionicons name="settings-sharp" size={24} color='#335C67' style={{marginRight:15}}/>
                       </Pressable>
-                      <Pressable onPress={ async () => {
-                            try {
-                                await signOut(auth);
-                                navigation.reset({index:0, routes:[{name: 'AuthenticationNavigator'}], key:null});      
-                            } catch (err) {
-                                console.log(`Logout failed: ${err.message}`);
-                            }
+                      <Pressable onPress={ () => {
+                            Alert.alert('Logout', 'Are you sure you want to logout?', [  
+                                {text: 'NO', onPress: () => console.log('NO Pressed'), style:'cancel'},  
+                                {text: 'YES', onPress: async () => {
+                                    try {
+                                        await signOut(auth);
+                                        navigation.reset({index:0, routes:[{name: 'AuthenticationNavigator'}], key:null});      
+                                    } catch (err) {
+                                        console.log(`Logout failed: ${err.message}`);
+                                    }
+                                }},
+                            ]);
                       }}>
                           <MaterialIcons name="logout" size={24} color='#335C67' />
                       </Pressable>
@@ -79,19 +84,37 @@ const MainNavigator = ({navigation}) => {
                     
                 )
             }}/>
-            <Stack.Screen name="PetProfileScreen" component={PetProfileScreen}/>
-            <Stack.Screen name="Settings" component={SettingScreen}/>
+            <Stack.Screen name="PetProfileScreen" component={PetProfileScreen} options={{title:'Pet Profile'}}/>
+            <Stack.Screen name="Settings" component={SettingScreen} options={{
+                headerRight: () => (
+                    <Pressable onPress={ () => {
+                        Alert.alert('Logout', 'Are you sure you want to logout?', [  
+                            {text: 'NO', onPress: () => console.log('NO Pressed'), style:'cancel'},  
+                            {text: 'YES', onPress: async () => {
+                                try {
+                                    await signOut(auth);
+                                    navigation.reset({index:0, routes:[{name: 'AuthenticationNavigator'}], key:null});      
+                                } catch (err) {
+                                    console.log(`Logout failed: ${err.message}`);
+                                }
+                            }},
+                        ]);
+                    }}>
+                        <MaterialIcons name="logout" size={24} color='#335C67' />
+                    </Pressable>
+                )
+            }}/>
             <Stack.Screen name="AddVetScreen" component={AddVetScreen}/>
-            <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ title: 'Edit Profile' }}/>
-            <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{ title: 'Change password' }}/>
-            <Stack.Screen name="NotificationsSettingScreen" component={NotificationsSettingScreen} options={{ title: 'Notifications' }}/>
+            <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{title:'Edit Profile'}}/>
+            <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{title:'Change Password'}}/>
+            <Stack.Screen name="NotificationsSettingScreen" component={NotificationsSettingScreen} options={{title:'Notifications'}}/>
             <Stack.Screen name="CheckMailScreen" component={CheckMailScreen}/>
             <Stack.Screen name="CreateNewPasswordScreen" component={CreateNewPasswordScreen}/>
-            <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen}/>
-            <Stack.Screen name="EditAddressScreen" component={EditAddressScreen}/>
-            <Stack.Screen name="CreatePetProfile" component={CreatePetProfile}/>
-            <Stack.Screen name="CreatePetProfile2Screen" component={CreatePetProfile2Screen}/>
-            <Stack.Screen name="VetsTabScreen" component={VetsTabScreen}/>
+            <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen} options={{title:'Delete Account'}}/>
+            <Stack.Screen name="EditAddressScreen" component={EditAddressScreen} options={{title:'Edit Address'}}/>
+            <Stack.Screen name="CreatePetProfile" component={CreatePetProfile} options={{title:'Add Pet'}}/>
+            <Stack.Screen name="CreatePetProfile2Screen" component={CreatePetProfile2Screen} options={{title:'Add Pet'}}/>
+            <Stack.Screen name="VetsScreen" component={VetsScreen} options={{title:'Veterinary Clinics'}}/>
             <Stack.Screen name="Vaccinations" component={PetHistoryScreenNavigator}/>
             <Stack.Screen name="AuthenticationNavigator" component={AuthenticationNavigator} options={{header: () => null}}/>
         </Stack.Navigator>
