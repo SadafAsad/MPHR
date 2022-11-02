@@ -1,6 +1,4 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
-import { StackActions } from '@react-navigation/native';
-import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import SelectList from 'react-native-dropdown-select-list';
 import { useState, useEffect } from 'react';
 import { db } from './FirebaseApp';
@@ -38,7 +36,7 @@ const EditProfileScreen = ({navigation, route}) => {
             userId:userProfileData.userId,
             first_name:firstname,
             last_name:lastname,
-            phone_number:phonenumber,
+            phone_number:selectedNumCode+phonenumber,
             address_1: userProfileData.address_1,
             address_2: userProfileData.address_2,
             city: userProfileData.city,

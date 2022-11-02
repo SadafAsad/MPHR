@@ -42,28 +42,6 @@ const AddressInfo = ({navigation, route}) => {
         catch (err) {
             console.log(`${err.message}`);
         }
-        // UPDATE EXAMPLE CODE -WORKED
-        // const docRef = doc(db, "profiles", profile);
-        // const profileToUpdate = await getDoc(docRef);
-        // const updatedProfileData = {
-        //     userId:profileToUpdate.data().userId,
-        //     first_name:profileToUpdate.data().first_name,
-        //     last_name:profileToUpdate.data().last_name,
-        //     phone_number:profileToUpdate.data().phone_number,
-        //     address_1: address1,
-        //     address_2: address2,
-        //     city: city,
-        //     country: selectedCountry,
-        //     province: selectedProvince,
-        //     postal_code: postalcode
-        // };
-        // try {
-        //     updateDoc(docRef, updatedProfileData);
-        //     navigation.reset({index:0, routes:[{name: 'MainNavigator', params: {user: profileToUpdate.data().userId}}], key:null});
-        // }
-        // catch (err) {
-        //     console.log(`${err.message}`);
-        // }
     }
 
     return (

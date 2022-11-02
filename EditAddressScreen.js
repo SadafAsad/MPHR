@@ -1,13 +1,18 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
-import { StackActions } from '@react-navigation/native';
-import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import SelectList from 'react-native-dropdown-select-list';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { db } from './FirebaseApp';
+import { updateDoc, getDoc, doc } from "firebase/firestore";
 
-
-const EditAddressScreen = ({navigation}) => {
+const EditAddressScreen = ({navigation, route}) => {
     const [selectedCountry, setSelectedCountry] = useState("");
     const [selectedProvince, setSelectedProvince] = useState("");
+    const [newAddress1, onaddress1Changed] = useState('');
+    const [newAddress2, onaddress2Changed] = useState('');
+    const [newCity, onCityChanged] = useState('');
+    const [postalcode, onPostalcodeChanged] = useState('');
+    const [userProfileData, setUserProfileData] = useState(null);
+    const [docRef, setDocRef] = useState(null);
 
     const country = [{key:'1',value:'Canada'}];
     const province = [
@@ -16,15 +21,56 @@ const EditAddressScreen = ({navigation}) => {
         {key:'3', value:'ON'}
     ]
 
+    const {userProfile} = route.params;
+
+    useEffect(() => {
+        async function getProfile() {
+            const docRef = doc(db, "profiles", userProfile);
+            const profileToUpdate = await getDoc(docRef);
+            setDocRef(docRef);
+            setUserProfileData(profileToUpdate.data());
+
+            onaddress1Changed(profileToUpdate.data().address_1);
+            onaddress2Changed(profileToUpdate.data().address_2);
+            onCityChanged(profileToUpdate.data().city);
+            onPostalcodeChanged(profileToUpdate.data().postal_code);
+        }
+        getProfile();
+    }, [])
+
+    const updateAddressPressed = async () => {
+        const updatedProfileData = {
+            userId:userProfileData.userId,
+            first_name:userProfileData.first_name,
+            last_name:userProfileData.last_name,
+            phone_number:userProfileData.phone_number,
+            address_1:newAddress1,
+            address_2:newAddress2,
+            city:newCity,
+            country:selectedCountry,
+            province:selectedProvince,
+            postal_code:postalcode
+        };
+        try {
+            updateDoc(docRef, updatedProfileData);
+            navigation.goBack();
+        }
+        catch (err) {
+            console.log(`${err.message}`);
+        }
+    }
+
     return (
         <SafeAreaView style={{flex:1}}>
-            <Text style={styles.screentitle}>Address Info</Text>
+            <Text style={styles.screentitle}>Address</Text>
             <Text style={styles.titleTxt}>Address</Text>
             <TextInput 
                 style={styles.input}
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
+                onChangeText={onaddress1Changed}
+                value={newAddress1}
             />
             <Text style={styles.titleTxt}>Address line 2</Text>
             <TextInput 
@@ -32,6 +78,8 @@ const EditAddressScreen = ({navigation}) => {
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
+                onChangeText={onaddress2Changed}
+                value={newAddress2}
             />
             <Text style={styles.titleTxt}>City</Text>
             <TextInput 
@@ -39,12 +87,14 @@ const EditAddressScreen = ({navigation}) => {
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
+                onChangeText={onCityChanged}
+                value={newCity}
             />
             <Text style={styles.titleTxt}>Country</Text>
             <SelectList 
                 setSelected={setSelectedCountry} 
                 data={country} 
-                onSelect={() => alert(selectedCountry)}
+                onSelect={() => {setSelectedCountry(country[selectedCountry-1].value)}}
                 boxStyles={styles.input}
                 dropdownItemStyles={styles.input}
                 dropdownStyles={{borderColor:'transparent'}}
@@ -55,7 +105,7 @@ const EditAddressScreen = ({navigation}) => {
             <SelectList 
                 setSelected={setSelectedProvince} 
                 data={province} 
-                onSelect={() => alert(selectedProvince)}
+                onSelect={() => {setSelectedProvince(province[selectedProvince-1].value)}}
                 boxStyles={styles.input}
                 dropdownItemStyles={styles.input}
                 dropdownStyles={{borderColor:'transparent'}}
@@ -68,21 +118,11 @@ const EditAddressScreen = ({navigation}) => {
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
+                onChangeText={onPostalcodeChanged}
+                value={postalcode}
             />
-            <Pressable onPress={ () => {
-                //navigation.dispatch(StackActions.replace('TabsNavigator'))
-                Alert.alert('Save Changes', 'Confirm',
-                [  
-                    {  
-                        text: 'Cancel',  
-                        onPress: () => console.log('Cancel Pressed'),  
-                        style: 'cancel',  
-                    },  
-                    {text: 'OK', onPress: () => navigation.navigate('SettingScreen')},  
-                ]  
-                );
-            }}>
-                <Text style={styles.PressableStyle}>Update Address</Text>
+            <Pressable onPress={updateAddressPressed}>
+                <Text style={styles.PressableStyle}>UPDATE ADDRESS</Text>
             </Pressable>
         </SafeAreaView>
     );
@@ -106,9 +146,10 @@ const styles = StyleSheet.create({
         marginLeft: 22,
         marginRight: 22,
         marginTop: 22,
-        fontSize: 18,
-        padding: 15,
+        fontSize: 15,
+        padding: 12,
         width: '90%',
+        fontWeight: 'bold'
     },
     titleTxt: {
         marginTop:20, 
