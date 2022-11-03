@@ -54,13 +54,24 @@ const SettingScreen = ({navigation}) => {
             const querySnapshot = await getDocs(docRef);
             const userProfile = querySnapshot.docs[0];
             setUserProfileToSend(userProfile.id);
-            const user = [
-                userProfile.data().first_name+' '+userProfile.data().last_name,
-                loggedInUser.email,
-                userProfile.data().phone_number,
-                userProfile.data().address_1+', '+userProfile.data().city+', '+userProfile.data().province+' '+userProfile.data().postal_code
-            ]
-            setUserData(user);
+            if (userProfile.data().address_2===''){
+                const user = [
+                    userProfile.data().first_name+' '+userProfile.data().last_name,
+                    loggedInUser.email,
+                    userProfile.data().phone_number,
+                    userProfile.data().address_1+', '+userProfile.data().city+', '+userProfile.data().province+' '+userProfile.data().postal_code
+                ]
+                setUserData(user);
+            }
+            else {
+                const user = [
+                    userProfile.data().first_name+' '+userProfile.data().last_name,
+                    loggedInUser.email,
+                    userProfile.data().phone_number,
+                    userProfile.data().address_2+', '+userProfile.data().address_1+', '+userProfile.data().city+', '+userProfile.data().province+' '+userProfile.data().postal_code
+                ]
+                setUserData(user);
+            }
         } catch (err) {
             console.log(err.message);      
         }
