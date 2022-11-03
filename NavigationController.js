@@ -21,6 +21,7 @@ import CreatePetProfile from './CreatePetProfile';
 import CreatePetProfile2Screen from './CreatePetProfile2Screen';
 import PetHistoryScreen from './PetHistoryScreen';
 import AddPetHistoryScreen from './AddPetHistoryScreen';
+import PetSettingScreen from './PetSettingScreen';
 import { Pressable, View, Alert } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'; 
 import { auth } from './FirebaseApp';
@@ -84,7 +85,17 @@ const MainNavigator = ({navigation}) => {
                     
                 )
             }}/>
-            <Stack.Screen name="PetProfileScreen" component={PetProfileScreen} options={{title:'Pet Profile'}}/>
+            <Stack.Screen name="PetProfileScreen" component={PetProfileScreen} options={{
+                title:'Pet Profile',
+                headerRight: () => (
+                    <Pressable onPress={ () => {
+                        navigation.navigate("PetSettingScreen");
+                    }}>
+                        <Ionicons name="settings-sharp" size={24} color='#335C67'/>
+                    </Pressable>
+                )
+                }}/>
+            <Stack.Screen name="PetSettingScreen" component={PetSettingScreen} options={{title:'Pet Settings'}}/>
             <Stack.Screen name="Settings" component={SettingScreen} options={{
                 headerRight: () => (
                     <Pressable onPress={ () => {

@@ -118,8 +118,8 @@ const SettingScreen = ({navigation}) => {
         <SafeAreaView style={styles.container}>
             
             <View style={styles.mainView}>
-                <FontAwesome name="user-circle" size={60} color="black"/>
-                <View style={{flex:1, margin: 10, paddingLeft: 30}}>
+                <FontAwesome name="user-circle" size={60} color="black" style={{marginRight:10}}/>
+                <View style={{flex:1, margin: 10}}>
                     <Text style={{fontWeight:'bold', fontSize:17}}>{userData[0]}</Text>
                     <Text style={{color:'dimgray', fontWeight:'bold'}}>Email: 
                         <Text style={{color:'gray', fontWeight:'normal'}}>{userData[1]}</Text>

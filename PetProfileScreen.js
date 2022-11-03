@@ -1,50 +1,59 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert, Image } from 'react-native';
-import { AntDesign, Ionicons, Fontisto, MaterialIcons, FontAwesome5 } from '@expo/vector-icons'; 
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'; 
 
 const PetProfileScreen = ({navigation}) => {
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1}}>
-            <Image source={require('./assets/cat.jpg')} style={styles.img}/>
-            {/* <Text style={styles.title}>Create Pet Profile</Text> */}
+            <View style={styles.mainView}>
+                <View style={styles.imgView}>
+                    <Image source={require('./assets/paw.png')} style={styles.img}/>
+                </View>
+                <View style={{flex:1, marginLeft:10}}>
+                    <Text style={{fontWeight:'bold', fontSize:17}}>Pet name</Text>
+                    <Text style={{color:'dimgray', fontWeight:'bold'}}>Age: 
+                        <Text style={{color:'gray', fontWeight:'normal'}}>Pet age</Text>
+                    </Text>
+                    <Text style={{color:'dimgray', fontWeight:'bold'}}>Owner: 
+                        <Text style={{color:'gray', fontWeight:'normal'}}>Pet owner</Text>
+                    </Text>
+                </View>
+            </View>
+            <View style={{paddingLeft:22, paddingRight:22, marginTop:10}}>
+                <Text style={{color:'dimgray', fontWeight:'bold'}}>Caregivers: </Text>
+                <Text style={{color:'gray', fontWeight:'normal'}}>Pet caregiveres</Text>
+            </View>
 
-            <Text style={{marginBottom:5, marginLeft:22}}>Name</Text>
-            <TextInput 
-                style={styles.input}
-                editable={false}
-                placeholder=""
-                keyboardType="default"
-                autoCapitalize="none"
-            />
+            <Text style={{alignSelf:'center', fontWeight:'bold', fontSize:16, marginBottom:20, marginTop:20}}>Medical Records</Text>
 
-            <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Birthday</Text>
-            <TextInput 
-                style={styles.input}
-                editable={false}
-                placeholder=""
-                keyboardType="default"
-                autoCapitalize="none"
-            />
+            <View style={styles.rowView}>
+                <MaterialCommunityIcons name="clipboard-text-clock" size={28} color="black" style={{marginRight:10}}/>
+                <Text style={{fontWeight:'bold'}}>Last Upload:</Text>
+                <Text>xx-xx-xx</Text>
+            </View>
+            <View style={styles.rowView}>
+                <MaterialCommunityIcons name="hospital-marker" size={28} color="black" style={{marginRight:10}}/>
+                <Text style={{fontWeight:'bold'}}>At:</Text>
+                <Text>location</Text>
+            </View>
+            <View style={styles.rowView}>
+                <MaterialIcons name="chat" size={28} color="black" style={{marginRight:10}}/>
+                <Text style={{fontWeight:'bold'}}>Owner's Notes:</Text>
+                <Text>note</Text>
+            </View>
+            
+            <View style={{marginTop:20}}>
+                <Pressable onPress={ () => {console.log('pressed')}}>
+                    <Text style={styles.pressableStyle}>UPLOAD NEW</Text>
+                </Pressable>
+                <Pressable onPress={ () => {console.log('pressed')}}>
+                    <Text style={styles.pressableStyle}>SHARE MEDICAL RECORD</Text>
+                </Pressable>
+                <Pressable onPress={ () => {console.log('pressed')}}>
+                    <Text style={styles.pressableStyle}>SHOW HISTORY</Text>
+                </Pressable>
+            </View>
 
-            <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Sex</Text>
-            <TextInput  
-                style={styles.input}
-                editable={false}
-                placeholder=""
-                keyboardType="default"
-                autoCapitalize="none"
-            />
-                
-            <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Species</Text>
-            <TextInput 
-                style={styles.input}
-                editable={false}
-                placeholder=""
-                keyboardType="default"
-                autoCapitalize="none"
-            />
-            <Pressable onPress={ () => {
-                // navigation.navigate("CheckMailScreen");
-                //navigation.dispatch(StackActions.replace('CheckMailScreen'))
+            {/* <Pressable onPress={ () => {
                 Alert.alert('Going to records', 'Confirm',
                     [  
                         {  
@@ -57,13 +66,39 @@ const PetProfileScreen = ({navigation}) => {
                     );
                 }}>
                     <Text style={styles.deletePressable}>Vaccination Records</Text>
-            </Pressable>
+            </Pressable> */}
            
         </SafeAreaView>
     );
 }
   
 const styles = StyleSheet.create({
+    mainView: {
+        flexDirection:'row',
+        alignItems:'center',
+        justifyContent:'center',
+        marginTop: 22
+    },
+    rowView: {
+        flexDirection:'row',
+        paddingLeft:22,
+        alignItems:'center'
+    },
+    img: {
+        width:'100%', 
+        height:undefined, 
+        aspectRatio:1
+    },
+    imgView: {
+        width: 60,
+        height: 60,
+        borderRadius: '100%',
+        borderWidth: 1,
+        borderColor: 'black',
+        alignSelf: 'center',
+        marginLeft: 22,
+        padding: 8
+    },
     title: {
         // textAlign: 'center',
         alignSelf: 'center',
@@ -79,6 +114,22 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
+    },
+    pressableStyle: {
+        alignSelf: 'center',
+        textAlign: 'center',
+        backgroundColor: '#335C67',
+        color: '#fff',
+        // backgroundColor: '#ffffff',
+        // color: '#335C67',
+        // borderColor: '#335C67',
+        // borderStyle: 'solid',
+        // borderWidth: 1,
+        marginTop: 10,
+        fontSize: 15,
+        padding: 12,
+        width: '90%',
+        fontWeight: 'bold'
     },
     deletePressable: {
         alignSelf: 'center',
@@ -106,15 +157,6 @@ const styles = StyleSheet.create({
         //flex:1, 
         alignItems:'center',
         alignSelf:'center'
-    },
-    img: {
-        alignSelf: 'center',
-        width: 150,
-        height: 150,
-        marginTop: 22,
-        borderRadius: '100%',
-        borderWidth: 1,
-        borderColor: 'black',
     },
 });
 
