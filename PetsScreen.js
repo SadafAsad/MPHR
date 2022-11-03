@@ -77,16 +77,16 @@ const PetsScreen = ({navigation}) => {
             month = m
         }
         if (age===0) {
-            return `${month}mon`;
+            return `${month} months`;
         }
         else {
-            return `${age}yr${month}mon`;
+            return `${age} years ${month} months`;
         }
     }
 
     const renderItem = ( {item} ) => (
         <Pressable onPress={ () => {
-            navigation.navigate("PetProfileScreen", {pet: item});
+            navigation.navigate("PetProfileScreen", {pet: item.data()});
         }
         }>
             <View style={styles.pet}>
@@ -97,9 +97,9 @@ const PetsScreen = ({navigation}) => {
                     <View>
                         <View style={{flexDirection:'row', alignItems:'baseline'}}>
                             <Text style={{marginLeft:20, fontSize:18}}>{item.data().name}</Text>
-                            <Text style={{fontSize:14}}> - age: {getAge(item.data().birthday)}</Text>
+                            <Text style={{fontSize:14, color:'gray'}}> {getAge(item.data().birthday)}</Text>
                         </View>
-                        <Text style={{marginLeft:20}}>Owner:</Text>
+                        <Text style={{marginLeft:20, color:'dimgray'}}>Owner:</Text>
                     </View>
                 </View>
                 <AntDesign name="right" size={20} color='#335C67' style={{marginRight:22}}/>
