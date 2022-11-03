@@ -1,7 +1,30 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert, Image } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; 
 
-const PetSettingScreen = (navigation) => {
+const PetSettingScreen = (props) => {
+    const {pet} = props.route.params;
+
+    function getAge(dateString) {
+        var today = new Date();
+        var birthDate = new Date(dateString);
+        var age = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        var month = 0;
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+            month = birthDate.getMonth();
+        }
+        else {
+            month = m
+        }
+        if (age===0) {
+            return `${month} months`;
+        }
+        else {
+            return `${age} years ${month} months`;
+        }
+    }
+
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1}}>
             <View style={styles.mainView}>
@@ -9,9 +32,9 @@ const PetSettingScreen = (navigation) => {
                     <Image source={require('./assets/paw.png')} style={styles.img}/>
                 </View>
                 <View style={{flex:1, marginLeft:10}}>
-                    <Text style={{fontWeight:'bold', fontSize:17}}>Pet name</Text>
+                    <Text style={{fontWeight:'bold', fontSize:17}}>{pet.name}</Text>
                     <Text style={{color:'dimgray', fontWeight:'bold'}}>Age: 
-                        <Text style={{color:'gray', fontWeight:'normal'}}>Pet age</Text>
+                        <Text style={{color:'gray', fontWeight:'normal'}}>{getAge(pet.birthday)}</Text>
                     </Text>
                     <Text style={{color:'dimgray', fontWeight:'bold'}}>Owner: 
                         <Text style={{color:'gray', fontWeight:'normal'}}>Pet owner</Text>

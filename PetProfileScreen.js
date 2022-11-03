@@ -1,8 +1,22 @@
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert, Image } from 'react-native';
-import { MaterialCommunityIcons, MaterialIcons, FontAwesome } from '@expo/vector-icons'; 
+import { SafeAreaView, StyleSheet, Text, View, Pressable, Alert, Image } from 'react-native';
+import { MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons'; 
+import { useEffect } from 'react';
 
 const PetProfileScreen = ({navigation, route}) => {
     const {pet} = route.params;
+
+    useEffect(()=>{
+        navigation.setOptions({
+            title:'Pet Profile',
+            headerRight: () => (
+                <Pressable onPress={ () => {
+                    navigation.navigate("PetSettingScreen", {pet:pet});
+                }}>
+                    <Ionicons name="settings-sharp" size={24} color='#335C67'/>
+                </Pressable>
+            )
+        })
+    }, [])
 
     function getAge(dateString) {
         var today = new Date();

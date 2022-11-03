@@ -85,16 +85,7 @@ const MainNavigator = ({navigation}) => {
                     
                 )
             }}/>
-            <Stack.Screen name="PetProfileScreen" component={PetProfileScreen} options={{
-                title:'Pet Profile',
-                headerRight: () => (
-                    <Pressable onPress={ () => {
-                        navigation.navigate("PetSettingScreen");
-                    }}>
-                        <Ionicons name="settings-sharp" size={24} color='#335C67'/>
-                    </Pressable>
-                )
-                }}/>
+            <Stack.Screen name="PetProfileScreen" component={PetProfileScreen}/>
             <Stack.Screen name="PetSettingScreen" component={PetSettingScreen} options={{title:'Pet Settings'}}/>
             <Stack.Screen name="Settings" component={SettingScreen} options={{
                 headerRight: () => (
