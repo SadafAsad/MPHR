@@ -86,7 +86,7 @@ const PetsScreen = ({navigation}) => {
 
     const renderItem = ( {item} ) => (
         <Pressable onPress={ () => {
-            navigation.navigate("PetProfileScreen", {pet: item.data()});
+            navigation.navigate("PetProfileScreen", {pet:item.id});
         }
         }>
             <View style={styles.pet}>

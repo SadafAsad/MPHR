@@ -1,9 +1,16 @@
 import { SafeAreaView, StyleSheet, Text, View, Pressable, Alert, Image } from 'react-native';
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons'; 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { auth, db } from './FirebaseApp';
+import { collection, query, where, getDoc, doc } from "firebase/firestore";
+import { useIsFocused } from '@react-navigation/native';
 
 const PetProfileScreen = ({navigation, route}) => {
+    const [pet_name, setPetName] = useState('');
+    const [pet_birthday, setPetBirthday] = useState('');
+
     const {pet} = route.params;
+    const isFocused = useIsFocused();
 
     useEffect(()=>{
         navigation.setOptions({
@@ -16,7 +23,17 @@ const PetProfileScreen = ({navigation, route}) => {
                 </Pressable>
             )
         })
-    }, [])
+    }, [isFocused])
+
+    useEffect(()=>{
+        async function getPetData() {
+            const docRef = doc(db, "pets", pet);
+            const pet_data = await getDoc(docRef);
+            setPetName(pet_data.data().name);
+            setPetBirthday(pet_data.data().birthday);
+        }
+        getPetData();
+    }, [isFocused])
 
     function getAge(dateString) {
         var today = new Date();
@@ -46,9 +63,9 @@ const PetProfileScreen = ({navigation, route}) => {
                     <Image source={require('./assets/paw.png')} style={styles.img}/>
                 </View>
                 <View style={{flex:1, marginLeft:10}}>
-                    <Text style={{fontWeight:'bold', fontSize:17}}>{pet.name}</Text>
+                    <Text style={{fontWeight:'bold', fontSize:17}}>{pet_name}</Text>
                     <Text style={{color:'dimgray', fontWeight:'bold'}}>Age: 
-                        <Text style={{color:'gray', fontWeight:'normal'}}>{getAge(pet.birthday)}</Text>
+                        <Text style={{color:'gray', fontWeight:'normal'}}>{getAge(pet_birthday)}</Text>
                     </Text>
                     <Text style={{color:'dimgray', fontWeight:'bold'}}>Owner: 
                         <Text style={{color:'gray', fontWeight:'normal'}}>Pet owner</Text>

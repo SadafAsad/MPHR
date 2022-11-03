@@ -1,8 +1,26 @@
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert, Image } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons'; 
+import { SafeAreaView, StyleSheet, Text, View, Pressable, Alert, Image } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
+import { auth, db } from './FirebaseApp';
+import { collection, query, where, getDoc, doc } from "firebase/firestore";
+import { useIsFocused } from '@react-navigation/native';
 
 const PetSettingScreen = (props) => {
+    const [pet_name, setPetName] = useState('');
+    const [pet_birthday, setPetBirthday] = useState('');
+
     const {pet} = props.route.params;
+    const isFocused = useIsFocused();
+
+    useEffect(()=>{
+        async function getPetData() {
+            const docRef = doc(db, "pets", pet);
+            const pet_data = await getDoc(docRef);
+            setPetName(pet_data.data().name);
+            setPetBirthday(pet_data.data().birthday);
+        }
+        getPetData();
+    }, [isFocused])
 
     function getAge(dateString) {
         var today = new Date();
@@ -32,9 +50,9 @@ const PetSettingScreen = (props) => {
                     <Image source={require('./assets/paw.png')} style={styles.img}/>
                 </View>
                 <View style={{flex:1, marginLeft:10}}>
-                    <Text style={{fontWeight:'bold', fontSize:17}}>{pet.name}</Text>
+                    <Text style={{fontWeight:'bold', fontSize:17}}>{pet_name}</Text>
                     <Text style={{color:'dimgray', fontWeight:'bold'}}>Age: 
-                        <Text style={{color:'gray', fontWeight:'normal'}}>{getAge(pet.birthday)}</Text>
+                        <Text style={{color:'gray', fontWeight:'normal'}}>{getAge(pet_birthday)}</Text>
                     </Text>
                     <Text style={{color:'dimgray', fontWeight:'bold'}}>Owner: 
                         <Text style={{color:'gray', fontWeight:'normal'}}>Pet owner</Text>
@@ -52,7 +70,7 @@ const PetSettingScreen = (props) => {
             <Text style={{alignSelf:'center', fontWeight:'bold', fontSize:16, marginBottom:20, marginTop:20}}>Settings</Text>
             
             <View>
-                <Pressable onPress={ () => {console.log('pressed')}}>
+                <Pressable onPress={ () => {props.navigation.navigate('EditPetScreen-1', {pet:pet})}}>
                     <Text style={styles.pressableStyle}>EDIT PET</Text>
                 </Pressable>
                 <Pressable onPress={ () => {console.log('pressed')}}>
