@@ -23,7 +23,7 @@ const CreatePetProfile2Screen = ({navigation, route}) => {
 
         try {
             const petToInsert = {
-                userId:pet_profile.userId,
+                owner:pet_profile.owner,
                 name:pet_profile.name,
                 birthday:pet_profile.birthday,
                 gender:pet_profile.gender,

@@ -48,7 +48,7 @@ const CreatePetProfile = ({navigation}) => {
 
     const nextPressed = () => {
         const petToInsert = {
-            userId:loggedInUser.uid,
+            owner:loggedInUser.uid,
             name:pet_name,
             birthday:pet_birthday,
             gender:pet_gender,

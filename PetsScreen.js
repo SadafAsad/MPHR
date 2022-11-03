@@ -33,7 +33,7 @@ const PetsScreen = ({navigation}) => {
 
     const getUserPets = async () => {
         try {
-            const docRef = query(collection(db, "pets"), where("userId", "==",loggedInUser.uid));
+            const docRef = query(collection(db, "pets"), where("owner", "==",loggedInUser.uid));
             const querySnapshot = await getDocs(docRef);
             const documents = querySnapshot.docs;
             setFilteredDataSource(documents);
@@ -99,7 +99,7 @@ const PetsScreen = ({navigation}) => {
                             <Text style={{marginLeft:20, fontSize:18}}>{item.data().name}</Text>
                             <Text style={{fontSize:14}}> - age: {getAge(item.data().birthday)}</Text>
                         </View>
-                        <Text style={{marginLeft:20}}>Caretakers:</Text>
+                        <Text style={{marginLeft:20}}>Owner:</Text>
                     </View>
                 </View>
                 <AntDesign name="right" size={20} color='#335C67' style={{marginRight:22}}/>

@@ -120,7 +120,7 @@ const SettingScreen = ({navigation}) => {
             <View style={styles.mainView}>
                 <FontAwesome name="user-circle" size={60} color="black"/>
                 <View style={{flex:1, margin: 10, paddingLeft: 30}}>
-                    <Text style={{fontWeight:'bold'}}>{userData[0]}</Text>
+                    <Text style={{fontWeight:'bold', fontSize:17}}>{userData[0]}</Text>
                     <Text style={{color:'dimgray', fontWeight:'bold'}}>Email: 
                         <Text style={{color:'gray', fontWeight:'normal'}}>{userData[1]}</Text>
                     </Text>
@@ -132,6 +132,8 @@ const SettingScreen = ({navigation}) => {
                     </Text>
                 </View>
             </View>
+
+            <Text style={{alignSelf:'center', fontWeight:'bold', fontSize:16}}>Account</Text>
 
             <View>
                 <Pressable onPress={ () => {navigation.navigate("EditProfileScreen", {userProfile: userProfileToSend})}}>
