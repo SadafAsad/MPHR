@@ -1,5 +1,5 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert, Image } from 'react-native';
-import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'; 
+import { MaterialCommunityIcons, MaterialIcons, FontAwesome } from '@expo/vector-icons'; 
 
 const PetProfileScreen = ({navigation}) => {
     return (
@@ -19,8 +19,11 @@ const PetProfileScreen = ({navigation}) => {
                 </View>
             </View>
             <View style={{paddingLeft:22, paddingRight:22, marginTop:10}}>
-                <Text style={{color:'dimgray', fontWeight:'bold'}}>Caregivers: </Text>
-                <Text style={{color:'gray', fontWeight:'normal'}}>Pet caregiveres</Text>
+                <Text style={{color:'dimgray', fontWeight:'bold', marginBottom:5}}>Caregivers: </Text>
+                <View style={{flexDirection:'row'}}>
+                    <FontAwesome name="user-circle" size={15} color="black" style={{marginRight:5}}/>
+                    <Text style={{color:'gray', fontWeight:'normal'}}>Pet caregiveres</Text>
+                </View>
             </View>
 
             <Text style={{alignSelf:'center', fontWeight:'bold', fontSize:16, marginBottom:20, marginTop:20}}>Medical Records</Text>
