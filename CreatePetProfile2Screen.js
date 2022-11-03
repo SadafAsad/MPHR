@@ -173,31 +173,10 @@ const styles = StyleSheet.create({
         marginRight: 22,
         marginTop: 22,
         fontSize: 15,
-        padding: 12,
+        padding: 15,
         width: '90%',
         fontWeight: 'bold'
     },
-    saveChanges: {
-        // borderRadius: 5,
-        // borderWidth: 1,
-        flex:1, 
-        alignItems:'baseline',
-        alignSelf:'center'
-    },
-    deleteAccount: {
-        // borderRadius: 5,
-        // borderWidth: 1,
-        //flex:1, 
-        alignItems:'center',
-        alignSelf:'center'
-    },
-    checkedOptions: {
-       
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-       
-        alignItems: 'center'
-    }
 });
 
 export default CreatePetProfile2Screen;

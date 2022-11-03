@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
         marginRight: 22,
         marginTop: 22,
         fontSize: 15,
-        padding: 12,
+        padding: 15,
         width: '90%',
         fontWeight: 'bold'
     },
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
         marginTop: 22,
         marginBottom: 0,
         fontSize: 15,
-        padding: 12,
+        padding: 15,
         width: '90%',
         fontWeight: 'bold'
     },
