@@ -136,7 +136,11 @@ const CreatePetProfile = ({navigation}) => {
                         </View>
                         <View style={{flexDirection:'row', justifyContent:'space-between', alignSelf:'center', alignItems:'center'}}>
                             <FontAwesome name="trash" size={24} color="black" style={{marginRight:20}}/>
-                            <MaterialIcons name="edit" size={24} color="black" style={{}}/>
+                            <Pressable onPress={ () => {
+                                navigation.navigate("VetsScreen", {onSelect: onSelectedVet});
+                            }}>
+                                <MaterialIcons name="edit" size={24} color="black" style={{}}/>
+                            </Pressable>
                         </View>
                     </View>
                 </View>
