@@ -73,7 +73,7 @@ const PetSettingScreen = (props) => {
                 <Pressable onPress={ () => {props.navigation.navigate('EditPetScreen-1', {pet:pet})}}>
                     <Text style={styles.pressableStyle}>EDIT PET</Text>
                 </Pressable>
-                <Pressable onPress={ () => {console.log('pressed')}}>
+                <Pressable onPress={ () => {props.navigation.navigate('ManageCareGiverSCreen', {pet:pet})}}>
                     <Text style={styles.pressableStyle}>MANAGE CAREGIVERS</Text>
                 </Pressable>
                 <Pressable onPress={ () => {console.log('pressed')}}>

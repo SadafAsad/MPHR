@@ -114,6 +114,11 @@ const VetsScreen = ({navigation, route}) => {
                 placeholder="Search Here"
             />
             {/* Vet Lists */}
+            <View style={styles.addVetView}>
+                <Text  onPress={() => navigation.navigate("AddVetClinicsScreen")} style={styles.addVetText}>Didn't find your clinic?</Text> 
+               
+            </View>
+            
             <FlatList
                 data={filteredDataSource}
                 keyExtractor={item => item.id}
@@ -154,6 +159,18 @@ const styles = StyleSheet.create({
       borderColor: '#009688',
       backgroundColor: '#FFFFFF',
     },
+    addVetText: {
+        alignSelf: 'center',
+        color:'#335C67',
+        fontWeight: 'bold',
+        textDecorationLine: "underline",
+        textDecorationStyle: "solid",
+        textDecorationColor: "#335C67",
+        marginTop: 5
+    },
+    addVetView: {
+        padding: 10
+    }
 });
 
 export default VetsScreen;
