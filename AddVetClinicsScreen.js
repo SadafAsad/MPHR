@@ -7,6 +7,8 @@ import { collection, doc, getDocs } from "firebase/firestore";
 
 
 const AddVetClinicsScreen = ({navigation}) => {
+    
+
     return (
         <SafeAreaView style={{backgroundColor:'#fff', justifyContent:'space-between'}}>
            <Text style={{marginBottom:5, marginLeft:22, marginTop:30}}>Veterinary Clinic Name</Text>

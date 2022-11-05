@@ -25,7 +25,8 @@ import AddPetHistoryScreen from './AddPetHistoryScreen';
 import PetSettingScreen from './PetSettingScreen';
 import EditPetScreen_1 from './EditPetScreen-1';
 import EditPetScreen_2 from './EditPetScreen-2';
-import ManageCareGiverSCreen from './ManageCareGiverScreen';
+import ManageCaregiverSCreen from './ManageCareGiverScreen';
+import AddCaregiverScreen from './AddCaregiverScreen';
 import { Pressable, View, Alert } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'; 
 import { auth } from './FirebaseApp';
@@ -122,8 +123,9 @@ const MainNavigator = ({navigation}) => {
             <Stack.Screen name="CreatePetProfile2Screen" component={CreatePetProfile2Screen} options={{title:'Add Pet'}}/>
             <Stack.Screen name="VetsScreen" component={VetsScreen} options={{title:'Veterinary Clinics'}}/>
             <Stack.Screen name="Vaccinations" component={PetHistoryScreenNavigator}/>
-            <Stack.Screen name="ManageCareGiverSCreen" component={ManageCareGiverSCreen}/>
+            <Stack.Screen name="ManageCaregiverSCreen" component={ManageCaregiverSCreen}/>
             <Stack.Screen name="AddVetClinicsScreen" component={AddVetClinicsScreen}/>
+            <Stack.Screen name="AddCaregiverScreen" component={AddCaregiverScreen}/>
             <Stack.Screen name="EditPetScreen-1" component={EditPetScreen_1} options={{title:'Edit Pet'}}/>
             <Stack.Screen name="EditPetScreen-2" component={EditPetScreen_2} options={{title:'Edit Pet'}}/>
             <Stack.Screen name="AuthenticationNavigator" component={AuthenticationNavigator} options={{header: () => null}}/>
