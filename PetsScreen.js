@@ -6,7 +6,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from './FirebaseApp';
 import { collection, query, where, getDocs, getDoc, doc } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
-import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
 
 const PetsScreen = ({navigation}) => {
     const [search, setSearch] = useState('');
@@ -30,8 +29,7 @@ const PetsScreen = ({navigation}) => {
     }, [])
 
     useEffect(()=>{
-        // getUserPets_1();
-        getUserPets_2();
+        getUserPets();
         getUserCaregiving();
     }, [loggedInUser, isFocused])
 
@@ -39,18 +37,7 @@ const PetsScreen = ({navigation}) => {
         setFilteredDataSource(usersPets.concat(usersCaregiving));
     }, [usersPets, usersCaregiving])
 
-    const getUserPets_1 = async () => {
-        try {
-            const docRef = query(collection(db, "pets"), where("owner", "==", loggedInUser.uid));
-            const querySnapshot = await getDocs(docRef);
-            const documents = querySnapshot.docs;
-            setFilteredDataSource(documents);
-        } catch (err) {
-            console.log("Getting User's Pets: " + err.message);        
-        }
-    }
-
-    const getUserPets_2 = async () => {
+    const getUserPets = async () => {
         var index = 0;
         var pets = [];
         try {
@@ -75,14 +62,10 @@ const PetsScreen = ({navigation}) => {
             const caregivingQuerySnapshot = await getDocs(caregivingDocRef);
             const caregivingDocuments = caregivingQuerySnapshot.docs;
 
-            console.log("length:" + caregivingDocuments.length);
-            console.log("pet id:" + caregivingDocuments[0].data().pet);
-            console.log("user id:" + caregivingDocuments[0].data().user);
             while (index<caregivingDocuments.length) {
                 try {
                     const petDocRef = doc(db, "pets", caregivingDocuments[index].data().pet);
                     const petQuerySnapshot = await getDoc(petDocRef);
-                    console.log(petQuerySnapshot.data().name)
 
                     try {
                         const userProfileDocRef = query(collection(db, "profiles"), where("userId", "==", petQuerySnapshot.data().owner));
@@ -195,7 +178,7 @@ const PetsScreen = ({navigation}) => {
                 keyExtractor={item => item.key}
                 renderItem={renderItem}
                 ItemSeparatorComponent={ItemDivider}
-                />
+            />
         </SafeAreaView>
     );
 }
