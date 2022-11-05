@@ -1,19 +1,21 @@
-import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image, Alert } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
 import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from './FirebaseApp';
-import { collection, query, where, getDocs, Firestore } from "firebase/firestore";
+import { collection, query, where, getDocs, getDoc, doc } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
+import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
 
 const PetsScreen = ({navigation}) => {
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
     const [loggedInUser, setLoggedInUser] = useState(null);
+    const [usersPets, setUsersPets] = useState([]);
+    const [usersCaregiving, setUsersCaregiving] = useState([]);
     const isFocused = useIsFocused();
-    let petId = String;
 
     useEffect(()=>{
         const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
@@ -28,17 +30,79 @@ const PetsScreen = ({navigation}) => {
     }, [])
 
     useEffect(()=>{
-        getUserPets();
+        // getUserPets_1();
+        getUserPets_2();
+        getUserCaregiving();
     }, [loggedInUser, isFocused])
 
-    const getUserPets = async () => {
+    useEffect(()=>{
+        setFilteredDataSource(usersPets.concat(usersCaregiving));
+    }, [usersPets, usersCaregiving])
+
+    const getUserPets_1 = async () => {
         try {
-            const docRef = query(collection(db, "pets"), where("owner", "==",loggedInUser.uid));
+            const docRef = query(collection(db, "pets"), where("owner", "==", loggedInUser.uid));
             const querySnapshot = await getDocs(docRef);
             const documents = querySnapshot.docs;
             setFilteredDataSource(documents);
         } catch (err) {
-            console.log(`${err.message}`)        
+            console.log("Getting User's Pets: " + err.message);        
+        }
+    }
+
+    const getUserPets_2 = async () => {
+        var index = 0;
+        var pets = [];
+        try {
+            const docRef = query(collection(db, "pets"), where("owner", "==", loggedInUser.uid));
+            const querySnapshot = await getDocs(docRef);
+            const documents = querySnapshot.docs;
+            while (index<documents.length) {
+                pets.push({key:documents[index].id, owner:'You', value:documents[index]});
+                index = index+1;
+            }
+            setUsersPets(pets);
+        } catch (err) {
+            console.log("Getting User's Pets: " + err.message);        
+        }
+    }
+
+    const getUserCaregiving = async () => {
+        var index = 0;
+        var pets = [];
+        try {
+            const caregivingDocRef = query(collection(db, "caregiving"), where("user", "==", loggedInUser.uid));
+            const caregivingQuerySnapshot = await getDocs(caregivingDocRef);
+            const caregivingDocuments = caregivingQuerySnapshot.docs;
+
+            console.log("length:" + caregivingDocuments.length);
+            console.log("pet id:" + caregivingDocuments[0].data().pet);
+            console.log("user id:" + caregivingDocuments[0].data().user);
+            while (index<caregivingDocuments.length) {
+                try {
+                    const petDocRef = doc(db, "pets", caregivingDocuments[index].data().pet);
+                    const petQuerySnapshot = await getDoc(petDocRef);
+                    console.log(petQuerySnapshot.data().name)
+
+                    try {
+                        const userProfileDocRef = query(collection(db, "profiles"), where("userId", "==", petQuerySnapshot.data().owner));
+                        const userProfileQuerySnapshot = await getDocs(userProfileDocRef);
+                        const userProfileDocument = userProfileQuerySnapshot.docs;
+
+                        pets.push({key: petQuerySnapshot.id,
+                                owner:userProfileDocument[0].data().first_name+" "+userProfileDocument[0].data().last_name,
+                                value: petQuerySnapshot});
+                    } catch(err) {
+                        console.log("Getting User's Caregiving Profile: " + err.message);
+                    }
+                } catch(err) {
+                    console.log("Getting User's Caregiving Pet: " + err.message);
+                }
+                index = index + 1;
+            }
+            setUsersCaregiving(pets);
+        } catch (err) {
+            console.log("Getting User's Caregiving: " + err.message);
         }
     }
 
@@ -86,7 +150,7 @@ const PetsScreen = ({navigation}) => {
 
     const renderItem = ( {item} ) => (
         <Pressable onPress={ () => {
-            navigation.navigate("PetProfileScreen", {pet:item.id});
+            navigation.navigate("PetProfileScreen", {pet:item.key});
         }
         }>
             <View style={styles.pet}>
@@ -96,10 +160,12 @@ const PetsScreen = ({navigation}) => {
                     </View>
                     <View>
                         <View style={{flexDirection:'row', alignItems:'baseline'}}>
-                            <Text style={{marginLeft:20, fontSize:18}}>{item.data().name}</Text>
-                            <Text style={{fontSize:14, color:'gray'}}> {getAge(item.data().birthday)}</Text>
+                            <Text style={{marginLeft:20, fontSize:18}}>{item.value.data().name}</Text>
+                            <Text style={{fontSize:14, color:'gray'}}> {getAge(item.value.data().birthday)}</Text>
                         </View>
-                        <Text style={{marginLeft:20, color:'dimgray'}}>Owner:</Text>
+                        <Text style={{marginLeft:20, color:'dimgray'}}>Owner:
+                            <Text style={{color:'gray'}}> {item.owner}</Text>
+                        </Text>
                     </View>
                 </View>
                 <AntDesign name="right" size={20} color='#335C67' style={{marginRight:22}}/>
@@ -126,7 +192,7 @@ const PetsScreen = ({navigation}) => {
             </View>
             <FlatList
                 data={filteredDataSource}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.key}
                 renderItem={renderItem}
                 ItemSeparatorComponent={ItemDivider}
                 />
