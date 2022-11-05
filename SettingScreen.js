@@ -122,13 +122,13 @@ const SettingScreen = ({navigation}) => {
                 <View style={{flex:1, margin: 10}}>
                     <Text style={{fontWeight:'bold', fontSize:17}}>{userData[0]}</Text>
                     <Text style={{color:'dimgray', fontWeight:'bold'}}>Email: 
-                        <Text style={{color:'gray', fontWeight:'normal'}}>{userData[1]}</Text>
+                        <Text style={{color:'gray', fontWeight:'normal'}}> {userData[1]}</Text>
                     </Text>
                     <Text style={{color:'dimgray', fontWeight:'bold'}}>Phone: 
-                        <Text style={{color:'gray', fontWeight:'normal'}}>{userData[2]}</Text>
+                        <Text style={{color:'gray', fontWeight:'normal'}}> {userData[2]}</Text>
                     </Text>
-                    <Text style={{color:'dimgray', fontWeight:'bold'}}>Addres: 
-                        <Text style={{color:'gray', fontWeight:'normal'}}>{userData[3]}</Text>
+                    <Text style={{color:'dimgray', fontWeight:'bold'}}>Address: 
+                        <Text style={{color:'gray', fontWeight:'normal'}}> {userData[3]}</Text>
                     </Text>
                 </View>
             </View>

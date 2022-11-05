@@ -8,12 +8,17 @@ import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/fire
 
 const DeleteAccountScreen = ({navigation, route}) => {
     const [password, onPasswordChanged] = useState('');
+    // Not tested yet //
     const [hasError, onHasErrorChanged] = useState(false);
+    //
 
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
     const {user} = route.params;
 
     const deleteAccountPressed = async () => {
+        // Not tested yet //
+        deleteUserCaregiving();
+        //
         deleteUserPets();
         deleteUserProfile();
         deleteUser();
@@ -29,11 +34,12 @@ const DeleteAccountScreen = ({navigation, route}) => {
                 .then(() => navigation.reset({index:0, routes:[{name: 'AuthenticationNavigator'}], key:null}))
                 .catch((err) => console.log(err));
             } catch(err) {
-                console.log('hehe');
                 console.log(err.message);
+                onErrorChanged(err.message);
+                onPasswordChanged("");
+                onHasErrorChanged(true);
             }
         } catch(err) {
-            console.log('this one');
             console.log(err.message);
             onErrorChanged("Your password is incorrect. Please try again.");
             onPasswordChanged("");
@@ -73,6 +79,23 @@ const DeleteAccountScreen = ({navigation, route}) => {
         }
     }
 
+    const deleteUserCaregiving = async () => {
+        try {
+            const docRef = query(collection(db, "caregiving"), where("user", "==",user));
+            const querySnapshot = await getDocs(docRef);
+            const documents = querySnapshot.docs;
+            for (let i=0; i<documents.length; i++) {
+                try {
+                    await deleteDoc(doc(db, "caregiving", documents[i].id));
+                } catch (err) {
+                    console.log(err.message);
+                }
+            }
+        } catch (err) {
+            console.log(`${err.message}`);        
+        }
+    }
+
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
 
@@ -97,6 +120,10 @@ const DeleteAccountScreen = ({navigation, route}) => {
                     <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
                 </Pressable>
             </View>
+
+            { hasError && (
+                <Text style={styles.errorStyle}>{error}</Text>
+            )}
             
             <Pressable onPress={ () => {
                 Alert.alert('DELETE ACCOUNT', 'Please confirm account deletion.', [  
@@ -171,6 +198,11 @@ const styles = StyleSheet.create({
         padding: 10,
         width: '90%'
     },
+    errorStyle: {
+        color: '#ff0000',
+        alignSelf: 'center',
+        marginTop: 22
+    }
 });
 
 export default DeleteAccountScreen;
