@@ -27,6 +27,7 @@ import EditPetScreen_1 from './EditPetScreen-1';
 import EditPetScreen_2 from './EditPetScreen-2';
 import ManageCaregiverSCreen from './ManageCareGiverScreen';
 import AddCaregiverScreen from './AddCaregiverScreen';
+import DeletePetScreen from './DeletePetScreen';
 import { Pressable, View, Alert } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'; 
 import { auth } from './FirebaseApp';
@@ -128,6 +129,7 @@ const MainNavigator = ({navigation}) => {
             <Stack.Screen name="AddCaregiverScreen" component={AddCaregiverScreen}/>
             <Stack.Screen name="EditPetScreen-1" component={EditPetScreen_1} options={{title:'Edit Pet'}}/>
             <Stack.Screen name="EditPetScreen-2" component={EditPetScreen_2} options={{title:'Edit Pet'}}/>
+            <Stack.Screen name="DeletePetScreen" component={DeletePetScreen} options={{title:'Delete Pet'}}/>
             <Stack.Screen name="AuthenticationNavigator" component={AuthenticationNavigator} options={{header: () => null}}/>
         </Stack.Navigator>
     )
