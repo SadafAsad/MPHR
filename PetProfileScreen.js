@@ -154,7 +154,7 @@ const PetProfileScreen = ({navigation, route}) => {
             </View>
             
             <View style={{marginTop:20}}>
-                <Pressable onPress={ () => {console.log('pressed')}}>
+                <Pressable onPress={ () => {navigation.navigate('UploadNewScreen')}}>
                     <Text style={styles.pressableStyle}>UPLOAD NEW</Text>
                 </Pressable>
                 <Pressable onPress={ () => {console.log('pressed')}}>
