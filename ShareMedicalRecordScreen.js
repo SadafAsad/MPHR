@@ -4,7 +4,7 @@ import { auth, db } from './FirebaseApp';
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
 
-const UploadNewScreen = ({navigation, route}) => {
+const ShareMedicalRecordScreen = ({navigation, route}) => {
     const [petName, setPetName] = useState('');
     const [petOwner, setPetOwner] = useState('');
     const [loggedInUser, setLoggedInUser] = useState(null);
@@ -16,40 +16,28 @@ const UploadNewScreen = ({navigation, route}) => {
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
 
-            <Text style={{textAlign:'center',marginTop:10, marginLeft:36, marginRight:35, fontSize:25, alignSelf: 'center', fontWeight: 'bold'}}>Upload new Medical Record </Text>
+            <Text style={{textAlign:'center',marginTop:10, marginLeft:36, marginRight:35, fontSize:25, alignSelf: 'center', fontWeight: 'bold'}}>Who do you want to share Medical History with?</Text>
 
             
-                <Text style={{textAlign:'center',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>You can add new Medical Report for your pet from here.
+                <Text style={{textAlign:'center',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>Please enter the destination email and we will send the most up-to-date medical history as an attachment.
                 </Text>
 
-                <Pressable onPress={ () => {
-                Alert.alert('Browse Local Files', 'Please confirm.', [  
-                    {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
-                    {text: 'Confirm', onPress: () => navigation.goBack()}
-                ]);
-                }}>
-                    <Text style={styles.choosePressable}>Choose File </Text>
-                </Pressable>
-            
-
-                <Text style={{marginBottom:5, marginLeft:22, marginTop: 20}}>Note</Text>
-                <TextInput 
-                    style={styles.txtInput}
-                    placeholder=""
-                    keyboardType=""
-                    autoCapitalize="none"
-                    multiline={true}
-                    numberOfLines={10}
-                  
-                />
+                <Text style={{marginBottom:5, marginLeft:22, marginTop:30}}>Email</Text>
+            <TextInput 
+                style={styles.input}
+                placeholder="Enter email address"
+                keyboardType="default"
+                autoCapitalize="none"
+                
+            />
             
             <Pressable onPress={ () => {
-                Alert.alert('UPLOAD NEW RECORD', 'Please confirm to upload.', [  
+                Alert.alert('SEND NEW RECORD', 'Please confirm to send.', [  
                     {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
                     {text: 'Confirm', onPress: () => navigation.goBack()}
                 ]);
             }}>
-                <Text style={styles.deletePressable}>UPLOAD </Text>
+                <Text style={styles.deletePressable}>SEND MEDICAL RECORD </Text>
             </Pressable>
 
             <Pressable onPress={() => {navigation.goBack()}}>
@@ -116,15 +104,15 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: 22
     },
-    txtInput: {
+    input: {
         alignSelf: 'center',
-        height: 150,
+        height: 45,
         width: '90%',
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
-        textAlignVertical: 'top'
+        borderRadius: '0%',
     },
 });
 
-export default UploadNewScreen;
+export default ShareMedicalRecordScreen;
