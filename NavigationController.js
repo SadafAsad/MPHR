@@ -25,7 +25,7 @@ import AddPetHistoryScreen from './AddPetHistoryScreen';
 import PetSettingScreen from './PetSettingScreen';
 import EditPetScreen_1 from './EditPetScreen-1';
 import EditPetScreen_2 from './EditPetScreen-2';
-import ManageCaregiverSCreen from './ManageCareGiverScreen';
+import ManageCaregiverScreen from './ManageCareGiverScreen'
 import AddCaregiverScreen from './AddCaregiverScreen';
 import DeletePetScreen from './DeletePetScreen';
 import { Pressable, View, Alert } from 'react-native';
@@ -124,7 +124,7 @@ const MainNavigator = ({navigation}) => {
             <Stack.Screen name="CreatePetProfile2Screen" component={CreatePetProfile2Screen} options={{title:'Add Pet'}}/>
             <Stack.Screen name="VetsScreen" component={VetsScreen} options={{title:'Veterinary Clinics'}}/>
             <Stack.Screen name="Vaccinations" component={PetHistoryScreenNavigator}/>
-            <Stack.Screen name="ManageCaregiverSCreen" component={ManageCaregiverSCreen}/>
+            <Stack.Screen name="ManageCaregiverScreen" component={ManageCaregiverScreen}/>
             <Stack.Screen name="AddVetClinicsScreen" component={AddVetClinicsScreen}/>
             <Stack.Screen name="AddCaregiverScreen" component={AddCaregiverScreen}/>
             <Stack.Screen name="EditPetScreen-1" component={EditPetScreen_1} options={{title:'Edit Pet'}}/>

@@ -7,7 +7,7 @@ import { collection, doc, getDocs } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
 
 
-const ManageCareGiverSCreen = ({navigation}) => {
+const ManageCareGiverScreen = ({navigation}) => {
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
@@ -78,14 +78,14 @@ const ManageCareGiverSCreen = ({navigation}) => {
             <Pressable onPress={ () => {
                     // navigation.navigate("CheckMailScreen");
                         //navigation.dispatch(StackActions.replace('CheckMailScreen'))
-                        Alert.alert('Adding VET CLINIC', 'Confirm',
+                        Alert.alert('Adding CAREGIVER', 'Confirm',
                         [  
                             {  
                                 text: 'Cancel',  
                                 onPress: () => console.log('Cancel Pressed'),  
                                 style: 'cancel',  
                             },  
-                            {text: 'OK', onPress: () => navigation.navigate("CreatePetProfile")},  
+                            {text: 'OK', onPress: () => navigation.navigate("AddCaregiverScreen")},  
                         ]  
                         );
                     }}>
@@ -131,4 +131,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ManageCareGiverSCreen;
+export default ManageCareGiverScreen;
