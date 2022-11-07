@@ -1,9 +1,9 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
-import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
+import { UseTogglePasswordVisibility } from '../UseTogglePasswordVisibility';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from './FirebaseApp';
+import { auth, db } from '../FirebaseApp';
 import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 const DeleteAccountScreen = ({navigation, route}) => {

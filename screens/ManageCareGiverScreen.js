@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View, Image, TextInput,Alert} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
-import { db } from "./FirebaseApp"
+import { db } from "../FirebaseApp"
 import { collection, doc, getDocs } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
 
@@ -46,7 +46,7 @@ const ManageCareGiverScreen = ({navigation}) => {
             <View style={styles.pet}>
                 <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
                     <View style={styles.imgView}>
-                        <Image source={require('./assets/paw.png')} style={styles.img}/>
+                        <Image source={require('../assets/paw.png')} style={styles.img}/>
                     </View>
                     <View>
                         <View style={{flexDirection:'row', alignItems:'baseline'}}>

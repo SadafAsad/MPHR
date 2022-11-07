@@ -1,18 +1,19 @@
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Pressable, TextInput } from 'react-native';
+import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import SelectList from 'react-native-dropdown-select-list';
-import { useState, useEffect } from 'react';
-import { db } from './FirebaseApp';
-import { updateDoc, getDoc, doc } from "firebase/firestore";
+import { useState } from 'react';
+import { db } from '../FirebaseApp';
+import { collection, addDoc } from "firebase/firestore";
 
-const EditAddressScreen = ({navigation, route}) => {
+const AddressInfo = ({navigation, route}) => {
     const [selectedCountry, setSelectedCountry] = useState("");
     const [selectedProvince, setSelectedProvince] = useState("");
-    const [newAddress1, onaddress1Changed] = useState('');
-    const [newAddress2, onaddress2Changed] = useState('');
-    const [newCity, onCityChanged] = useState('');
+    const [address1, onaddress1Changed] = useState('');
+    const [address2, onaddress2Changed] = useState('');
+    const [city, onCityChanged] = useState('');
     const [postalcode, onPostalcodeChanged] = useState('');
-    const [userProfileData, setUserProfileData] = useState(null);
-    const [docRef, setDocRef] = useState(null);
+
+    const {profile} = route.params;
 
     const country = [{key:'1',value:'Canada'}];
     const province = [
@@ -21,39 +22,22 @@ const EditAddressScreen = ({navigation, route}) => {
         {key:'3', value:'ON'}
     ]
 
-    const {userProfile} = route.params;
-
-    useEffect(() => {
-        async function getProfile() {
-            const docRef = doc(db, "profiles", userProfile);
-            const profileToUpdate = await getDoc(docRef);
-            setDocRef(docRef);
-            setUserProfileData(profileToUpdate.data());
-
-            onaddress1Changed(profileToUpdate.data().address_1);
-            onaddress2Changed(profileToUpdate.data().address_2);
-            onCityChanged(profileToUpdate.data().city);
-            onPostalcodeChanged(profileToUpdate.data().postal_code);
-        }
-        getProfile();
-    }, [])
-
-    const updateAddressPressed = async () => {
-        const updatedProfileData = {
-            userId:userProfileData.userId,
-            first_name:userProfileData.first_name,
-            last_name:userProfileData.last_name,
-            phone_number:userProfileData.phone_number,
-            address_1:newAddress1,
-            address_2:newAddress2,
-            city:newCity,
-            country:selectedCountry,
-            province:selectedProvince,
-            postal_code:postalcode
-        };
+    const createAccountPressed = async() => {
         try {
-            updateDoc(docRef, updatedProfileData);
-            navigation.goBack();
+            const profileToInsert = {
+                userId:profile.userId,
+                first_name:profile.first_name,
+                last_name:profile.last_name,
+                phone_number:profile.phone_number,
+                address_1: address1,
+                address_2: address2,
+                city: city,
+                country: selectedCountry,
+                province: selectedProvince,
+                postal_code: postalcode
+            };
+            const insertedProfile = await addDoc(collection(db, "profiles"), profileToInsert);
+            navigation.reset({index:0, routes:[{name: 'MainNavigator'}], key:null});
         }
         catch (err) {
             console.log(`${err.message}`);
@@ -61,16 +45,35 @@ const EditAddressScreen = ({navigation, route}) => {
     }
 
     return (
-        <SafeAreaView style={{flex:1}}>
-            <Text style={styles.screentitle}>Address</Text>
-            <Text style={styles.titleTxt}>Address</Text>
+        <SafeAreaView style={{flex:1}}> 
+            <View style={{height:120}}> 
+                <ProgressSteps
+                    borderWidth={3}
+                    activeStepIconBorderColor="#335C67"
+                    activeLabelFontSize={12}
+                    activeLabelColor="black"
+                    labelFontSize={12}
+                    labelColor="black"
+                    activeStep={2}
+                    completedLabelColor="black"
+                    completedStepIconColor="#335C67"
+                    completedProgressBarColor="#335C67"
+                >
+                    <ProgressStep label="Registration" removeBtnRow={true}/>
+                    <ProgressStep label="Profile" removeBtnRow={true}/>
+                    <ProgressStep label="Address" removeBtnRow={true}/>
+                </ProgressSteps>
+            </View>
+            <Text style={styles.screentitle}>Address Info</Text>
+            <Text style={styles.descTxt}>Complete your profile information. It will only take a few minutes.</Text>
+            <Text style={styles.titleTxt}>Address *</Text>
             <TextInput 
                 style={styles.input}
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
                 onChangeText={onaddress1Changed}
-                value={newAddress1}
+                value={address1}
             />
             <Text style={styles.titleTxt}>Address line 2</Text>
             <TextInput 
@@ -79,18 +82,18 @@ const EditAddressScreen = ({navigation, route}) => {
                 keyboardType="default"
                 autoCapitalize="none"
                 onChangeText={onaddress2Changed}
-                value={newAddress2}
+                value={address2}
             />
-            <Text style={styles.titleTxt}>City</Text>
+            <Text style={styles.titleTxt}>City *</Text>
             <TextInput 
                 style={styles.input}
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
                 onChangeText={onCityChanged}
-                value={newCity}
+                value={city}
             />
-            <Text style={styles.titleTxt}>Country</Text>
+            <Text style={styles.titleTxt}>Country *</Text>
             <SelectList 
                 setSelected={setSelectedCountry} 
                 data={country} 
@@ -101,7 +104,7 @@ const EditAddressScreen = ({navigation, route}) => {
                 maxHeight='100'
                 placeholder=" "
             />
-            <Text style={styles.titleTxt}>Province / State</Text>
+            <Text style={styles.titleTxt}>Province / State *</Text>
             <SelectList 
                 setSelected={setSelectedProvince} 
                 data={province} 
@@ -112,7 +115,7 @@ const EditAddressScreen = ({navigation, route}) => {
                 maxHeight='100'
                 placeholder=" "
             />
-            <Text style={styles.titleTxt}>Postal Code</Text>
+            <Text style={styles.titleTxt}>Postal Code *</Text>
             <TextInput 
                 style={styles.input}
                 placeholder=""
@@ -121,13 +124,8 @@ const EditAddressScreen = ({navigation, route}) => {
                 onChangeText={onPostalcodeChanged}
                 value={postalcode}
             />
-            <Pressable onPress={() => {
-                Alert.alert('UPDATE ADDRESS', 'Are you sure you want to update your address?', [  
-                    {text: 'NO', onPress: () => console.log('NO Pressed'), style:'cancel'},  
-                    {text: 'YES', onPress: () => updateAddressPressed()}
-                ]);
-            }}>
-                <Text style={styles.PressableStyle}>UPDATE ADDRESS</Text>
+            <Pressable onPress={createAccountPressed}>
+                <Text style={styles.PressableStyle}>CREATE ACCOUNT</Text>
             </Pressable>
         </SafeAreaView>
     );
@@ -154,10 +152,11 @@ const styles = StyleSheet.create({
         fontSize: 15,
         padding: 15,
         width: '90%',
+        marginBottom: 22,
         fontWeight: 'bold'
     },
     titleTxt: {
-        marginTop:20, 
+        marginTop:15, 
         marginBottom:5, 
         marginLeft:22, 
         marginRight:22
@@ -173,9 +172,8 @@ const styles = StyleSheet.create({
         fontWeight:'bold', 
         fontSize:30, 
         marginLeft:22, 
-        marginRight:22,
-        marginTop:22
+        marginRight:22
     },
 });
 
-export default EditAddressScreen;
+export default AddressInfo;

@@ -1,36 +1,14 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, Pressable, View } from 'react-native';
-import { Ionicons, MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
-import { useState, useEffect } from 'react';
-import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
+import { MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
+import { useState } from 'react';
+import { UseTogglePasswordVisibility } from '../UseTogglePasswordVisibility';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
-import { auth } from "./FirebaseApp";
 import { updatePassword } from 'firebase/auth';
 
 const SetPasswordScreen = ({navigation, route}) => {
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
     const {user} = route.params;
     const [password, onPasswordChanged] = useState('');
-
-    let resendTimerInterval;
-
-    const triggerTimer = (targetTimeInSeconds = 30) => {
-        setTargetTime(targetTimeInSeconds);
-        setResendActive(false);
-        const finalTime = +new Date() + targetTimeInSeconds*1000;
-        resendTimerInterval = setInterval(() => calculateTimeLeft(finalTime), 1000);
-    }
-
-    const calculateTimeLeft = (finalTime) => {
-        const difference = finalTime - +new Date();
-        if (difference >= 0) {
-            setTimeLeft(Math.round(difference/1000));
-        }
-        else {
-            clearInterval(resendTimerInterval);
-            setResendActive(true);
-            setTimeLeft(null);
-        }
-    }
 
     const nextPressed = () => {
         updatePassword(user, password);

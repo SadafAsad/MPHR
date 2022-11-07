@@ -1,6 +1,6 @@
 import { SafeAreaView, StyleSheet, Text, Pressable, Alert } from 'react-native';
 import { useState, useEffect } from "react";
-import { auth, db } from './FirebaseApp';
+import { auth, db } from '../FirebaseApp';
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
 

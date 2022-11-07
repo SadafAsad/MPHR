@@ -2,9 +2,8 @@ import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } fro
 import { StackActions } from '@react-navigation/native';
 import { useState } from "react";
 import CheckBox from "expo-checkbox";
-import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
+import { UseTogglePasswordVisibility } from '../UseTogglePasswordVisibility';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
 
 const ChangePasswordScreen = ({navigation}) => {
     return (

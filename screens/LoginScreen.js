@@ -2,9 +2,9 @@ import { SafeAreaView, StyleSheet, Text, Pressable, Image, View, TextInput } fro
 import { StackActions } from '@react-navigation/native';
 import { useState, useEffect } from "react";
 import CheckBox from "expo-checkbox";
-import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
+import { UseTogglePasswordVisibility } from '../UseTogglePasswordVisibility';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { auth } from "./FirebaseApp";
+import { auth } from "../FirebaseApp";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginScreen = ({navigation}) => {
@@ -30,7 +30,7 @@ const LoginScreen = ({navigation}) => {
 
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
-            <Image source={require('./assets/mphr-logo.png')} style={styles.img}/>
+            <Image source={require('../assets/mphr-logo.png')} style={styles.img}/>
             <View style={{marginTop:300}}/>
 
             <View style={{flex:1, alignItems:'baseline'}}>

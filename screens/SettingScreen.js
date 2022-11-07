@@ -1,12 +1,10 @@
-import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image, Alert } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { StyleSheet, Text, SafeAreaView, Pressable, View } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useEffect, useState } from "react";
-import { auth, db } from './FirebaseApp';
-import { onAuthStateChanged,signOut } from "firebase/auth"
+import { auth, db } from '../FirebaseApp';
+import { onAuthStateChanged } from "firebase/auth"
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
-
 
 const SettingScreen = ({navigation}) => {
     const [userData, setUserData] = useState([]);
@@ -14,23 +12,6 @@ const SettingScreen = ({navigation}) => {
     const [userProfileToSend, setUserProfileToSend] = useState(null);
 
     const isFocused = useIsFocused();
-    // const settingOptions = [
-    //     {id: 1, name: "Edit Profile", component: "EditProfileScreen"},
-    //     {id: 2, name: "Edit Address", component: "EditAddressScreen"},
-    //     {id: 3, name: "Change password", component: "ChangePasswordScreen"},
-    //     {id: 4, name: "Delete Account", component: "DeleteAccountScreen"},
-    //     {id: 5, name: "Notifications", component: "NotificationsSettingScreen"}
-
-    // ];
-
-    // const logoutPressed = async () => {
-    //     try {
-    //         await signOut(auth) 
-    //         navigation.reset({index:0, routes:[{name: 'AuthenticationNavigator'}], key:null}); 
-    //     } catch (err) {
-    //         console.log(`Logout failed: ${err.message}`);
-    //     }
-    // }
 
     useEffect(()=>{
         const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
@@ -76,43 +57,6 @@ const SettingScreen = ({navigation}) => {
             console.log(err.message);      
         }
     }
-
-    // const renderDetails = ( {item} ) => (
-        
-    //         <View style={styles.pet}>
-    //             <View>
-    //             <View style={{flexDirection:'column', marginLeft:20, alignItems:'baseline'}}>
-    //                         <Text style={{fontSize:18, fontWeight:'bold'}}>{item.data().first_name}{` `}{item.data().last_name}</Text>
-    //                         <Text style={{fontSize:14}}>{item.data().email}</Text>
-    //                         <Text style={{fontSize:14}}>{item.data().address_1}</Text>
-    //                         <Text style={{fontSize:14}}>{item.data().city}{` `}{item.data().province}{`, `}{item.data().country}</Text>
-    //                         <Text style={{fontSize:14}}>{item.data().phone_number}</Text>
-    //                     </View> 
-                    
-    //             </View>
-               
-    //         </View>
-      
-    // )
-
-    // const renderItem = ( {item} ) => (
-    //     <Pressable onPress={() => {
-    //         navigation.navigate(item.component)
-    //     }}>
-    //         <View style={styles.pet}>
-    //             <View>
-    //                 <Text style={{marginLeft:20, fontSize:18}}>{item.name}</Text>
-    //             </View>
-    //             <AntDesign name="right" size={20} color='#335C67' style={{marginRight:20}}/>
-    //         </View>
-    //     </Pressable>
-    // )
-
-    // const ItemDivider = () => {
-    //     return (
-    //         <View style={{height: 1, width: "100%", backgroundColor: "#cccccc"}}/>
-    //     )
-    // }
     
     return (
         <SafeAreaView style={styles.container}>
@@ -149,44 +93,6 @@ const SettingScreen = ({navigation}) => {
                     <Text style={styles.pressableStyle}>DELETE ACCOUNT</Text>
                 </Pressable>
             </View>
-            {/* <FlatList style={{marginTop:0}}
-                data={settingOptions}
-                keyExtractor={item => item.id}
-                renderItem={renderItem}
-                ItemSeparatorComponent={ItemDivider}
-            />
-
-            <View  style={{marginTop:0, marginBottom:10}}> 
-                <Pressable onPress={ () => {
-                        Alert.alert('Contact Us', 'Confirm',
-                        [  
-                            {  
-                                text: 'Cancel',  
-                                onPress: () => console.log('Cancel Pressed'),  
-                                style: 'cancel',  
-                            },  
-                            {text: 'OK', onPress: () => console.log('OK Pressed')},  //console.log('OK Pressed')
-                        ]  
-                        );
-                    }}>
-                        <Text style={styles.deletePressable}>Contact Us</Text>
-                </Pressable>
-
-                <Pressable onPress={ () => {
-                        Alert.alert('Signing Out', 'Confirm',
-                        [  
-                            {  
-                                text: 'Cancel',  
-                                onPress: () => console.log('Cancel Pressed'),  
-                                style: 'cancel',  
-                            },  
-                            {text: 'OK', onPress:logoutPressed},
-                        ]  
-                        );
-                    }}>
-                        <Text style={styles.deletePressable}>Sign Out</Text>
-                </Pressable>
-            </View> */}
         </SafeAreaView>
     );
 
@@ -197,13 +103,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
-    // pet: {
-    //     flexDirection: 'row',
-    //     justifyContent: 'space-between',
-    //     marginTop: 15,
-    //     marginBottom: 15,
-    //     alignItems: 'center'
-    // },
     mainView: {
         flexDirection:'row',
         alignItems:'center',
@@ -211,18 +110,6 @@ const styles = StyleSheet.create({
         padding: 22
         
     },
-    // deletePressable: {
-    //     alignSelf: 'center',
-    //     textAlign: 'center',
-    //     backgroundColor: '#335C67',
-    //     color: '#ffffff',
-    //     marginLeft: 22,
-    //     marginRight: 22,
-    //     marginTop: 10,
-    //     fontSize: 18,
-    //     padding: 15,
-    //     width: '90%',
-    // },
     pressableStyle: {
         alignSelf: 'center',
         textAlign: 'center',

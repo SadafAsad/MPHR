@@ -1,9 +1,8 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
 import SelectList from 'react-native-dropdown-select-list';
 import { useState, useEffect } from 'react';
-import { db } from './FirebaseApp';
+import { db } from '../FirebaseApp';
 import { updateDoc, getDoc, doc } from "firebase/firestore";
-
 
 const EditProfileScreen = ({navigation, route}) => {
     const [selectedNumCode, setSelectedNumCode] = useState("");

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View, Image, TextInput,Alert} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
-import { db } from "./FirebaseApp"
+import { db } from "../FirebaseApp"
 import { collection, doc, getDocs } from "firebase/firestore";
 
 

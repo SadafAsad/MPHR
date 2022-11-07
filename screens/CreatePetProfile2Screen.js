@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
 import CheckBox from "expo-checkbox";
-import { useState, useEffect } from 'react';
-import { db } from './FirebaseApp';
-import { updateDoc, getDoc, doc } from "firebase/firestore";
+import { db } from '../FirebaseApp';
+import { collection, addDoc} from "firebase/firestore";
 
-const EditPetScreen_2 = ({navigation, route}) => {
+const CreatePetProfile2Screen = ({navigation, route}) => {
     const [pet_specie, onSpecieChanged] = useState('');
     const [pet_breed, onBreedChanged] = useState('');
     const [coat_color, onColorChanged] = useState('');
@@ -13,49 +12,27 @@ const EditPetScreen_2 = ({navigation, route}) => {
     const [isSpayed, setSpayed] = useState(false);
     const [isIntact, setIntact] = useState(false);
 
-    const {pet, pet_id} = route.params;
+    const {pet_profile} = route.params;
 
-    useEffect(()=>{
-        onSpecieChanged(pet.specie);
-        onBreedChanged(pet.breed);
-        onColorChanged(pet.coat_color);
-        onMarkChanged(pet.mark);
-        if (pet.neutering=='Intact') {
-            setIntact(true);
-            setSpayed(false);
-        }
-        else if (pet.neutering=='Neutered') {
-            setIntact(false);
-            setSpayed(true);
-        }
-        else{
-            setIntact(false);
-            setSpayed(false);
-        }
-    }, [])
-
-    const updatePetPressed = async () => {
-        const docRef = doc(db, "pets", pet_id);
-        const clinic = await getDoc(docRef);
-
+    const addPetPressed = async () => {
         var castration = "";
         if (isSpayed) { castration = 'Neutered' }
         else if (isIntact) { castration = 'Intact' };
 
-        const updatedPetData = {
-            owner:pet.owner,
-            name:pet.name,
-            birthday:pet.birthday,
-            gender:pet.gender,
-            regular_clinic:pet.regular_clinic,
-            specie:pet_specie,
-            breed:pet_breed,
-            coat_color:coat_color,
-            mark:mark,
-            neutering:castration,
-        };
         try {
-            updateDoc(docRef, updatedPetData);
+            const petToInsert = {
+                owner:pet_profile.owner,
+                name:pet_profile.name,
+                birthday:pet_profile.birthday,
+                gender:pet_profile.gender,
+                regular_clinic:pet_profile.regular_clinic,
+                specie:pet_specie,
+                breed:pet_breed,
+                coat_color:coat_color,
+                mark:mark,
+                neutering:castration,
+            };
+            const insertedPet = await addDoc(collection(db, "pets"), petToInsert);
             navigation.pop(2);
         }
         catch (err) {
@@ -141,12 +118,12 @@ const EditPetScreen_2 = ({navigation, route}) => {
             
             <View style={{marginTop:10, marginBottom:22}}>
                 <Pressable onPress={() => {
-                    Alert.alert('UPDATE PET', 'Are you sure you want to update the pet?', [  
+                    Alert.alert('ADD PET', 'Are you sure you want to add the pet?', [  
                         {text: 'NO', onPress: () => console.log('NO Pressed'), style:'cancel'},  
-                        {text: 'YES', onPress: () => updatePetPressed()}
+                        {text: 'YES', onPress: () => addPetPressed()}
                     ]);
                 }}>
-                    <Text style={styles.pressableStyle}>UPDATE PET</Text>
+                    <Text style={styles.pressableStyle}>ADD PET</Text>
                 </Pressable>
             </View>
                 
@@ -200,4 +177,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default EditPetScreen_2;
+export default CreatePetProfile2Screen;

@@ -1,63 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View, Image, TextInput,} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-
-import { db } from "./FirebaseApp"
+import { db } from "../FirebaseApp"
 import { collection, doc, getDocs } from "firebase/firestore";
 
-const PetHistoryScreen = ({navigation}) => {
+const VetsScreen = ({navigation, route}) => {
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
 
     useEffect(() => {
-        setFilteredDataSource(vaccinations);
-        setMasterDataSource(vaccinations);
+        getVetList()
+            // setFilteredDataSource(vets);
+            // setMasterDataSource(vets);
     }, []);
 
-    // const getHistoryList = async () => {
-    //     try {
-    //         let querySnapshot = await getDocs(collection(db, "vac_list"));
+    const getVetList = async () => {
+        try {
+            let querySnapshot = await getDocs(collection(db, "vet_list"));
 
-    //         let documents = querySnapshot.docs
+            let documents = querySnapshot.docs
 
-    //         FOR TESTING PURPOSES
-    //         for (let i = 0; i < documents.length; i++) {
-    //             const currDocument = documents[i]
-    //             console.log(`ID: ${currDocument.id}`)
-    //             console.log(currDocument.data())
-    //             console.log("------")
-    //         }
+            // FOR TESTING PURPOSES
+            // for (let i = 0; i < documents.length; i++) {
+            //     const currDocument = documents[i]
+            //     console.log(`ID: ${currDocument.id}`)
+            //     console.log(currDocument.data())
+            //     console.log("------")
+            // }
 
-    //         setFilteredDataSource(documents);
-    //         setMasterDataSource(documents);
+            setFilteredDataSource(documents);
+            setMasterDataSource(documents);
 
-    //     } catch (err) {
-    //         console.log(`${documents.id}`)    
-    //         console.log(`${err.message}`)        
-    //     }
-    // }
+        } catch (err) {
+            console.log(`${documents.id}`)    
+            console.log(`${err.message}`)        
+        }
+    }
     
-    const vaccinations = [
-        {id: 1, name: "Canine Lepto Vaccine", lastDone: "2021-09-16", nextVaccination: "2022-09-16"},
-        {id: 2, name: "Canine Bordatella with Vaccina", lastDone: "2021-09-16", nextVaccination: "2022-09-16"},
-        {id: 3, name: "Canine DHPP Annual", lastDone: "2021-09-16", nextVaccination: "2022-09-16"}
+    const vets = [
+        {id: 1, name: "Merck Animal Health", address: "16750 route Transcanadienne\nKirkland, Quebec H9H 4M7"},
+        {id: 2, name: "Parliament Animal Hospital", address: "584 Parliament St.\nToronto, Ontario M4X 1P8"}
     ];
+
+    const vetSelected = (vet) => {
+        const vetData = {
+            id: vet.id,
+            name: vet.data().name,
+            street: vet.data().street_address,
+            city: vet.data().city_address
+        }
+        route.params.onSelect({selectedVet: vetData});
+        navigation.goBack();
+    }
 
     const renderItem = ( {item} ) => (
         <Pressable onPress={ () => {
             //maybe add navigation for details (not yet confirmed)
-            console.log(`${item.name}`);
+            vetSelected(item);
         }
         }>
-            <View style={styles.histories}>
+            <View style={styles.vet}>
                 <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                    <Image source={require('./assets/injection.png')} style={styles.img}/>
+                    <Image source={require('../assets/physical-examination-1.png')} style={styles.img}/>
                     <View>
                         <View style={{flexDirection:'column', marginLeft:20, alignItems:'baseline'}}>
-                            <Text style={{fontSize:18, fontWeight:'bold'}}>{item.name}</Text>
-                            <Text style={{fontSize:14}}>Last Done: {item.lastDone}</Text>
-                            <Text style={{fontSize:14}}>Next Vaccination: {item.nextVaccination}</Text>
+                            <Text style={{fontSize:18, fontWeight:'bold'}}>{item.data().name}</Text>
+                            <Text style={{fontSize:14}}>{item.data().street_address}</Text>
+                            <Text style={{fontSize:14}}>{item.data().city_address}</Text>
+                            <Text style={{fontSize:14}}>+1 {item.data().phone_number}</Text>
                         </View> 
                     </View>
                 </View>
@@ -77,8 +88,8 @@ const PetHistoryScreen = ({navigation}) => {
         // Check if searched text is not blank
         if (text) {
           const newData = masterDataSource.filter(function (item) {
-            const itemData = item.name
-              ? item.name.toUpperCase()
+            const itemData = item.data().name
+              ? item.data().name.toUpperCase()
               : ''.toUpperCase();
             const textData = text.toUpperCase();
             return itemData.indexOf(textData) > -1;
@@ -93,6 +104,7 @@ const PetHistoryScreen = ({navigation}) => {
 
     return (
         <SafeAreaView style={styles.container}>
+            {/* <Text>Vets Tab Screen!</Text>    */}
             <TextInput
                 style={styles.textInputStyle}
                 onChangeText={(text) => searchFilterFunction(text)}
@@ -100,13 +112,12 @@ const PetHistoryScreen = ({navigation}) => {
                 underlineColorAndroid="transparent"
                 placeholder="Search Here"
             />
-            {/* add new vaccination button */}
-            <Pressable onPress={ () => {
-                    navigation.navigate("AddPetHistoryScreen");
-                    }}>
-                        <Text style={styles.addNewButton}>Add New Vaccination</Text>
-                </Pressable>
-            {/* History Lists */}
+            {/* Vet Lists */}
+            <View style={styles.addVetView}>
+                <Text  onPress={() => navigation.navigate("AddVetClinicsScreen")} style={styles.addVetText}>Didn't find your clinic?</Text> 
+               
+            </View>
+            
             <FlatList
                 data={filteredDataSource}
                 keyExtractor={item => item.id}
@@ -122,7 +133,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
-    histories: {
+    vet: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 15,
@@ -147,18 +158,18 @@ const styles = StyleSheet.create({
       borderColor: '#009688',
       backgroundColor: '#FFFFFF',
     },
-    addNewButton: {
+    addVetText: {
         alignSelf: 'center',
-        textAlign: 'center',
-        backgroundColor: '#335C67',
-        color: '#ffffff',
-        marginLeft: 22,
-        marginRight: 22,
-        fontSize: 18,
-        padding: 15,
-        width: '90%',
+        color:'#335C67',
+        fontWeight: 'bold',
+        textDecorationLine: "underline",
+        textDecorationStyle: "solid",
+        textDecorationColor: "#335C67",
+        marginTop: 5
     },
+    addVetView: {
+        padding: 10
+    }
 });
 
-export default PetHistoryScreen;
-
+export default VetsScreen;

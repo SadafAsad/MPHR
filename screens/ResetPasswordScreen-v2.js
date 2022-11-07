@@ -1,10 +1,10 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, Pressable, View } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
-import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
+import { UseTogglePasswordVisibility } from '../UseTogglePasswordVisibility';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { sendEmailVerification, onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "./FirebaseApp";
+import { auth, db } from "../FirebaseApp";
 import { collection, getDoc, query, where, doc } from "firebase/firestore";
 import { FontAwesome } from '@expo/vector-icons'; 
 

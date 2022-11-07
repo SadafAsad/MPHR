@@ -1,13 +1,11 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Image } from 'react-native';
 import SelectList from 'react-native-dropdown-select-list';
-import { AntDesign, MaterialIcons, FontAwesome5, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'; 
+import { AntDesign, MaterialIcons, FontAwesome5, FontAwesome } from '@expo/vector-icons'; 
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from './FirebaseApp';
-import { db } from './FirebaseApp';
-import { updateDoc, getDoc, doc } from "firebase/firestore";
+import { auth } from '../FirebaseApp';
 
-const EditPetScreen_1 = ({navigation, route}) => {
+const CreatePetProfile = ({navigation}) => {
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [pet_name, onPetnameChanged] = useState('');
     const [pet_birthday, onPetbirthdayChanged] = useState('');
@@ -16,34 +14,6 @@ const EditPetScreen_1 = ({navigation, route}) => {
     const [vet_name, setVetName] = useState('');
     const [vet_street, setVetStreet] = useState('');
     const [vet_city, setVetCity] = useState('');
-    const [petData, setPetData] = useState(null);
-
-    const {pet} = route.params;
-
-    useEffect(()=>{
-        async function getPetData() {
-            const docRef = doc(db, "pets", pet);
-            const pet_data = await getDoc(docRef);
-
-            onPetnameChanged(pet_data.data().name);
-            onPetbirthdayChanged(pet_data.data().birthday);
-            if (pet_data.data().regular_clinic!=null) {
-                setVetId(pet_data.data().regular_clinic);
-                getClinic(pet_data.data().regular_clinic);
-            }
-
-            setPetData(pet_data);
-        }
-        getPetData();
-    }, [])
-
-    const getClinic = async (vet) => {
-        const docRef = doc(db, "vet_list", vet);
-        const clinic = await getDoc(docRef);
-        setVetName(clinic.data().name);
-        setVetStreet(clinic.data().street_address);
-        setVetCity(clinic.data().city_address);
-    }
 
     const onSelectedVet = data => {
         var count = 0;
@@ -64,38 +34,40 @@ const EditPetScreen_1 = ({navigation, route}) => {
         {key:'2', value:'Female'}
     ]
 
+    useEffect(()=>{
+        const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
+        if (userFromFirebaseAuth) {
+            setLoggedInUser(userFromFirebaseAuth);
+        }
+        else {
+            setLoggedInUser(null);
+        }
+        })
+        return listener
+    }, [])
+
     const nextPressed = () => {
-        const petToUpdate = {
-            owner:petData.data().owner,
+        const petToInsert = {
+            owner:loggedInUser.uid,
             name:pet_name,
             birthday:pet_birthday,
             gender:pet_gender,
-            regular_clinic:vet_id,
-            specie:petData.data().specie,
-            breed:petData.data().breed,
-            coat_color:petData.data().coat_color,
-            mark:petData.data().mark,
-            neutering:petData.data().neutering,
+            regular_clinic:vet_id
         };
-        navigation.navigate('EditPetScreen-2', {pet:petToUpdate, pet_id:pet});
+        navigation.navigate('CreatePetProfile2Screen', {pet_profile: petToInsert});
     }
 
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
             
             <View style={styles.imgView}>
-                <Image source={require('./assets/paw.png')} style={styles.img}/>
+                <Image source={require('../assets/paw.png')} style={styles.img}/>
             </View>
+
             <Pressable>
                 <View style={{flexDirection:'row', alignItems:'center', alignSelf:'center', marginTop:15}}>
                     <MaterialIcons name="file-upload" size={24} color='#335C67' />
-                    <Text style={{color:'#335C67', fontWeight:'bold'}}>Change photo</Text>
-                </View>
-            </Pressable>
-            <Pressable>
-                <View style={{flexDirection:'row', alignItems:'center', alignSelf:'center', marginTop:15}}>
-                <MaterialCommunityIcons name="trash-can" size={24} color='#335C67' />
-                    <Text style={{color:'#335C67', fontWeight:'bold'}}>Remove photo</Text>
+                    <Text style={{color:'#335C67', fontWeight:'bold'}}>Upload photo</Text>
                 </View>
             </Pressable>
 
@@ -112,7 +84,7 @@ const EditPetScreen_1 = ({navigation, route}) => {
             <Text style={{marginBottom:5, marginLeft:22, marginTop:20}}>Pet Birthday *</Text>
             <TextInput 
                 style={styles.input}
-                placeholder="YY-MM-DD"
+                placeholder="YYYY-MM-DD"
                 keyboardType="default"
                 autoCapitalize="none"
                 onChangeText={onPetbirthdayChanged}
@@ -154,7 +126,7 @@ const EditPetScreen_1 = ({navigation, route}) => {
                     <View style={{flexDirection:'row', justifyContent:'space-between', marginRight: 10, alignSelf:'stretch', alignItems:'center'}}>
                         <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
                             <View style={styles.smallImgView}>
-                                <Image source={require('./assets/physical-examination-1.png')} style={styles.img}/>
+                                <Image source={require('../assets/physical-examination-1.png')} style={styles.img}/>
                             </View>
                             <View style={{marginRight:20, marginLeft: 20}}>
                                 <Text style={{fontWeight: 'bold'}}>{vet_name}</Text>
@@ -244,4 +216,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default EditPetScreen_1;
+export default CreatePetProfile;

@@ -1,35 +1,33 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import PetsScreen from './PetsScreen';
-import VetsScreen from './VetsScreen';
-import PetProfileScreen from './PetProfileScreen';
-import SettingScreen from './SettingScreen';
-import AddVetScreen from './AddVetScreen';
-import AddVetClinicsScreen from './AddVetClinicsScreen';
-import LoginScreen from './LoginScreen';
-import ResetPasswordScreen_v2 from './ResetPasswordScreen-v2';
-import Registration_v3 from './Registration-v3';
-import SetPasswordScreen from './SetPasswordScreen';
-import ProfileInfo from './ProfileInfo';
-import AddressInfo from './AddressInfo';
-import EditProfileScreen from './EditProfileScreen';
-import EditAddressScreen from './EditAddressScreen';
-import ChangePasswordScreen from './ChangePasswordScreen';
-import NotificationsSettingScreen from './NotificationsSettingScreen';
-import CheckMailScreen from './CheckMailScreen';
-import CreateNewPasswordScreen from './CreateNewPasswordScreen';
-import DeleteAccountScreen from './DeleteAccountScreen';
-import CreatePetProfile from './CreatePetProfile';
-import CreatePetProfile2Screen from './CreatePetProfile2Screen';
-import PetHistoryScreen from './PetHistoryScreen';
-import AddPetHistoryScreen from './AddPetHistoryScreen';
-import PetSettingScreen from './PetSettingScreen';
-import EditPetScreen_1 from './EditPetScreen-1';
-import EditPetScreen_2 from './EditPetScreen-2';
-import ManageCaregiverScreen from './ManageCareGiverScreen'
-import AddCaregiverScreen from './AddCaregiverScreen';
-import UploadNewScreen from './UploadNewScreen';
-import DeletePetScreen from './DeletePetScreen';
-import ShareMedicalRecordScreen from './ShareMedicalRecordScreen';
+import LoginScreen from './screens/LoginScreen';
+import Registration_v3 from './screens/Registration-v3';
+import SetPasswordScreen from './screens/SetPasswordScreen';
+import ResetPasswordScreen_v2 from './screens/ResetPasswordScreen-v2';
+import ProfileInfo from './screens/ProfileInfo';
+import AddressInfo from './screens/AddressInfo';
+import PetsScreen from './screens/PetsScreen';
+import SettingScreen from './screens/SettingScreen';
+import EditProfileScreen from './screens/EditProfileScreen';
+import EditAddressScreen from './screens/EditAddressScreen';
+import ChangePasswordScreen from './screens/ChangePasswordScreen';
+import CheckMailScreen from './screens/CheckMailScreen';
+import CreateNewPasswordScreen from './screens/CreateNewPasswordScreen';
+import DeleteAccountScreen from './screens/DeleteAccountScreen';
+import CreatePetProfile from './screens/CreatePetProfile';
+import CreatePetProfile2Screen from './screens/CreatePetProfile';
+import VetsScreen from './screens/VetsScreen';
+import AddVetClinicsScreen from './screens/AddVetClinicsScreen';
+import PetProfileScreen from './screens/PetProfileScreen';
+import PetSettingScreen from './screens/PetSettingScreen';
+import UploadNewScreen from './screens/UploadNewScreen';
+import ShareMedicalRecordScreen from './screens/ShareMedicalRecordScreen';
+import EditPetScreen_1 from './screens/EditPetScreen-1';
+import EditPetScreen_2 from './screens/EditPetScreen-2';
+import ManageCaregiverScreen from './screens/ManageCareGiverScreen';
+import DeletePetScreen from './screens/DeletePetScreen';
+import PetHistoryScreen from './screens/PetHistoryScreen';
+import AddPetHistoryScreen from './screens/AddPetHistoryScreen';
+import AddCaregiverScreen from './screens/AddCaregiverScreen';
 import { Pressable, View, Alert } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'; 
 import { auth } from './FirebaseApp';
@@ -114,10 +112,8 @@ const MainNavigator = ({navigation}) => {
                     </Pressable>
                 )
             }}/>
-            <Stack.Screen name="AddVetScreen" component={AddVetScreen}/>
             <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{title:'Profile Info'}}/>
             <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{title:'Change Password'}}/>
-            <Stack.Screen name="NotificationsSettingScreen" component={NotificationsSettingScreen} options={{title:'Notifications'}}/>
             <Stack.Screen name="CheckMailScreen" component={CheckMailScreen}/>
             <Stack.Screen name="CreateNewPasswordScreen" component={CreateNewPasswordScreen}/>
             <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen} options={{title:'Delete Account'}}/>

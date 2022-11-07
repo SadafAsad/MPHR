@@ -1,31 +1,28 @@
-import { SafeAreaView, StyleSheet, Text, View, Pressable, Image, FlatList } from 'react-native';
-import { MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons'; 
+import { SafeAreaView, StyleSheet, Text, View, Pressable, FlatList, Image } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { db } from './FirebaseApp';
+import { db } from '../FirebaseApp';
 import { collection, query, where, getDoc, doc, getDocs } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
 
-const PetProfileScreen = ({navigation, route}) => {
+const PetSettingScreen = (props) => {
     const [pet_name, setPetName] = useState('');
     const [pet_birthday, setPetBirthday] = useState('');
     const [caregivers, setCaregivers] = useState([]);
     const [ownerName, setOwnerName] = useState('');
     const [caregiversName, setCaregiversName] = useState([]);
 
-    const {pet} = route.params;
+    const {pet} = props.route.params;
     const isFocused = useIsFocused();
 
     useEffect(()=>{
-        navigation.setOptions({
-            title:'Pet Profile',
-            headerRight: () => (
-                <Pressable onPress={ () => {
-                    navigation.navigate("PetSettingScreen", {pet:pet});
-                }}>
-                    <Ionicons name="settings-sharp" size={24} color='#335C67'/>
-                </Pressable>
-            )
-        })
+        async function getPetData() {
+            const docRef = doc(db, "pets", pet);
+            const pet_data = await getDoc(docRef);
+            setPetName(pet_data.data().name);
+            setPetBirthday(pet_data.data().birthday);
+        }
+        getPetData();
     }, [isFocused])
 
     useEffect(()=>{
@@ -111,12 +108,12 @@ const PetProfileScreen = ({navigation, route}) => {
         <SafeAreaView style={{backgroundColor:'#fff', flex:1}}>
             <View style={styles.mainView}>
                 <View style={styles.imgView}>
-                    <Image source={require('./assets/paw.png')} style={styles.img}/>
+                    <Image source={require('../assets/paw.png')} style={styles.img}/>
                 </View>
                 <View style={{flex:1, marginLeft:10}}>
                     <Text style={{fontWeight:'bold', fontSize:17}}>{pet_name}</Text>
                     <Text style={{color:'dimgray', fontWeight:'bold'}}>Age: 
-                        <Text style={{color:'gray', fontWeight:'normal'}}> {getAge(pet_birthday)}</Text>
+                        <Text style={{color:'gray', fontWeight:'normal'}}>{getAge(pet_birthday)}</Text>
                     </Text>
                     <Text style={{color:'dimgray', fontWeight:'bold'}}>Owner: 
                         <Text style={{color:'gray', fontWeight:'normal'}}> {ownerName}</Text>
@@ -135,51 +132,22 @@ const PetProfileScreen = ({navigation, route}) => {
                 </View>
             )}
 
-            <Text style={{alignSelf:'center', fontWeight:'bold', fontSize:16, marginBottom:20, marginTop:20}}>Medical Records</Text>
-
-            <View style={styles.rowView}>
-                <MaterialCommunityIcons name="clipboard-text-clock" size={28} color="black" style={{marginRight:10}}/>
-                <Text style={{fontWeight:'bold'}}>Last Upload:</Text>
-                <Text>xx-xx-xx</Text>
-            </View>
-            <View style={styles.rowView}>
-                <MaterialCommunityIcons name="hospital-marker" size={28} color="black" style={{marginRight:10}}/>
-                <Text style={{fontWeight:'bold'}}>At:</Text>
-                <Text>location</Text>
-            </View>
-            <View style={styles.rowView}>
-                <MaterialIcons name="chat" size={28} color="black" style={{marginRight:10}}/>
-                <Text style={{fontWeight:'bold'}}>Owner's Notes:</Text>
-                <Text>note</Text>
-            </View>
+            <Text style={{alignSelf:'center', fontWeight:'bold', fontSize:16, marginBottom:20, marginTop:20}}>Settings</Text>
             
-            <View style={{marginTop:20}}>
-                <Pressable onPress={ () => {navigation.navigate('UploadNewScreen')}}>
-                    <Text style={styles.pressableStyle}>UPLOAD NEW</Text>
+            <View>
+                <Pressable onPress={ () => {props.navigation.navigate('EditPetScreen-1', {pet:pet})}}>
+                    <Text style={styles.pressableStyle}>EDIT PET</Text>
                 </Pressable>
-                <Pressable onPress={ () => {navigation.navigate('ShareMedicalRecordScreen')}}>
-                    <Text style={styles.pressableStyle}>SHARE MEDICAL RECORD</Text>
+                <Pressable onPress={ () => {props.navigation.navigate('ManageCaregiverScreen', {pet:pet})}}>
+                    <Text style={styles.pressableStyle}>MANAGE CAREGIVERS</Text>
                 </Pressable>
                 <Pressable onPress={ () => {console.log('pressed')}}>
-                    <Text style={styles.pressableStyle}>SHOW HISTORY</Text>
+                    <Text style={styles.pressableStyle}>TRANSFER OWNERSHIP</Text>
+                </Pressable>
+                <Pressable onPress={ () => {props.navigation.navigate('DeletePetScreen', {pet:pet})}}>
+                    <Text style={styles.pressableStyle}>REMOVE PET</Text>
                 </Pressable>
             </View>
-
-            {/* <Pressable onPress={ () => {
-                Alert.alert('Going to records', 'Confirm',
-                    [  
-                        {  
-                            text: 'Cancel',  
-                            onPress: () => console.log('Cancel Pressed'),  
-                            style: 'cancel',  
-                        },  
-                        {text: 'OK', onPress: () => navigation.navigate("Vaccinations")},  
-                    ]  
-                    );
-                }}>
-                    <Text style={styles.deletePressable}>Vaccination Records</Text>
-            </Pressable> */}
-           
         </SafeAreaView>
     );
 }
@@ -211,22 +179,6 @@ const styles = StyleSheet.create({
         marginLeft: 22,
         padding: 8
     },
-    title: {
-        // textAlign: 'center',
-        alignSelf: 'center',
-        padding: 20,
-        margin: 30,
-        fontWeight: 'bold',
-        fontSize: '35'
-    },
-    input: {
-        alignSelf: 'center',
-        height: 45,
-        width: '90%',
-        borderWidth: 1,
-        padding: 10,
-        borderColor: '#808080',
-    },
     pressableStyle: {
         alignSelf: 'center',
         textAlign: 'center',
@@ -243,33 +195,6 @@ const styles = StyleSheet.create({
         width: '90%',
         fontWeight: 'bold'
     },
-    deletePressable: {
-        alignSelf: 'center',
-        textAlign: 'center',
-        backgroundColor: '#335C67',
-        color: '#ffffff',
-        marginLeft: 22,
-        marginRight: 22,
-        marginTop: 22,
-        fontSize: 18,
-        padding: 15,
-        width: '90%',
-        marginBottom:22
-    },
-    saveChanges: {
-        // borderRadius: 5,
-        // borderWidth: 1,
-        flex:1, 
-        alignItems:'baseline',
-        alignSelf:'center'
-    },
-    deleteAccount: {
-        // borderRadius: 5,
-        // borderWidth: 1,
-        //flex:1, 
-        alignItems:'center',
-        alignSelf:'center'
-    },
 });
 
-export default PetProfileScreen;
+export default PetSettingScreen;

@@ -1,9 +1,9 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, Pressable, View } from 'react-native';
 import { useState, useEffect } from 'react';
-import { UseTogglePasswordVisibility } from './UseTogglePasswordVisibility';
+import { UseTogglePasswordVisibility } from '../UseTogglePasswordVisibility';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
-import { sendEmailVerification, createUserWithEmailAndPassword, ActionCodeSettings } from "firebase/auth";
-import { auth } from "./FirebaseApp";
+import { sendEmailVerification, createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../FirebaseApp";
 import { onAuthStateChanged } from "firebase/auth";
 import { FontAwesome } from '@expo/vector-icons'; 
 
