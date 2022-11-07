@@ -1,15 +1,43 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CheckBox from "expo-checkbox";
+import { auth } from "../FirebaseApp";
+import { fetchSignInMethodsForEmail, onAuthStateChanged } from "firebase/auth";
 
 const TransferOwnershipScreen = ({navigation}) => {
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, onErrorChanged] = useState('');
     const [emailAddress, onEmailChanged] = useState('');
     const [isSelected, setSelection] = useState(false);
+    const [loggedInUser, setLoggedInUser] = useState(null);
+    const [newOwner, setNewOwner] = useState(null);
 
-    const transferOwnershipPressed = () => {
+    useEffect(()=>{
+        const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
+        if (userFromFirebaseAuth) {
+            setLoggedInUser(userFromFirebaseAuth);
+        }
+        else {
+            setLoggedInUser(null);
+        }
+        })
+        return listener
+    }, [])
 
+    const transferOwnershipPressed = async () => {
+        await fetchSignInMethodsForEmail(auth, emailAddress)
+        .then((result) => {
+            if (result.length===0) {
+                onHasErrorChanged(true);
+                onErrorChanged("No user was found with this email.");
+                onEmailChanged("");
+            }
+            else {
+                onHasErrorChanged(false);
+                onErrorChanged("");
+                console.log(result[0]);
+            }})
+        .catch((err) => console.log(err.message));
     }
 
     return (
@@ -33,13 +61,13 @@ const TransferOwnershipScreen = ({navigation}) => {
                 value={emailAddress}
             />
 
-            <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+            <View style={{flexDirection:'row', alignItems:'center', marginLeft:22, marginTop:10}}>
                 <CheckBox
                     value={isSelected}
                     onValueChange={setSelection}
                     color='#335C67'
                 />
-                <Text style={{marginLeft:5, fontSize:15}}>Add me as caregiver</Text>
+                <Text style={{marginLeft:5, fontSize:15}}>Add me as a caregiver</Text>
             </View>
 
             { hasError && (
