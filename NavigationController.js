@@ -24,6 +24,7 @@ import ShareMedicalRecordScreen from './screens/ShareMedicalRecordScreen';
 import EditPetScreen_1 from './screens/EditPetScreen-1';
 import EditPetScreen_2 from './screens/EditPetScreen-2';
 import ManageCaregiverScreen from './screens/ManageCareGiverScreen';
+import TransferOwnershipScreen from './screens/TransferOwnershipScreen';
 import DeletePetScreen from './screens/DeletePetScreen';
 import PetHistoryScreen from './screens/PetHistoryScreen';
 import AddPetHistoryScreen from './screens/AddPetHistoryScreen';
@@ -130,6 +131,7 @@ const MainNavigator = ({navigation}) => {
             <Stack.Screen name="EditPetScreen-1" component={EditPetScreen_1} options={{title:'Edit Pet'}}/>
             <Stack.Screen name="EditPetScreen-2" component={EditPetScreen_2} options={{title:'Edit Pet'}}/>
             <Stack.Screen name="DeletePetScreen" component={DeletePetScreen} options={{title:'Delete Pet'}}/>
+            <Stack.Screen name="TransferPetOwnership" component={TransferOwnershipScreen} options={{title:'Transfer Ownership'}}/>
             <Stack.Screen name="AuthenticationNavigator" component={AuthenticationNavigator} options={{header: () => null}}/>
         </Stack.Navigator>
     )

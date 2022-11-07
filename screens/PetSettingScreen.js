@@ -141,7 +141,7 @@ const PetSettingScreen = (props) => {
                 <Pressable onPress={ () => {props.navigation.navigate('ManageCaregiverScreen', {pet:pet})}}>
                     <Text style={styles.pressableStyle}>MANAGE CAREGIVERS</Text>
                 </Pressable>
-                <Pressable onPress={ () => {console.log('pressed')}}>
+                <Pressable onPress={ () => {props.navigation.navigate('TransferPetOwnership', {pet:pet})}}>
                     <Text style={styles.pressableStyle}>TRANSFER OWNERSHIP</Text>
                 </Pressable>
                 <Pressable onPress={ () => {props.navigation.navigate('DeletePetScreen', {pet:pet})}}>
