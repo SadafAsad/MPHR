@@ -10,6 +10,7 @@ const ManageCareGiverScreen = ({navigation, route}) => {
     const [search, setSearch] = useState('');
     const [caregivers, setCaregivers] = useState([]);
     const [caregiversName, setCaregiversName] = useState([]);
+    const [caregiversInfo, setCaregiversInfo] = useState([]);
 
     const isFocused = useIsFocused();
 
@@ -20,8 +21,37 @@ const ManageCareGiverScreen = ({navigation, route}) => {
     }, [isFocused])
 
     useEffect(()=>{
-        getCaregiversName();
+        getCaregiversInfo();
+        // getCaregiversName();
     }, [caregivers])
+
+    const getCaregiversInfo = async () => {
+        var index = 0;
+        var info = [];
+        while (index<caregivers.length) {
+            try {
+                const docRef = query(collection(db, "profiles"), where("userId", "==", caregivers[index].data().user));
+                const querySnapshot = await getDocs(docRef);
+                const documents = querySnapshot.docs;
+
+                try {
+                    const userDocRef = doc(db, "Users", caregivers[index].data().user);
+                    const user_data = await getDoc(userDocRef);
+                    // console.log("Email: " + user_data.id)
+
+                    info.push({key:index, 
+                        name:documents[0].data().first_name+" "+documents[0].data().last_name,
+                        email:user_data.id});
+                } catch(err) {
+                    console.log("Getting Caregiver's Name: " + err.message);
+                }
+            } catch(err) {
+                console.log("Getting Caregivers' Names: " + err.message);
+            }
+            index = index+1;
+        }
+        setCaregiversInfo(info);
+    }
 
     const getCaregivers = async () => {
         try {
@@ -80,8 +110,9 @@ const ManageCareGiverScreen = ({navigation, route}) => {
             <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
                 <FontAwesome name="user-circle" size={50} color="black"/>
                 <View>
-                    <Text style={{marginLeft:20, fontSize:18}}>{item.value}</Text>
-                    <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>Caregiver Email</Text>
+                    <Text style={{marginLeft:20, fontSize:18}}>{item.name}</Text>
+                    {/* <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>{item.email}</Text> */}
+                    <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>Email</Text>
                 </View>
             </View>
             <Pressable onPress={ () => {
@@ -104,7 +135,7 @@ const ManageCareGiverScreen = ({navigation, route}) => {
 
             </View>
             <FlatList
-                data={caregiversName}
+                data={caregiversInfo}
                 keyExtractor={item => item.key}
                 renderItem={renderItem}
                 ItemSeparatorComponent={ItemDivider}
