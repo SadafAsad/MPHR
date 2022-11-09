@@ -1,18 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View, Image, TextInput,Alert} from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
-import { db } from "../FirebaseApp"
-import { collection, doc, getDocs } from "firebase/firestore";
+import { db } from '../FirebaseApp';
+import { collection, query, where, getDoc, doc, getDocs } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
 
-
-const ManageCareGiverScreen = ({navigation}) => {
+const ManageCareGiverScreen = ({navigation, route}) => {
     const [search, setSearch] = useState('');
-    const [filteredDataSource, setFilteredDataSource] = useState([]);
-    const [masterDataSource, setMasterDataSource] = useState([]);
-    const [loggedInUser, setLoggedInUser] = useState(null);
+    const [caregivers, setCaregivers] = useState([]);
+    const [caregiversName, setCaregiversName] = useState([]);
+
     const isFocused = useIsFocused();
+
+    const {pet} = route.params;
+
+    useEffect(()=>{
+        getCaregivers();
+    }, [isFocused])
+
+    useEffect(()=>{
+        getCaregiversName();
+    }, [caregivers])
+
+    const getCaregivers = async () => {
+        try {
+            const docRef = query(collection(db, "caregiving"), where("pet", "==", pet));
+            const querySnapshot = await getDocs(docRef);
+            const documents = querySnapshot.docs;
+            setCaregivers(documents);
+        } catch (err) {
+            console.log("Getting Pet's Caregivers: " + err.message);        
+        }
+    }
+
+    const getCaregiversName = async () => {
+        var index = 0;
+        var names = [];
+        while (index<caregivers.length) {
+            try {
+                const docRef = query(collection(db, "profiles"), where("userId", "==", caregivers[index].data().user));
+                const querySnapshot = await getDocs(docRef);
+                const documents = querySnapshot.docs;
+                names.push({key:index, value:documents[0].data().first_name+" "+documents[0].data().last_name});
+            } catch(err) {
+                console.log("Getting Caregivers' Names: " + err.message);
+            }
+            index = index+1;
+        }
+        setCaregiversName(names);
+    }
 
     const searchFilterFunction = (text) => {
         // Check if searched text is not blank
@@ -38,73 +75,57 @@ const ManageCareGiverScreen = ({navigation}) => {
         )
     }
 
-    const renderItem = ( {item} ) => (
-        <Pressable onPress={ () => {
-            navigation.navigate("PetProfileScreen", {pet:item.id});
-        }
-        }>
-            <View style={styles.pet}>
-                <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                    <View style={styles.imgView}>
-                        <Image source={require('../assets/paw.png')} style={styles.img}/>
-                    </View>
-                    <View>
-                        <View style={{flexDirection:'row', alignItems:'baseline'}}>
-                            <Text style={{marginLeft:20, fontSize:18}}>{item.data().name}</Text>
-                            <Text style={{fontSize:14, color:'gray'}}> {getAge(item.data().birthday)}</Text>
-                        </View>
-                        <Text style={{marginLeft:20, color:'dimgray'}}>Owner:</Text>
-                    </View>
+    const renderItem = ({item}) => (
+        <View style={styles.eachRow}>
+            <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                <FontAwesome name="user-circle" size={50} color="black"/>
+                <View>
+                    <Text style={{marginLeft:20, fontSize:18}}>{item.value}</Text>
+                    <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>Caregiver Email</Text>
                 </View>
-                <AntDesign name="right" size={20} color='#335C67' style={{marginRight:22}}/>
             </View>
-        </Pressable>
+            <Pressable onPress={ () => {
+                // Remove Caregiver
+            }}>
+                <MaterialIcons name="link-off" size={28} color='#335C67' style={{alignSelf:'center'}}/>
+            </Pressable>
+        </View>
     );
 
     return (
-        <SafeAreaView style={{backgroundColor:'#fff', justifyContent:'space-between'}}>
-           <View  style={{marginTop:10, marginBottom:10}}> 
+        <SafeAreaView style={styles.container}>
+            <View  style={{marginTop:10, marginBottom:10}}> 
             <Searchbar placeholder="Search" onChangeText={(text) => searchFilterFunction(text)} value={search} style={styles.searchBar} />
-                
-            </View>
+                <Pressable onPress={ () => {
+                    // navigation.navigate("AddCaregiverScreen");
+                }}>
+                    <Text style={styles.pressableStyle}>ADD CAREGIVER</Text>
+                </Pressable>
 
+            </View>
             <FlatList
-                data={filteredDataSource}
-                keyExtractor={item => item.id}
+                data={caregiversName}
+                keyExtractor={item => item.key}
                 renderItem={renderItem}
                 ItemSeparatorComponent={ItemDivider}
-                />
-
-            <Pressable onPress={ () => {
-                    // navigation.navigate("CheckMailScreen");
-                        //navigation.dispatch(StackActions.replace('CheckMailScreen'))
-                        Alert.alert('Adding CAREGIVER', 'Confirm',
-                        [  
-                            {  
-                                text: 'Cancel',  
-                                onPress: () => console.log('Cancel Pressed'),  
-                                style: 'cancel',  
-                            },  
-                            {text: 'OK', onPress: () => navigation.navigate("AddCaregiverScreen")},  
-                        ]  
-                        );
-                    }}>
-                <Text style={styles.pressableStyle}>ADD CAREGIVER</Text>
-            </Pressable>
+            />
         </SafeAreaView>
     );
 }
   
 const styles = StyleSheet.create({
-    input: {
-        height: 40,
-      width: '90%',
-      alignSelf: 'center',
-      borderWidth: 1,
-      paddingLeft: 20,
-      margin: 5,
-      borderColor: '#009688',
-      backgroundColor: '#FFFFFF',
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    eachRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 15,
+        marginBottom: 15,
+        marginRight: 22,
+        marginLeft: 22,
+        alignItems: 'center'
     },
     pressableStyle: {
         alignSelf: 'center',
