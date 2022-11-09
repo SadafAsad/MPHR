@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View, Image, TextInput,Alert} from 'react-native';
+import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View,Alert} from 'react-native';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
 import { db } from '../FirebaseApp';
-import { collection, query, where, getDoc, doc, getDocs } from "firebase/firestore";
+import { collection, query, where, getDoc, doc, getDocs, deleteDoc } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
 
 const ManageCareGiverScreen = ({navigation, route}) => {
@@ -11,10 +11,12 @@ const ManageCareGiverScreen = ({navigation, route}) => {
     const [caregivers, setCaregivers] = useState([]);
     const [caregiversName, setCaregiversName] = useState([]);
     const [caregiversInfo, setCaregiversInfo] = useState([]);
+    const [hasError, onHasErrorChanged] = useState(false);
+    const [error, onErrorChanged] = useState('');
 
     const isFocused = useIsFocused();
 
-    const {pet} = route.params;
+    const {pet, pet_name} = route.params;
 
     useEffect(()=>{
         getCaregivers();
@@ -24,6 +26,20 @@ const ManageCareGiverScreen = ({navigation, route}) => {
         getCaregiversInfo();
         // getCaregiversName();
     }, [caregivers])
+
+    // Removes Caregiver but have to refresh the page two times to see the result
+    const removeCaregiverPressed = async (user_id) => {
+        const userDocRef = query(collection(db, "caregiving"), where("pet", "==", pet), where("user", "==", user_id));
+        const querySnapshot = await getDocs(userDocRef);
+        const documents = querySnapshot.docs;
+        await deleteDoc(doc(db, "caregiving", documents[0].id))
+        .then(console.log("Caregiver removed"))
+        .catch((err) => {
+            console.log(err.message);
+            onErrorChanged(err.message);
+            onHasErrorChanged(true);
+        });
+    }
 
     const getCaregiversInfo = async () => {
         var index = 0;
@@ -41,7 +57,8 @@ const ManageCareGiverScreen = ({navigation, route}) => {
 
                     info.push({key:index, 
                         name:documents[0].data().first_name+" "+documents[0].data().last_name,
-                        email:user_data.id});
+                        email:user_data.id,
+                        user_id:user_data.id});
                 } catch(err) {
                     console.log("Getting Caregiver's Name: " + err.message);
                 }
@@ -116,7 +133,11 @@ const ManageCareGiverScreen = ({navigation, route}) => {
                 </View>
             </View>
             <Pressable onPress={ () => {
-                // Remove Caregiver
+                Alert.alert('Are you sure you don\'t want to share your pet\'s data anymore?', 
+                    'The user ' + item.name + ' will no longer have access to ' + pet_name + '\'s medical record.', [  
+                    {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style:'cancel'},  
+                    {text: 'Remove Caregiver', onPress: () => removeCaregiverPressed(item.user_id)}
+                ]);
             }}>
                 <MaterialIcons name="link-off" size={28} color='#335C67' style={{alignSelf:'center'}}/>
             </Pressable>
@@ -128,7 +149,7 @@ const ManageCareGiverScreen = ({navigation, route}) => {
             <View  style={{marginTop:10, marginBottom:10}}> 
             <Searchbar placeholder="Search" onChangeText={(text) => searchFilterFunction(text)} value={search} style={styles.searchBar} />
                 <Pressable onPress={ () => {
-                    // navigation.navigate("AddCaregiverScreen");
+                    navigation.navigate("AddCaregiverScreen", {pet:pet});
                 }}>
                     <Text style={styles.pressableStyle}>ADD CAREGIVER</Text>
                 </Pressable>
