@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View, Image, TextInput,} from 'react-native';
+import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View, Image, TextInput, Alert} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { db } from "../FirebaseApp"
 import { collection, doc, getDocs } from "firebase/firestore";
@@ -55,6 +55,11 @@ const ShowHistoryScreen = ({navigation, route}) => {
         navigation.goBack();
     }
 
+    const downloadRecordPressed = async () => {
+        console.log("Download pressed...")
+        
+    }
+
     const renderItem = ( {item} ) => (
         <Pressable onPress={ () => {
             //maybe add navigation for details (not yet confirmed)
@@ -67,7 +72,7 @@ const ShowHistoryScreen = ({navigation, route}) => {
                     <Image source={require('../assets/pdf2.png')} style={styles.img}/>
                     <View>
                         <View style={{flexDirection:'column', marginLeft:20, alignItems:'baseline'}}>
-                            <Text style={{fontSize:18, fontWeight:'bold'}}>{item.data().name}</Text>
+                            <Text style={{fontSize:18, fontWeight:'bold', marginBottom: 5}}>{item.data().name}</Text>
                             <Text style={{fontSize:12}}><Text style={{fontSize:12,fontWeight:'bold', color:'#335C67'}}>At: </Text> {item.data().location}</Text>
                             <Text style={{fontSize:12}}><Text style={{fontSize:12,fontWeight:'bold', color:'#335C67'}}>uploaded at: </Text>{item.data().upload_date}</Text>
                             
@@ -77,9 +82,31 @@ const ShowHistoryScreen = ({navigation, route}) => {
                 </View>
 
                 <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'flex-end', marginRight: 10}}>
-                    <Image source={require('../assets/share.png')} style={styles.icon}/>
-                    <Image source={require('../assets/download.png')} style={styles.icon}/>
-                    <Image source={require('../assets/delete.png')} style={styles.icon}/>
+                    <Pressable onPress={ () => {
+                        navigation.navigate("ShareMedicalRecordScreen", {pet:item.key});
+                    }}>
+                        <Image source={require('../assets/share.png')} style={styles.icon}/>
+
+                    </Pressable>
+                    <Pressable onPress={ () => {
+                        console.log("download pressed")  
+                        Alert.alert(`DOWNLOAD RECORD`, 'Please confirm record download.', [  
+                            {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
+                            {text: 'Confirm', onPress: () => downloadRecordPressed()}
+                        ]);
+                    }}>
+                        <Image source={require('../assets/download.png')} style={styles.icon}/>
+
+                    </Pressable>
+                    <Pressable onPress={ () => {
+                        navigation.navigate("DeleteMedicalRecordsScreen", {pet:item.key});
+                    }}>
+                        <Image source={require('../assets/delete.png')} style={styles.icon}/>
+
+                    </Pressable>
+                    
+                    {/* <Image source={require('../assets/download.png')} style={styles.icon}/>
+                    <Image source={require('../assets/delete.png')} style={styles.icon}/> */}
                     </View>
                 
             </View>
@@ -140,8 +167,8 @@ const styles = StyleSheet.create({
     },
     img: {
         marginLeft: 22,
-        width: 60,
-        height: 60,
+        width: 50,
+        height: 50,
         borderRadius: '10%',
         borderWidth: 1,
         borderColor: '#335C67',

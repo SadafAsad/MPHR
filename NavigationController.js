@@ -32,6 +32,7 @@ import AddCaregiverScreen from './screens/AddCaregiverScreen';
 import { Pressable, View, Alert } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'; 
 import ShowHistoryScreen from './screens/ShowHistoryScreen';
+import DeleteMedicalRecordsScreen from './screens/DeleteMedicalRecordsScreen';
 import { auth } from './FirebaseApp';
 import { signOut } from "firebase/auth";
 
@@ -133,6 +134,7 @@ const MainNavigator = ({navigation}) => {
             <Stack.Screen name="EditPetScreen-2" component={EditPetScreen_2} options={{title:'Edit Pet'}}/>
             <Stack.Screen name="DeletePetScreen" component={DeletePetScreen} options={{title:'Delete Pet'}}/>
             <Stack.Screen name="ShowHistoryScreen" component={ShowHistoryScreen} options={{title:'Medical Records'}}/>
+            <Stack.Screen name="DeleteMedicalRecordsScreen" component={DeleteMedicalRecordsScreen} options={{title: 'Delete Medical Record'}}/>
             <Stack.Screen name="TransferPetOwnership" component={TransferOwnershipScreen} options={{title:'Transfer Ownership'}}/>
             <Stack.Screen name="AuthenticationNavigator" component={AuthenticationNavigator} options={{header: () => null}}/>
         </Stack.Navigator>
