@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
+import { useState, useEffect } from "react";
 import CheckBox from "expo-checkbox";
 import { db } from '../FirebaseApp';
 import { collection, addDoc} from "firebase/firestore";

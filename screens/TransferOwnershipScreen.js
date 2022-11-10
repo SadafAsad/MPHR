@@ -1,16 +1,20 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
 import { useState, useEffect } from "react";
 import CheckBox from "expo-checkbox";
-import { auth } from "../FirebaseApp";
+import { auth, db  } from "../FirebaseApp";
 import { fetchSignInMethodsForEmail, onAuthStateChanged } from "firebase/auth";
+import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
 
-const TransferOwnershipScreen = ({navigation}) => {
+const TransferOwnershipScreen = ({navigation, route}) => {
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, onErrorChanged] = useState('');
     const [emailAddress, onEmailChanged] = useState('');
     const [isSelected, setSelection] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [newOwner, setNewOwner] = useState(null);
+    const [petName, setPetName] = useState('');
+
+    const {pet} = route.params;
 
     useEffect(()=>{
         const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
@@ -22,6 +26,16 @@ const TransferOwnershipScreen = ({navigation}) => {
         }
         })
         return listener
+    }, [])
+
+    useEffect(()=>{
+        async function getPetData() {
+            const docRef = doc(db, "pets", pet);
+            const pet_data = await getDoc(docRef);
+            setPetName(pet_data.data().name);
+            // setPetOwner(pet_data.data().owner);
+        }
+        getPetData();
     }, [])
 
     const transferOwnershipPressed = async () => {
@@ -44,7 +58,7 @@ const TransferOwnershipScreen = ({navigation}) => {
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
 
             <Text style={{textAlign:'center',marginTop:10, marginLeft:36, marginRight:35, fontSize:20, alignSelf: 'center', fontWeight: 'bold'}}>Who will be the new owner of {}
-                <Text style={{textDecorationLine:'underline'}}>PET NAME</Text>
+                <Text style={{textDecorationLine:'underline'}}>{petName}</Text>
             ?
             </Text>
             <Text style={{textAlign:'left',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>Attention: 

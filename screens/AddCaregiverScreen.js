@@ -1,110 +1,55 @@
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
-import { UseTogglePasswordVisibility } from '../UseTogglePasswordVisibility';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { SafeAreaView, StyleSheet, Text, Pressable, Alert, TextInput } from 'react-native';
+import { useState, useEffect } from "react";
 import { auth, db } from '../FirebaseApp';
-import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
 
 const AddCaregiverScreen = ({navigation, route}) => {
-    const [password, onPasswordChanged] = useState('');
+    const [petName, setPetName] = useState('');
+    const [petOwner, setPetOwner] = useState('');
+    const [loggedInUser, setLoggedInUser] = useState(null);
+    const [isOwner, setIsOwner] = useState(false);
+    // Not tested yet //
     const [hasError, onHasErrorChanged] = useState(false);
+    const [error, onErrorChanged] = useState('');
 
-    const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
-    const {user} = route.params;
+    const {pet} = route.params;
 
-    const deleteAccountPressed = async () => {
-        deleteUserPets();
-        deleteUserProfile();
-        deleteUser();
-    }
-
-    const deleteUser = async () => {
-        try {
-            var user = auth.currentUser;
-            await signInWithEmailAndPassword(auth, user.email, password);
-            user = auth.currentUser;
-            try {
-                user.delete()
-                .then(() => navigation.reset({index:0, routes:[{name: 'AuthenticationNavigator'}], key:null}))
-                .catch((err) => console.log(err));
-            } catch(err) {
-                console.log('hehe');
-                console.log(err.message);
-            }
-        } catch(err) {
-            console.log('this one');
-            console.log(err.message);
-            onErrorChanged("Your password is incorrect. Please try again.");
-            onPasswordChanged("");
-            onHasErrorChanged(true);
+    useEffect(()=>{
+        async function getPetData() {
+            const docRef = doc(db, "pets", pet);
+            const pet_data = await getDoc(docRef);
+            setPetName(pet_data.data().name);
+            // setPetOwner(pet_data.data().owner);
         }
-    }
-
-    const deleteUserProfile = async () => {
-        try {
-            const docRef = query(collection(db, "profiles"), where("userId", "==",user));
-            const querySnapshot = await getDocs(docRef);
-            const documents = querySnapshot.docs;
-            try {
-                await deleteDoc(doc(db, "profiles", documents[0].id));
-            } catch (err) {
-                console.log(err.message);
-            }
-        } catch (err) {
-            console.log(`${err.message}`);        
-        }
-    }
-
-    const deleteUserPets = async () => {
-        try {
-            const docRef = query(collection(db, "pets"), where("userId", "==",user));
-            const querySnapshot = await getDocs(docRef);
-            const documents = querySnapshot.docs;
-            for (let i=0; i<documents.length; i++) {
-                try {
-                    await deleteDoc(doc(db, "pets", documents[i].id));
-                } catch (err) {
-                    console.log(err.message);
-                }
-            }
-        } catch (err) {
-            console.log(`${err.message}`);        
-        }
-    }
-
+        getPetData();
+    }, [])
+    
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
 
-            <Text style={{textAlign:'center',marginTop:10, marginLeft:36, marginRight:35, fontSize:20, alignSelf: 'center', fontWeight: 'bold'}}>Are you sure that you want to delete your account?</Text>
-            <Text style={{textAlign:'center',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>Attention: 
-                <Text style={{color:'gray'}}>This action is irreversible and will erase all the data related to your account and your pets from the My Pet Health Record app.</Text>
-            </Text>
+            <Text style={{textAlign:'center',marginTop:10, marginLeft:36, marginRight:35, fontSize:25, alignSelf: 'center', fontWeight: 'bold'}}>Who do you want to share <Text style={{textDecorationLine:'underline'}}>{petName}</Text>'s data with?</Text>
+
             
-            <Text style={{marginBottom:5, fontSize:15, marginTop:15, marginLeft:22}}>Password</Text>
-            <View style={styles.inputContainer}>
-                <TextInput 
-                    style={styles.inputField}
-                    placeholder="Enter password"
-                    keyboardType="default"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    secureTextEntry={passwordVisibility}
-                    onChangeText={onPasswordChanged}
-                    value={password}
-                />
-                <Pressable onPress={handlePasswordVisibility}>
-                    <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
-                </Pressable>
-            </View>
+                <Text style={{textAlign:'center',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>An email will be sent to the other person and once confirmed he will be able to access all of your pets's medical record.
+                </Text>
+
+                <Text style={{marginBottom:5, marginLeft:22, marginTop:30}}>Email</Text>
+            <TextInput 
+                style={styles.input}
+                placeholder="Enter email address"
+                keyboardType="default"
+                autoCapitalize="none"
+                
+            />
             
             <Pressable onPress={ () => {
-                Alert.alert('DELETE ACCOUNT', 'Please confirm account deletion.', [  
+                Alert.alert('SEND NEW RECORD', 'Please confirm to send.', [  
                     {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
-                    {text: 'Confirm', onPress: () => deleteAccountPressed()}
+                    {text: 'Confirm', onPress: () => navigation.goBack()}
                 ]);
             }}>
-                <Text style={styles.deletePressable}>DELETE ACCOUNT</Text>
+                <Text style={styles.deletePressable}>ADD CAREGIVER </Text>
             </Pressable>
 
             <Pressable onPress={() => {navigation.goBack()}}>
@@ -116,12 +61,6 @@ const AddCaregiverScreen = ({navigation, route}) => {
 }
   
 const styles = StyleSheet.create({
-    title: {
-        // textAlign: 'center',
-        alignSelf: 'center',
-        fontWeight: 'bold',
-        fontSize: '35'
-    },
     deletePressable: {
         alignSelf: 'center',
         textAlign: 'center',
@@ -134,6 +73,20 @@ const styles = StyleSheet.create({
         padding: 15,
         width: '90%',
         fontWeight: 'bold'
+    },
+    choosePressable: {
+        alignSelf: 'center',
+        textAlign: 'center',
+        backgroundColor: '#335C67',
+        color: '#ffffff',
+        marginLeft: 22,
+        marginRight: 22,
+        marginTop: 22,
+        fontSize: 13,
+        padding: 15,
+        width: '25%',
+        fontWeight: 'bold',
+        borderRadius: 10,
     },
     cancelPressable: {
         alignSelf: 'center',
@@ -158,19 +111,21 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'center'
     },
-    inputContainer: {
+    errorStyle: {
+        color: '#ff0000',
+        alignSelf: 'center',
+        marginTop: 22
+    },
+    input: {
+        alignSelf: 'center',
         height: 45,
         width: '90%',
         borderWidth: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderColor: '#808080',
-        alignSelf: 'center'
-    },
-    inputField: {
         padding: 10,
-        width: '90%'
+        borderColor: '#808080',
+        borderRadius: '0%',
     },
 });
 
 export default AddCaregiverScreen;
+

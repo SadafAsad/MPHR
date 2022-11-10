@@ -12,6 +12,18 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
     // Not tested yet //
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, onErrorChanged] = useState('');
+
+    //const {pet} = route.params;
+
+    useEffect(()=>{
+        async function getPetData() {
+            const docRef = doc(db, "pets", pet);
+            const pet_data = await getDoc(docRef);
+            setPetName(pet_data.data().name);
+            // setPetOwner(pet_data.data().owner);
+        }
+        getPetData();
+    }, [])
     
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>

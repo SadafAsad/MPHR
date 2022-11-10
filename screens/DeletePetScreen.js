@@ -106,7 +106,7 @@ const DeletePetScreen = ({navigation, route}) => {
             )}
             
             <Pressable onPress={ () => {
-                Alert.alert('REMOVE PET', 'Please confirm pet deletion.', [  
+                Alert.alert(`REMOVE ${petName.toUpperCase()}`, 'Please confirm pet deletion.', [  
                     {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
                     {text: 'Confirm', onPress: () => deletePetPressed()}
                 ]);
