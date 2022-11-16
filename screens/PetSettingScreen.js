@@ -147,11 +147,11 @@ const PetSettingScreen = (props) => {
 
             <Text style={{alignSelf:'center', fontWeight:'bold', fontSize:16, marginBottom:20, marginTop:20}}>Settings</Text>
             
-            <Pressable onPress={ () => {props.navigation.navigate('EditPetScreen-1', {pet:pet})}}>
-                <Text style={styles.pressableStyle}>EDIT PET</Text>
-            </Pressable>
             { isOwner && (
                 <View>
+                    <Pressable onPress={ () => {props.navigation.navigate('EditPetScreen-1', {pet:pet})}}>
+                        <Text style={styles.pressableStyle}>EDIT PET</Text>
+                    </Pressable>
                     <Pressable onPress={ () => {props.navigation.navigate('ManageCaregiverScreen', {pet:pet, pet_name:pet_name})}}>
                         <Text style={styles.pressableStyle}>MANAGE CAREGIVERS</Text>
                     </Pressable>
