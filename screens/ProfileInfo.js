@@ -17,6 +17,7 @@ const ProfileInfo = ({navigation, route}) => {
     const nextPressed = () => {
         const profileToInsert = {
             userId:user.uid,
+            email:user.email,
             first_name:firstname,
             last_name:lastname,
             phone_number:selectedNumCode+phonenumber

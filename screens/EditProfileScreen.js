@@ -33,6 +33,7 @@ const EditProfileScreen = ({navigation, route}) => {
     const updateProfilePressed = async () => {
         const updatedProfileData = {
             userId:userProfileData.userId,
+            emai:userProfileData.email,
             first_name:firstname,
             last_name:lastname,
             phone_number:selectedNumCode+phonenumber,

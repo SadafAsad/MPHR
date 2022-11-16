@@ -1,5 +1,5 @@
 import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
 import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged } from "firebase/auth";
@@ -14,7 +14,37 @@ const PetsScreen = ({navigation}) => {
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [usersPets, setUsersPets] = useState([]);
     const [usersCaregiving, setUsersCaregiving] = useState([]);
+
     const isFocused = useIsFocused();
+
+    useEffect(()=>{
+        navigation.setOptions({
+            headerRight: () => (
+                <View style={{flexDirection:'row'}}>
+                    <Pressable onPress={ () => {
+                        navigation.navigate("Settings", {userId:loggedInUser.uid});
+                    }}>
+                        <Ionicons name="settings-sharp" size={24} color='#335C67' style={{marginRight:15}}/>
+                    </Pressable>
+                    <Pressable onPress={ () => {
+                        Alert.alert('Logout', 'Are you sure you want to logout?', [  
+                            {text: 'NO', onPress: () => console.log('NO Pressed'), style:'cancel'},  
+                            {text: 'YES', onPress: async () => {
+                                try {
+                                    await signOut(auth);
+                                    navigation.reset({index:0, routes:[{name: 'AuthenticationNavigator'}], key:null});      
+                                } catch (err) {
+                                    console.log(`Logout failed: ${err.message}`);
+                                }
+                            }},
+                        ]);
+                    }}>
+                    <MaterialIcons name="logout" size={24} color='#335C67' />
+                </Pressable>
+              </View>
+            )
+        })
+    }, [loggedInUser, isFocused])
 
     useEffect(()=>{
         const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
@@ -32,8 +62,6 @@ const PetsScreen = ({navigation}) => {
         getUserPets();
         getUserCaregiving();
     }, [loggedInUser, isFocused])
-
-   
 
     const getUserPets = async () => {
         var index = 0;

@@ -63,37 +63,7 @@ const MainNavigator = ({navigation}) => {
             headerTintColor:'#335C67',
             headerTitleStyle:{color:'#000000'},
             }}>
-            <Stack.Screen 
-            name="PetsScreen" 
-            component={PetsScreen} 
-            options={{
-                title: 'Pets',
-                headerRight: () => (
-                    <View style={{flexDirection:'row'}}>
-                      <Pressable onPress={ () => {
-                          navigation.navigate("Settings");
-                      }}>
-                          <Ionicons name="settings-sharp" size={24} color='#335C67' style={{marginRight:15}}/>
-                      </Pressable>
-                      <Pressable onPress={ () => {
-                            Alert.alert('Logout', 'Are you sure you want to logout?', [  
-                                {text: 'NO', onPress: () => console.log('NO Pressed'), style:'cancel'},  
-                                {text: 'YES', onPress: async () => {
-                                    try {
-                                        await signOut(auth);
-                                        navigation.reset({index:0, routes:[{name: 'AuthenticationNavigator'}], key:null});      
-                                    } catch (err) {
-                                        console.log(`Logout failed: ${err.message}`);
-                                    }
-                                }},
-                            ]);
-                      }}>
-                          <MaterialIcons name="logout" size={24} color='#335C67' />
-                      </Pressable>
-                    </View>
-                    
-                )
-            }}/>
+            <Stack.Screen name="PetsScreen" component={PetsScreen} options={{title:'Pets'}}/>
             <Stack.Screen name="PetProfileScreen" component={PetProfileScreen}/>
             <Stack.Screen name="PetSettingScreen" component={PetSettingScreen} options={{title:'Pet Settings'}}/>
             <Stack.Screen name="Settings" component={SettingScreen} options={{

@@ -26,6 +26,7 @@ const AddressInfo = ({navigation, route}) => {
         try {
             const profileToInsert = {
                 userId:profile.userId,
+                email:profile.email,
                 first_name:profile.first_name,
                 last_name:profile.last_name,
                 phone_number:profile.phone_number,

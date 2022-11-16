@@ -41,6 +41,7 @@ const EditAddressScreen = ({navigation, route}) => {
     const updateAddressPressed = async () => {
         const updatedProfileData = {
             userId:userProfileData.userId,
+            email:userProfileData.email,
             first_name:userProfileData.first_name,
             last_name:userProfileData.last_name,
             phone_number:userProfileData.phone_number,

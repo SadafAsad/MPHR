@@ -6,39 +6,28 @@ import { onAuthStateChanged } from "firebase/auth"
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
 
-const SettingScreen = ({navigation}) => {
+const SettingScreen = ({navigation, route}) => {
     const [userData, setUserData] = useState([]);
-    const [loggedInUser, setLoggedInUser] = useState('');
     const [userProfileToSend, setUserProfileToSend] = useState(null);
 
     const isFocused = useIsFocused();
 
-    useEffect(()=>{
-        const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
-        if (userFromFirebaseAuth) {
-            setLoggedInUser(userFromFirebaseAuth);
-        }
-        else {
-            setLoggedInUser(null);
-        }
-        })
-        return listener
-    }, [])
+    const {userId} = route.params;
 
     useEffect(()=>{
         getUserDetails();
-    }, [loggedInUser, isFocused])
+    }, [isFocused])
 
     const getUserDetails = async () => {
         try {
-            const docRef = query(collection(db, "profiles"), where("userId", "==",loggedInUser.uid));
+            const docRef = query(collection(db, "profiles"), where("userId", "==",userId));
             const querySnapshot = await getDocs(docRef);
             const userProfile = querySnapshot.docs[0];
             setUserProfileToSend(userProfile.id);
             if (userProfile.data().address_2===''){
                 const user = [
                     userProfile.data().first_name+' '+userProfile.data().last_name,
-                    loggedInUser.email,
+                    userProfile.data().email,
                     userProfile.data().phone_number,
                     userProfile.data().address_1+', '+userProfile.data().city+', '+userProfile.data().province+' '+userProfile.data().postal_code
                 ]
@@ -47,7 +36,7 @@ const SettingScreen = ({navigation}) => {
             else {
                 const user = [
                     userProfile.data().first_name+' '+userProfile.data().last_name,
-                    loggedInUser.email,
+                    userProfile.data().email,
                     userProfile.data().phone_number,
                     userProfile.data().address_2+', '+userProfile.data().address_1+', '+userProfile.data().city+', '+userProfile.data().province+' '+userProfile.data().postal_code
                 ]
@@ -89,7 +78,7 @@ const SettingScreen = ({navigation}) => {
                 <Pressable onPress={ () => {navigation.navigate("ChangePasswordScreen")}}>
                     <Text style={styles.pressableStyle}>CHANGE PASSWORD</Text>
                 </Pressable>
-                <Pressable onPress={ () => {navigation.navigate("DeleteAccountScreen", {user: loggedInUser.uid})}}>
+                <Pressable onPress={ () => {navigation.navigate("DeleteAccountScreen", {user: userId})}}>
                     <Text style={styles.pressableStyle}>DELETE ACCOUNT</Text>
                 </Pressable>
             </View>
