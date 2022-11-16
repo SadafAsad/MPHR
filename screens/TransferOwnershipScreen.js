@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import CheckBox from "expo-checkbox";
 import { auth, db  } from "../FirebaseApp";
 import { fetchSignInMethodsForEmail, onAuthStateChanged } from "firebase/auth";
-import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
 
 const TransferOwnershipScreen = ({navigation, route}) => {
     const [hasError, onHasErrorChanged] = useState(false);
@@ -12,6 +12,8 @@ const TransferOwnershipScreen = ({navigation, route}) => {
     const [isSelected, setSelection] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [newOwner, setNewOwner] = useState(null);
+    const [petRef, setPetRef] = useState(null);
+    const [petData, setPetData] = useState(null);
     const [petName, setPetName] = useState('');
 
     const {pet} = route.params;
@@ -33,7 +35,8 @@ const TransferOwnershipScreen = ({navigation, route}) => {
             const docRef = doc(db, "pets", pet);
             const pet_data = await getDoc(docRef);
             setPetName(pet_data.data().name);
-            // setPetOwner(pet_data.data().owner);
+            setPetRef(docRef);
+            setPetData(pet_data.data());
         }
         getPetData();
     }, [])
@@ -49,9 +52,48 @@ const TransferOwnershipScreen = ({navigation, route}) => {
             else {
                 onHasErrorChanged(false);
                 onErrorChanged("");
-                console.log(result[0]);
+                getUser();
             }})
-        .catch((err) => console.log(err.message));
+        .catch((err) => {
+            onHasErrorChanged(true);
+            onErrorChanged("No user was found with this email.");
+            onEmailChanged("");
+            console.log(err.message);
+        });
+    }
+
+    const getUser = async () => {
+        try {
+            const docRef = query(collection(db, "profiles"), where("email", "==", emailAddress));
+            const querySnapshot = await getDocs(docRef);
+            const documents = querySnapshot.docs;
+            setNewOwner(documents[0].data().userId);
+            updatePetOwner();
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
+    const updatePetOwner = async () => {
+        const updatedPetData = {
+            owner:newOwner,
+            name:petData.name,
+            birthday:petData.birthday,
+            gender:petData.gender,
+            regular_clinic:petData.regular_clinic,
+            specie:petData.specie,
+            breed:petData.breed,
+            coat_color:petData.coat_color,
+            mark:petData.mark,
+            neutering:petData.neutering,
+        };
+        try {
+            updateDoc(petRef, updatedPetData);
+            navigation.pop(3);
+        }
+        catch (err) {
+            console.log(`${err.message}`);
+        }
     }
 
     return (
