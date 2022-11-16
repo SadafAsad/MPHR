@@ -33,9 +33,7 @@ const PetsScreen = ({navigation}) => {
         getUserCaregiving();
     }, [loggedInUser, isFocused])
 
-    useEffect(()=>{
-        setFilteredDataSource(usersPets.concat(usersCaregiving));
-    }, [usersPets, usersCaregiving])
+   
 
     const getUserPets = async () => {
         var index = 0;
@@ -53,6 +51,8 @@ const PetsScreen = ({navigation}) => {
             console.log("Getting User's Pets: " + err.message);        
         }
     }
+
+   
 
     const getUserCaregiving = async () => {
         var index = 0;
@@ -88,6 +88,10 @@ const PetsScreen = ({navigation}) => {
             console.log("Getting User's Caregiving: " + err.message);
         }
     }
+
+    useEffect(()=>{
+        setFilteredDataSource(usersPets.concat(usersCaregiving));
+    }, [usersPets, usersCaregiving])
 
     const onChangeSearch = query => setSearchQuery(query);
 

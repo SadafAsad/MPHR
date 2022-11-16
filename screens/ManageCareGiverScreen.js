@@ -14,6 +14,11 @@ const ManageCareGiverScreen = ({navigation, route}) => {
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, onErrorChanged] = useState('');
 
+    // for refresh screen
+    const [refreshFlatlist, setRefreshFlatList] = useState(true);
+    const [refreshing, setRefreshing] = useState(true);
+    const [userData, setUserData] = useState([]);
+
     const isFocused = useIsFocused();
 
     const {pet, pet_name} = route.params;
@@ -27,6 +32,15 @@ const ManageCareGiverScreen = ({navigation, route}) => {
         // getCaregiversName();
     }, [caregivers])
 
+    // for refresh
+    useEffect(() => {
+        loadUserData();
+      }, []);
+    
+      const loadUserData = () => {
+        getCaregiversInfo();
+      };
+
     // Removes Caregiver but have to refresh the page two times to see the result
     const removeCaregiverPressed = async (user_id) => {
         const userDocRef = query(collection(db, "caregiving"), where("pet", "==", pet), where("user", "==", user_id));
@@ -39,7 +53,14 @@ const ManageCareGiverScreen = ({navigation, route}) => {
             onErrorChanged(err.message);
             onHasErrorChanged(true);
         });
+
+        // for refresh--
+        console.log("refresh")
+        //getCaregiversInfo(caregivers);
+        //setRefreshFlatList(!refreshFlatlist)
+        navigation.navigate("ManageCareGiverScreen");
     }
+
 
     const getCaregiversInfo = async () => {
         var index = 0;
@@ -160,6 +181,7 @@ const ManageCareGiverScreen = ({navigation, route}) => {
                 keyExtractor={item => item.key}
                 renderItem={renderItem}
                 ItemSeparatorComponent={ItemDivider}
+                // extraData= {refreshFlatlist}
             />
         </SafeAreaView>
     );
