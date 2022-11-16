@@ -1,9 +1,11 @@
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Image } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Image, Button } from 'react-native';
 import SelectList from 'react-native-dropdown-select-list';
 import { AntDesign, MaterialIcons, FontAwesome5, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { useState, useEffect } from 'react';
 import { db } from '../FirebaseApp';
 import { getDoc, doc } from "firebase/firestore";
+
+import * as ImagePicker from 'expo-image-picker';
 
 const EditPetScreen_1 = ({navigation, route}) => {
     const [loggedInUser, setLoggedInUser] = useState(null);
@@ -17,6 +19,7 @@ const EditPetScreen_1 = ({navigation, route}) => {
     const [petData, setPetData] = useState(null);
 
     const {pet} = route.params;
+
 
     useEffect(()=>{
         async function getPetData() {
@@ -77,6 +80,23 @@ const EditPetScreen_1 = ({navigation, route}) => {
         };
         navigation.navigate('EditPetScreen-2', {pet:petToUpdate, pet_id:pet});
     }
+    const state = {
+        image: null,
+      };
+    let { image } = state;
+    const _pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true,
+          aspect: [4, 3],
+        });
+    
+        alert(result.uri);
+        console.log(result)
+    
+        if (!result.cancelled) {
+          this.setState({ image: result.uri });
+        }
+      };
 
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
@@ -87,7 +107,15 @@ const EditPetScreen_1 = ({navigation, route}) => {
             <Pressable>
                 <View style={{flexDirection:'row', alignItems:'center', alignSelf:'center', marginTop:15}}>
                     <MaterialIcons name="file-upload" size={24} color='#335C67' />
-                    <Text style={{color:'#335C67', fontWeight:'bold'}}>Change photo</Text>
+                    <Text style={{color:'#335C67', fontWeight:'bold'}} onPress={_pickImage}>Change photo</Text>
+                    {/* <View style={{ 'marginTop': 20}}>
+                        <Button
+                        title="Select Image"
+                        onPress={_pickImage}
+                        />
+                        {image &&
+                        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+                    </View> */}
                 </View>
             </Pressable>
             <Pressable>
