@@ -29,8 +29,8 @@ import DeletePetScreen from './screens/DeletePetScreen';
 import PetHistoryScreen from './screens/PetHistoryScreen';
 import AddPetHistoryScreen from './screens/AddPetHistoryScreen';
 import AddCaregiverScreen from './screens/AddCaregiverScreen';
-import { Pressable, View, Alert } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons'; 
+import { Pressable, Alert } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons'; 
 import ShowHistoryScreen from './screens/ShowHistoryScreen';
 import DeleteMedicalRecordsScreen from './screens/DeleteMedicalRecordsScreen';
 import { auth } from './FirebaseApp';
@@ -61,7 +61,7 @@ const MainNavigator = ({navigation}) => {
     return(
         <Stack.Navigator screenOptions={{
             headerTintColor:'#335C67',
-            headerTitleStyle:{color:'#000000'},
+            headerTitleStyle:{color:'#000000'}
             }}>
             <Stack.Screen name="PetsScreen" component={PetsScreen} options={{title:'Pets'}}/>
             <Stack.Screen name="PetProfileScreen" component={PetProfileScreen}/>
