@@ -1,17 +1,17 @@
-import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, Pressable, FlatList, View, Image, Alert } from 'react-native';
 import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
 import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from '../FirebaseApp';
 import { collection, query, where, getDocs, getDoc, doc } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
 
 const PetsScreen = ({navigation}) => {
+    const [loggedInUser, setLoggedInUser] = useState(null);
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
-    const [loggedInUser, setLoggedInUser] = useState(null);
     const [usersPets, setUsersPets] = useState([]);
     const [usersCaregiving, setUsersCaregiving] = useState([]);
 
@@ -22,7 +22,7 @@ const PetsScreen = ({navigation}) => {
             headerRight: () => (
                 <View style={{flexDirection:'row'}}>
                     <Pressable onPress={ () => {
-                        navigation.navigate("Settings", {userId:loggedInUser.uid});
+                        navigation.navigate("Settings", {userId: loggedInUser.uid});
                     }}>
                         <Ionicons name="settings-sharp" size={24} color='#335C67' style={{marginRight:15}}/>
                     </Pressable>
@@ -79,8 +79,6 @@ const PetsScreen = ({navigation}) => {
             console.log("Getting User's Pets: " + err.message);        
         }
     }
-
-   
 
     const getUserCaregiving = async () => {
         var index = 0;

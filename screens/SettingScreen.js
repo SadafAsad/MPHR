@@ -1,8 +1,7 @@
 import { StyleSheet, Text, SafeAreaView, Pressable, View } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useEffect, useState } from "react";
-import { auth, db } from '../FirebaseApp';
-import { onAuthStateChanged } from "firebase/auth"
+import { db } from '../FirebaseApp';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
 
