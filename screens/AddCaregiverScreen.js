@@ -1,17 +1,16 @@
 import { SafeAreaView, StyleSheet, Text, Pressable, Alert, TextInput } from 'react-native';
 import { useState, useEffect } from "react";
 import { auth, db } from '../FirebaseApp';
-import { onAuthStateChanged } from "firebase/auth";
-import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
+import { fetchSignInMethodsForEmail } from "firebase/auth";
+import { collection, query, where, getDocs, doc, getDoc, addDoc } from "firebase/firestore";
 
 const AddCaregiverScreen = ({navigation, route}) => {
     const [petName, setPetName] = useState('');
-    const [petOwner, setPetOwner] = useState('');
-    const [loggedInUser, setLoggedInUser] = useState(null);
-    const [isOwner, setIsOwner] = useState(false);
-    // Not tested yet //
+    const [emailAddress, onEmailChanged] = useState('');
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, onErrorChanged] = useState('');
+    const [newCaregiver, setNewCaregiver] = useState(null);
+    const [petId, setPetId] = useState(null);
 
     const {pet} = route.params;
 
@@ -20,33 +19,85 @@ const AddCaregiverScreen = ({navigation, route}) => {
             const docRef = doc(db, "pets", pet);
             const pet_data = await getDoc(docRef);
             setPetName(pet_data.data().name);
-            // setPetOwner(pet_data.data().owner);
+            setPetId(pet_data.id);
         }
         getPetData();
     }, [])
+
+    const addCaregiverPressed = async () => {
+        await fetchSignInMethodsForEmail(auth, emailAddress)
+        .then((result) => {
+            if (result.length===0) {
+                onHasErrorChanged(true);
+                onErrorChanged("No user was found with this email.");
+                onEmailChanged("");
+            }
+            else {
+                onHasErrorChanged(false);
+                onErrorChanged("");
+                getUser();
+            }})
+        .catch((err) => {
+            onHasErrorChanged(true);
+            onErrorChanged("No user was found with this email.");
+            onEmailChanged("");
+            console.log(err.message);
+        });
+    }
+
+    const getUser = async () => {
+        try {
+            const docRef = query(collection(db, "profiles"), where("email", "==", emailAddress));
+            const querySnapshot = await getDocs(docRef);
+            const documents = querySnapshot.docs;
+            setNewCaregiver(documents[0].data().userId);
+            addNewPetCaregiver();
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
+    const addNewPetCaregiver = async () => {
+        try {
+            const record = {
+                pet:petId,
+                user:newCaregiver
+            };
+            const insertedRecord = await addDoc(collection(db, "caregiving"), record);
+            navigation.pop(2);
+        }
+        catch (err) {
+            console.log(`${err.message}`);
+        }
+    }
     
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
 
-            <Text style={{textAlign:'center',marginTop:10, marginLeft:36, marginRight:35, fontSize:25, alignSelf: 'center', fontWeight: 'bold'}}>Who do you want to share <Text style={{textDecorationLine:'underline'}}>{petName}</Text>'s data with?</Text>
+            <Text style={{textAlign:'center',marginTop:10, marginLeft:36, marginRight:35, fontSize:25, alignSelf: 'center', fontWeight: 'bold'}}>Who do you want to share your pet's data with?</Text>
+            <Text style={{textAlign:'left',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>An email will be sent to the other person and once confirmed he will be able to access all of {} 
+                <Text style={{textDecorationLine:'underline', fontWeight:'bold'}}>{petName}</Text>
+            's medical record.
+            </Text>
 
-            
-                <Text style={{textAlign:'center',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>An email will be sent to the other person and once confirmed he will be able to access all of your pets's medical record.
-                </Text>
-
-                <Text style={{marginBottom:5, marginLeft:22, marginTop:30}}>Email</Text>
+            <Text style={{marginBottom:5, marginLeft:22, marginTop:30}}>Email</Text>
             <TextInput 
                 style={styles.input}
                 placeholder="Enter email address"
                 keyboardType="default"
                 autoCapitalize="none"
-                
+                onChangeText={onEmailChanged}
+                value={emailAddress}
             />
+
+            { hasError && (
+                <Text style={styles.errorStyle}>{error}</Text>
+            )}
             
             <Pressable onPress={ () => {
-                Alert.alert('SEND NEW RECORD', 'Please confirm to send.', [  
+                Alert.alert('ADD CAREGIVER', 'Please confirm caregiver addition.', [  
                     {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
-                    {text: 'Confirm', onPress: () => navigation.goBack()}
+                    {text: 'Confirm', onPress: () => addCaregiverPressed()}
                 ]);
             }}>
                 <Text style={styles.deletePressable}>ADD CAREGIVER </Text>
