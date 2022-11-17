@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, Pressable, Alert, TextInput, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, Pressable, Alert, TextInput, View, ActivityIndicator } from 'react-native';
 import { useState, useEffect } from "react";
 import { auth, db, storage } from '../FirebaseApp';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
@@ -7,9 +7,9 @@ import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "fireb
 import * as DocumentPicker from 'expo-document-picker';
 
 const UploadNewScreen = ({navigation, route}) => {
-    const [percent, setPercent] = useState(0);
     const [fileName, setFileName] = useState("Upload Medical Record");
     const [blobFile, setBlobFile] = useState(null);
+    const [isLoading, setLoading] = useState(false);
 
     const {petID, petName} = route.params;
 
@@ -36,20 +36,17 @@ const UploadNewScreen = ({navigation, route}) => {
 
         uploadTask.on(
             "state_changed",
-            (snapshot) => {
-                const percent = Math.round(
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                );
-            
-                // update progress
-                setPercent(percent);
+            () => {
+                setLoading(true);
             },
             (err) => console.log("ERROR: while uploading file -> " + err),
             () => {
+                setLoading(false);
                 // download url
                 getDownloadURL(uploadTask.snapshot.ref).then((url) => {
                     console.log(url);
                 });
+                navigation.pop();
             }
         );
     }
@@ -57,7 +54,13 @@ const UploadNewScreen = ({navigation, route}) => {
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
 
-            <Text>{percent}% DONE</Text>
+            { isLoading && (
+                <View style={{marginLeft:22, marginRight:22, alignSelf:'center', alignItems:'center', marginBottom:22, fontWeight:'bold'}}>
+                    <ActivityIndicator animating={true} size="small" color="#335C67"/>
+                    <Text style={{color:'dimgray'}}>Uploading in progress</Text>
+                </View>
+            )}
+
             <Text style={{textAlign:'center',marginTop:10, marginLeft:25, marginRight:25, fontSize:25, alignSelf: 'center', fontWeight: 'bold'}}>Upload new Medical Record </Text>
             <Text style={{textAlign:'left',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>Upload new medical report for {}
                 <Text style={{textDecorationLine:'underline', fontWeight:'bold'}}>{petName}</Text> 
@@ -81,7 +84,12 @@ const UploadNewScreen = ({navigation, route}) => {
                 <Text style={{fontSize:13, color:'dimgray', flexShrink:1}}>{fileName}</Text>
             </View>
             
-            <Pressable onPress={ () => {addDocumentPressed()}}>
+            <Pressable onPress={ () => {
+                Alert.alert('ADD MEDICAL RECORD', 'Please confirm adding medical record.', [  
+                    {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
+                    {text: 'Confirm', onPress: () => addDocumentPressed()}
+                ]);
+            }}>
                 <Text style={styles.deletePressable}>ADD MEDICAL RECORD</Text>
             </Pressable>
 
