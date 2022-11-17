@@ -7,9 +7,8 @@ import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "fireb
 import * as DocumentPicker from 'expo-document-picker';
 
 const UploadNewScreen = ({navigation, route}) => {
-    const [file, setFile] = useState("");
     const [percent, setPercent] = useState(0);
-    const [fileName, setFileName] = useState("");
+    const [fileName, setFileName] = useState("Upload Medical Record");
 
     const {petID, petName} = route.params;
 
@@ -18,16 +17,13 @@ const UploadNewScreen = ({navigation, route}) => {
             type: "*/*",
             copyToCacheDirectory: true,
         });
-        if (file==undefined) { 
-            setFile("");
-            setFileName("");
-         }
-        else {
-            setFile(file);
-            setFileName(file.name);
-        };
 
-        if (file!="") {
+        if (file.type==='cancel') {
+            setFileName("Upload Medical Record");
+        }
+        else {
+            setFileName(file.name);
+
             const storageRef = ref(storage, `/files/medical-records/${file.name}`);
             const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -49,10 +45,9 @@ const UploadNewScreen = ({navigation, route}) => {
                     });
                 }
             );
-        }
+        };
 
-        alert(result.uri);
-        console.log(result);
+        console.log(file_tmp);
 	}
     
     return (
@@ -79,14 +74,7 @@ const UploadNewScreen = ({navigation, route}) => {
                 <Pressable onPress={_pickDocument}>
                     <Text style={styles.choosePressable}>CHOOSE FILE</Text>
                 </Pressable>
-
-                {fileName=="" && (
-                    <Text style={{fontSize:13, color:'dimgray', flexShrink:1}}>Upload Medical Record</Text>
-                )}
-                {fileName!="" && (
-                    <Text style={{fontSize:13, color:'dimgray', flexShrink:1}}>{fileName}</Text>
-                )}
-
+                <Text style={{fontSize:13, color:'dimgray', flexShrink:1}}>{fileName}</Text>
             </View>
             
             <Pressable onPress={ () => {
