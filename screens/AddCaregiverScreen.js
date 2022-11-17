@@ -9,7 +9,6 @@ const AddCaregiverScreen = ({navigation, route}) => {
     const [emailAddress, onEmailChanged] = useState('');
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, onErrorChanged] = useState('');
-    const [newCaregiver, setNewCaregiver] = useState(null);
     const [petId, setPetId] = useState(null);
 
     const {pet} = route.params;
@@ -50,18 +49,17 @@ const AddCaregiverScreen = ({navigation, route}) => {
             const docRef = query(collection(db, "profiles"), where("email", "==", emailAddress));
             const querySnapshot = await getDocs(docRef);
             const documents = querySnapshot.docs;
-            setNewCaregiver(documents[0].data().userId);
-            addNewPetCaregiver();
+            addNewPetCaregiver(documents[0].data().userId);
         } catch (err) {
             console.log(err.message);
         }
     }
 
-    const addNewPetCaregiver = async () => {
+    const addNewPetCaregiver = async (caregiver) => {
         try {
             const record = {
                 pet:petId,
-                user:newCaregiver
+                user:caregiver
             };
             const insertedRecord = await addDoc(collection(db, "caregiving"), record);
             navigation.pop(2);

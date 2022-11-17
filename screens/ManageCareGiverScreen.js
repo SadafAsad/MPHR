@@ -10,6 +10,8 @@ const ManageCareGiverScreen = ({navigation, route}) => {
     const [search, setSearch] = useState('');
     const [caregivers, setCaregivers] = useState([]);
     const [caregiversInfo, setCaregiversInfo] = useState([]);
+    const [filteredDataSource, setFilteredDataSource] = useState([]);
+    const [masterDataSource, setMasterDataSource] = useState([]);
 
     const isFocused = useIsFocused();
 
