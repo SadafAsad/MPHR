@@ -2,7 +2,7 @@ import { SafeAreaView, StyleSheet, Text, View, Pressable, Image, FlatList } from
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons'; 
 import { useEffect, useState } from 'react';
 import { db } from '../FirebaseApp';
-import { collection, query, where, getDoc, doc, getDocs } from "firebase/firestore";
+import { collection, query, where, getDoc, doc, getDocs, orderBy } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
 
 const PetProfileScreen = ({navigation, route}) => {
@@ -11,6 +11,10 @@ const PetProfileScreen = ({navigation, route}) => {
     const [caregivers, setCaregivers] = useState([]);
     const [ownerName, setOwnerName] = useState('');
     const [caregiversName, setCaregiversName] = useState([]);
+    const [lastUpload, setLastUpload] = useState(null);
+    const [lastUploadDate, setLastUploadDate] = useState("");
+    const [lastUploadAt, setLastUploadAt] = useState("");
+    const [lastUploadReason, setLastUploadReaosn] = useState("");
 
     const {pet} = route.params;
     const isFocused = useIsFocused();
@@ -38,11 +42,30 @@ const PetProfileScreen = ({navigation, route}) => {
         }
         getPetData();
         getCaregivers();
+        getLastUpload();
     }, [isFocused])
 
     useEffect(()=>{
         getCaregiversName();
     }, [caregivers])
+
+    const getLastUpload = async () => {
+        const docRef = query(collection(db, "history"), where("pet", "==", pet), orderBy("date", "asc"));
+        const querySnapshot = await getDocs(docRef);
+        const documents = querySnapshot.docs;
+        if (documents.length==0){
+            setLastUpload(null);
+            setLastUploadDate("");
+            setLastUploadAt("");
+            setLastUploadReaosn("");
+        }
+        else {
+            setLastUpload(documents[0]);
+            setLastUploadDate(documents[0].data().date);
+            setLastUploadAt(documents[0].data().clinic);
+            setLastUploadReaosn(documents[0].data().reason);
+        }
+    }
 
     const getOwnerName = async (owner_id) => {
         const userProfileDocRef = query(collection(db, "profiles"), where("userId", "==", owner_id));
@@ -139,18 +162,18 @@ const PetProfileScreen = ({navigation, route}) => {
 
             <View style={styles.rowView}>
                 <MaterialCommunityIcons name="clipboard-text-clock" size={28} color="black" style={{marginRight:10}}/>
-                <Text style={{fontWeight:'bold'}}>Last Upload:</Text>
-                <Text>xx-xx-xx</Text>
+                <Text style={{fontWeight:'bold'}}>Last Upload: {}</Text>
+                <Text>{lastUploadDate}</Text>
             </View>
             <View style={styles.rowView}>
                 <MaterialCommunityIcons name="hospital-marker" size={28} color="black" style={{marginRight:10}}/>
-                <Text style={{fontWeight:'bold'}}>At:</Text>
-                <Text>location</Text>
+                <Text style={{fontWeight:'bold'}}>At: {}</Text>
+                <Text>{lastUploadAt}</Text>
             </View>
             <View style={styles.rowView}>
                 <MaterialIcons name="chat" size={28} color="black" style={{marginRight:10}}/>
-                <Text style={{fontWeight:'bold'}}>Owner's Notes:</Text>
-                <Text>note</Text>
+                <Text style={{fontWeight:'bold'}}>Reason: {}</Text>
+                <Text>{lastUploadReason}</Text>
             </View>
             
             <View style={{marginTop:20}}>
