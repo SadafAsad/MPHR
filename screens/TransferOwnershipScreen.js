@@ -2,33 +2,19 @@ import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } fro
 import { useState, useEffect } from "react";
 import CheckBox from "expo-checkbox";
 import { auth, db  } from "../FirebaseApp";
-import { fetchSignInMethodsForEmail, onAuthStateChanged } from "firebase/auth";
-import { collection, query, where, getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
+import { fetchSignInMethodsForEmail } from "firebase/auth";
+import { collection, query, where, getDocs, doc, getDoc, updateDoc, addDoc, deleteDoc } from "firebase/firestore";
 
 const TransferOwnershipScreen = ({navigation, route}) => {
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, onErrorChanged] = useState('');
     const [emailAddress, onEmailChanged] = useState('');
     const [isSelected, setSelection] = useState(false);
-    const [loggedInUser, setLoggedInUser] = useState(null);
-    const [newOwner, setNewOwner] = useState(null);
     const [petRef, setPetRef] = useState(null);
     const [petData, setPetData] = useState(null);
     const [petName, setPetName] = useState('');
 
-    const {pet} = route.params;
-
-    useEffect(()=>{
-        const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
-        if (userFromFirebaseAuth) {
-            setLoggedInUser(userFromFirebaseAuth);
-        }
-        else {
-            setLoggedInUser(null);
-        }
-        })
-        return listener
-    }, [])
+    const {pet, user} = route.params;
 
     useEffect(()=>{
         async function getPetData() {
@@ -67,16 +53,56 @@ const TransferOwnershipScreen = ({navigation, route}) => {
             const docRef = query(collection(db, "profiles"), where("email", "==", emailAddress));
             const querySnapshot = await getDocs(docRef);
             const documents = querySnapshot.docs;
-            setNewOwner(documents[0].data().userId);
-            updatePetOwner();
+            await removeIfIsCaregiver(documents[0].data().userId);
+            await addNewCaregiver();
+            await updatePetOwner(documents[0].data().userId);
         } catch (err) {
             console.log(err.message);
         }
     }
 
-    const updatePetOwner = async () => {
+    const removeIfIsCaregiver = async (user_id) => {
+        try {
+            const docRef = query(collection(db, "caregiving"), where("pet", "==", pet), where("user", "==", user_id));
+            const querySnapshot = await getDocs(docRef);
+            const documents = querySnapshot.docs;
+            if (documents.length!=0) {
+                console.log("is a caregiver");
+                await deleteDoc(doc(db, "caregiving", documents[0].id))
+                .then(console.log("Caregiver removed"))
+                .catch((err) => {
+                    console.log("ERROR: Can't remove caregiver -> " + err.message);
+                    onErrorChanged(err.message);
+                    onHasErrorChanged(true);
+                });
+            }
+        } catch(err) {
+            console.log(err.message);
+            onErrorChanged(err.message);
+            onHasErrorChanged(true);
+        }
+    }
+
+    const addNewCaregiver = async () => {
+        if (isSelected) {
+            console.log("add me as caregiver");
+            try {
+                const record = {
+                    pet:pet,
+                    user:user
+                };
+                const insertedRecord = await addDoc(collection(db, "caregiving"), record);
+                console.log("Added user as caregiver");
+            }
+            catch (err) {
+                console.log("ERROR: Can't add as caregiver -> " + err.message);
+            }
+        }
+    }
+
+    const updatePetOwner = async (user_id) => {
         const updatedPetData = {
-            owner:newOwner,
+            owner:user_id,
             name:petData.name,
             birthday:petData.birthday,
             gender:petData.gender,
@@ -89,10 +115,11 @@ const TransferOwnershipScreen = ({navigation, route}) => {
         };
         try {
             updateDoc(petRef, updatedPetData);
+            console.log("pet owner updated");
             navigation.pop(3);
         }
         catch (err) {
-            console.log(`${err.message}`);
+            console.log("ERROR: Can't update pet owner -> " + err.message);
         }
     }
 
