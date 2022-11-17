@@ -3,7 +3,7 @@ import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View } from 'react
 import { MaterialIcons, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
 import { db } from '../FirebaseApp';
-import { collection, query, where, getDoc, doc, getDocs } from "firebase/firestore";
+import { collection, query, where, getDoc, doc, getDocs, orderBy } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
 
 const ShowHistoryScreen = ({navigation, route}) => {
@@ -20,7 +20,7 @@ const ShowHistoryScreen = ({navigation, route}) => {
 
     const getRecords = async () => {
         try {
-            const docRef = query(collection(db, "history"), where("pet", "==", petId));
+            const docRef = query(collection(db, "history"), where("pet", "==", petId), orderBy("date", "asc"));
             const querySnapshot = await getDocs(docRef);
             const documents = querySnapshot.docs;
             setRecords(documents);
@@ -35,7 +35,7 @@ const ShowHistoryScreen = ({navigation, route}) => {
         )
     }
 
-    const renderItem = ({item}) => (
+    const renderItem = ({item, index}) => (
         <View style={styles.eachRow}>
             <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
                 <MaterialCommunityIcons name="file-pdf-box" size={45} color="#335C67" />
@@ -45,9 +45,19 @@ const ShowHistoryScreen = ({navigation, route}) => {
                     <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>Uploaded at: {item.data().date}</Text>
                 </View>
             </View>
-            <Pressable onPress={ () => {}}>
-                <MaterialIcons name="link-off" size={28} color='#335C67' style={{alignSelf:'center'}}/>
-            </Pressable>
+            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                {index===0 && (
+                    <Pressable onPress={ () => {}}>
+                        <MaterialIcons name="share" size={24} color='#335C67' style={{marginRight:5}}/>
+                    </Pressable>
+                )}
+                <Pressable onPress={ () => {}}>
+                    <MaterialCommunityIcons name="download" size={24} color='#335C67' style={{marginRight:5}}/>
+                </Pressable>
+                <Pressable onPress={ () => {}}>
+                    <MaterialCommunityIcons name="trash-can" size={24} color='#335C67' />
+                </Pressable>
+            </View>
         </View>
     );
 
@@ -75,7 +85,8 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         marginRight: 22,
         marginLeft: 22,
-        alignItems: 'center'
+        alignItems: 'center',
+        alignSelf:'stretch'
     },
     pressableStyle: {
         alignSelf: 'center',
