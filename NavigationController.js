@@ -29,6 +29,7 @@ import DeletePetScreen from './screens/DeletePetScreen';
 import PetHistoryScreen from './screens/PetHistoryScreen';
 import AddPetHistoryScreen from './screens/AddPetHistoryScreen';
 import AddCaregiverScreen from './screens/AddCaregiverScreen';
+import DeleteCaregiverScreen from './screens/DeleteCaregiverScreen';
 import { Pressable, Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import ShowHistoryScreen from './screens/ShowHistoryScreen';
@@ -106,6 +107,7 @@ const MainNavigator = ({navigation}) => {
             <Stack.Screen name="ShowHistoryScreen" component={ShowHistoryScreen} options={{title:'Medical Records'}}/>
             <Stack.Screen name="DeleteMedicalRecordsScreen" component={DeleteMedicalRecordsScreen} options={{title: 'Delete Medical Record'}}/>
             <Stack.Screen name="TransferPetOwnership" component={TransferOwnershipScreen} options={{title:'Transfer Ownership'}}/>
+            <Stack.Screen name="DeleteCaregiver" component={DeleteCaregiverScreen} options={{title:'Remove Caregiver'}}/>
             <Stack.Screen name="AuthenticationNavigator" component={AuthenticationNavigator} options={{header: () => null}}/>
         </Stack.Navigator>
     )

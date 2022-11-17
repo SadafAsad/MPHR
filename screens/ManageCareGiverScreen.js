@@ -1,23 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View,Alert} from 'react-native';
+import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View } from 'react-native';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
 import { db } from '../FirebaseApp';
-import { collection, query, where, getDoc, doc, getDocs, deleteDoc } from "firebase/firestore";
+import { collection, query, where, getDoc, doc, getDocs } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
 
 const ManageCareGiverScreen = ({navigation, route}) => {
     const [search, setSearch] = useState('');
     const [caregivers, setCaregivers] = useState([]);
-    const [caregiversName, setCaregiversName] = useState([]);
     const [caregiversInfo, setCaregiversInfo] = useState([]);
-    const [hasError, onHasErrorChanged] = useState(false);
-    const [error, onErrorChanged] = useState('');
-
-    // for refresh screen
-    const [refreshFlatlist, setRefreshFlatList] = useState(true);
-    const [refreshing, setRefreshing] = useState(true);
-    const [userData, setUserData] = useState([]);
 
     const isFocused = useIsFocused();
 
@@ -29,36 +21,10 @@ const ManageCareGiverScreen = ({navigation, route}) => {
 
     useEffect(()=>{
         getCaregiversInfo();
-        // getCaregiversName();
     }, [caregivers])
 
-    // for refresh
-    useEffect(() => {
-        loadUserData();
-      }, []);
-    
-      const loadUserData = () => {
-        getCaregiversInfo();
-      };
-
-    // Removes Caregiver but have to refresh the page two times to see the result
-    const removeCaregiverPressed = async (user_id) => {
-        const userDocRef = query(collection(db, "caregiving"), where("pet", "==", pet), where("user", "==", user_id));
-        const querySnapshot = await getDocs(userDocRef);
-        const documents = querySnapshot.docs;
-        await deleteDoc(doc(db, "caregiving", documents[0].id))
-        .then(console.log("Caregiver removed"))
-        .catch((err) => {
-            console.log(err.message);
-            onErrorChanged(err.message);
-            onHasErrorChanged(true);
-        });
-
-        // for refresh--
-        console.log("refresh")
-        //getCaregiversInfo(caregivers);
-        //setRefreshFlatList(!refreshFlatlist)
-        navigation.navigate("ManageCareGiverScreen");
+    const removeCaregiverPressed = async (user_id, user_name) => {
+        navigation.navigate("DeleteCaregiver", {userId:user_id, userName:user_name, petId:pet, petName:pet_name});
     }
 
 
@@ -74,11 +40,10 @@ const ManageCareGiverScreen = ({navigation, route}) => {
                 try {
                     const userDocRef = doc(db, "Users", caregivers[index].data().user);
                     const user_data = await getDoc(userDocRef);
-                    // console.log("Email: " + user_data.id)
 
                     info.push({key:index, 
                         name:documents[0].data().first_name+" "+documents[0].data().last_name,
-                        email:user_data.id,
+                        email:documents[0].data().email,
                         user_id:user_data.id});
                 } catch(err) {
                     console.log("Getting Caregiver's Name: " + err.message);
@@ -100,23 +65,6 @@ const ManageCareGiverScreen = ({navigation, route}) => {
         } catch (err) {
             console.log("Getting Pet's Caregivers: " + err.message);        
         }
-    }
-
-    const getCaregiversName = async () => {
-        var index = 0;
-        var names = [];
-        while (index<caregivers.length) {
-            try {
-                const docRef = query(collection(db, "profiles"), where("userId", "==", caregivers[index].data().user));
-                const querySnapshot = await getDocs(docRef);
-                const documents = querySnapshot.docs;
-                names.push({key:index, value:documents[0].data().first_name+" "+documents[0].data().last_name});
-            } catch(err) {
-                console.log("Getting Caregivers' Names: " + err.message);
-            }
-            index = index+1;
-        }
-        setCaregiversName(names);
     }
 
     const searchFilterFunction = (text) => {
@@ -149,17 +97,10 @@ const ManageCareGiverScreen = ({navigation, route}) => {
                 <FontAwesome name="user-circle" size={50} color="black"/>
                 <View>
                     <Text style={{marginLeft:20, fontSize:18}}>{item.name}</Text>
-                    {/* <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>{item.email}</Text> */}
-                    <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>Email</Text>
+                    <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>{item.email}</Text>
                 </View>
             </View>
-            <Pressable onPress={ () => {
-                Alert.alert('Are you sure you don\'t want to share your pet\'s data anymore?', 
-                    'The user ' + item.name + ' will no longer have access to ' + pet_name + '\'s medical record.', [  
-                    {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style:'cancel'},  
-                    {text: 'Remove Caregiver', onPress: () => removeCaregiverPressed(item.user_id)}
-                ]);
-            }}>
+            <Pressable onPress={ () => {removeCaregiverPressed(item.user_id, item.name)}}>
                 <MaterialIcons name="link-off" size={28} color='#335C67' style={{alignSelf:'center'}}/>
             </Pressable>
         </View>
@@ -181,7 +122,6 @@ const ManageCareGiverScreen = ({navigation, route}) => {
                 keyExtractor={item => item.key}
                 renderItem={renderItem}
                 ItemSeparatorComponent={ItemDivider}
-                // extraData= {refreshFlatlist}
             />
         </SafeAreaView>
     );
