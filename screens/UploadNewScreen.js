@@ -3,15 +3,16 @@ import { useState, useEffect } from "react";
 import { auth, db, storage } from '../FirebaseApp';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import * as DocumentPicker from 'expo-document-picker';
 
 const UploadNewScreen = ({navigation, route}) => {
     const [fileName, setFileName] = useState("Upload Medical Record");
     const [blobFile, setBlobFile] = useState(null);
     const [isLoading, setLoading] = useState(false);
+    const [reason, setReason] = useState("");
 
-    const {petID, petName} = route.params;
+    const {petId, petName} = route.params;
 
     const _pickDocument = async () => {
         const file = await DocumentPicker.getDocumentAsync({
@@ -30,7 +31,7 @@ const UploadNewScreen = ({navigation, route}) => {
         };
 	}
 
-    const addDocumentPressed = () => {
+    const addDocumentPressed = async () => {
         const storageRef = ref(storage, `/medical-records/${fileName}`);
         const uploadTask = uploadBytesResumable(storageRef, blobFile);
 
@@ -40,15 +41,34 @@ const UploadNewScreen = ({navigation, route}) => {
                 setLoading(true);
             },
             (err) => console.log("ERROR: while uploading file -> " + err),
-            () => {
+            async () => {
                 setLoading(false);
+
                 // download url
-                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                await getDownloadURL(uploadTask.snapshot.ref).then((url) => {
                     console.log(url);
+                    addToHistory(url);
                 });
-                navigation.pop();
             }
         );
+    }
+
+    const addToHistory = async (url) => {
+        const today = new Date();
+        try {
+            const history = {
+                pet:petId,
+                record:url,
+                reason:reason,
+                date:today.getFullYear()+"-"+today.getMonth()+"-"+today.getDate(),
+                clinic:"TBA"
+            };
+            const insertedHistory = await addDoc(collection(db, "history"), history);
+            navigation.pop();
+        }
+        catch (err) {
+            console.log(`${err.message}`);
+        }
     }
     
     return (
@@ -74,7 +94,9 @@ const UploadNewScreen = ({navigation, route}) => {
                 keyboardType=""
                 autoCapitalize="none"
                 multiline={true}
-                numberOfLines={10}  
+                numberOfLines={10} 
+                onChangeText={setReason}
+                value={reason} 
             />
 
             <View style={{flexDirection:'row', alignItems:'center', alignSelf:'stretch', marginLeft:22, marginTop:22, marginRight:22}}>
