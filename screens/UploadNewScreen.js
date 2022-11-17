@@ -1,7 +1,7 @@
 import { SafeAreaView, StyleSheet, Text, Pressable, Alert, TextInput, View } from 'react-native';
 import { useState, useEffect } from "react";
-import { auth, db, storage, uploadBytesResumable, getDownloadURL } from '../FirebaseApp';
-import { ref } from 'firebase/storage';
+import { auth, db, storage } from '../FirebaseApp';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
 import * as DocumentPicker from 'expo-document-picker';
@@ -9,46 +9,50 @@ import * as DocumentPicker from 'expo-document-picker';
 const UploadNewScreen = ({navigation, route}) => {
     const [percent, setPercent] = useState(0);
     const [fileName, setFileName] = useState("Upload Medical Record");
+    const [blobFile, setBlobFile] = useState(null);
 
     const {petID, petName} = route.params;
 
     const _pickDocument = async () => {
         const file = await DocumentPicker.getDocumentAsync({
-            type: "*/*",
-            copyToCacheDirectory: true,
+            // type: "*/*",
+            // copyToCacheDirectory: true,
         });
 
         if (file.type==='cancel') {
             setFileName("Upload Medical Record");
         }
         else {
+            const fetched_file = await fetch(file.uri);
+            const blob_file = await fetched_file.blob();
             setFileName(file.name);
-
-            const storageRef = ref(storage, `/files/medical-records/${file.name}`);
-            const uploadTask = uploadBytesResumable(storageRef, file);
-
-            uploadTask.on(
-                "state_changed",
-                (snapshot) => {
-                    const percent = Math.round(
-                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                    );
-            
-                    // update progress
-                    setPercent(percent);
-                },
-                (err) => console.log("ERROR: while uploading file -> " + err),
-                () => {
-                    // download url
-                    getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                        console.log(url);
-                    });
-                }
-            );
+            setBlobFile(blob_file);
         };
-
-        console.log(file_tmp);
 	}
+
+    const addDocumentPressed = () => {
+        const storageRef = ref(storage, `/medical-records/${fileName}`);
+        const uploadTask = uploadBytesResumable(storageRef, blobFile);
+
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                const percent = Math.round(
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                );
+            
+                // update progress
+                setPercent(percent);
+            },
+            (err) => console.log("ERROR: while uploading file -> " + err),
+            () => {
+                // download url
+                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                    console.log(url);
+                });
+            }
+        );
+    }
     
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
@@ -77,12 +81,7 @@ const UploadNewScreen = ({navigation, route}) => {
                 <Text style={{fontSize:13, color:'dimgray', flexShrink:1}}>{fileName}</Text>
             </View>
             
-            <Pressable onPress={ () => {
-                Alert.alert('UPLOAD NEW RECORD', 'Please confirm to upload.', [  
-                    {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
-                    {text: 'Confirm', onPress: () => navigation.goBack()}
-                ]);
-            }}>
+            <Pressable onPress={ () => {addDocumentPressed()}}>
                 <Text style={styles.deletePressable}>ADD MEDICAL RECORD</Text>
             </Pressable>
 
