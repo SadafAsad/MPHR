@@ -183,7 +183,7 @@ const PetProfileScreen = ({navigation, route}) => {
                 <Pressable onPress={ () => {navigation.navigate('ShareMedicalRecordScreen')}}>
                     <Text style={styles.pressableStyle}>SHARE MEDICAL RECORD</Text>
                 </Pressable>
-                <Pressable onPress={ () => {navigation.navigate('ShowHistoryScreen')}}>
+                <Pressable onPress={ () => {navigation.navigate('ShowHistoryScreen', {petId:pet, petName:pet_name})}}>
                     <Text style={styles.pressableStyle}>SHOW HISTORY</Text>
                 </Pressable>
             </View>

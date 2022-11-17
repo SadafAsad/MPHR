@@ -1,117 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View, Image, TextInput, Alert} from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import { db } from "../FirebaseApp"
-import { collection, doc, getDocs } from "firebase/firestore";
-
-
+import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View } from 'react-native';
+import { MaterialIcons, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Searchbar } from 'react-native-paper';
+import { db } from '../FirebaseApp';
+import { collection, query, where, getDoc, doc, getDocs } from "firebase/firestore";
+import { useIsFocused } from '@react-navigation/native';
 
 const ShowHistoryScreen = ({navigation, route}) => {
-    const [search, setSearch] = useState('');
-    const [filteredDataSource, setFilteredDataSource] = useState([]);
-    const [masterDataSource, setMasterDataSource] = useState([]);
+    const [records, setRecords] = useState([]);
 
-    useEffect(() => {
-        getMedRecList()
-            
-    }, []);
+    const isFocused = useIsFocused();
 
-    const getMedRecList = async () => {
+    const {petId, petName} = route.params;
+
+    useEffect(()=>{
+        navigation.setOptions({title:petName+' Medical Records'})
+        getRecords();
+    }, [isFocused])
+
+    const getRecords = async () => {
         try {
-            let querySnapshot = await getDocs(collection(db, "med_records_list"));
-
-            let documents = querySnapshot.docs
-
-            // FOR TESTING PURPOSES
-            // for (let i = 0; i < documents.length; i++) {
-            //     const currDocument = documents[i]
-            //     console.log(`ID: ${currDocument.id}`)
-            //     console.log(currDocument.data())
-            //     console.log("------")
-            // }
-
-            setFilteredDataSource(documents);
-            setMasterDataSource(documents);
-
+            const docRef = query(collection(db, "history"), where("pet", "==", petId));
+            const querySnapshot = await getDocs(docRef);
+            const documents = querySnapshot.docs;
+            setRecords(documents);
         } catch (err) {
-            console.log(`${documents.id}`)    
-            console.log(`${err.message}`)        
+            console.log("Getting Pet's Records: " + err.message);        
         }
     }
-    
-    const medRecords = [
-        {id: 1, name: "Merck Animal Health", address: "16750 route Transcanadienne\nKirkland, Quebec H9H 4M7"},
-        {id: 2, name: "Parliament Animal Hospital", address: "584 Parliament St.\nToronto, Ontario M4X 1P8"}
-    ];
-
-    const medRecSelected = (medRecords) => {   //medRecordSelected
-        const medData = {
-            id: medRecords.id,
-            name: medRecords.data().name,
-            upload_date: medRecords.data().upload_date,
-            location: medRecords.data().location
-        }
-        route.params.onSelect({selectedMedRecords: medData});
-        navigation.goBack();
-    }
-
-    const downloadRecordPressed = async () => {
-        console.log("Download pressed...")
-        
-    }
-
-    const renderItem = ( {item} ) => (
-        <Pressable onPress={ () => {
-            //maybe add navigation for details (not yet confirmed)
-            
-            medRecSelected(item);
-        }
-        }>
-            <View style={styles.vet}>
-                <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                    <Image source={require('../assets/pdf2.png')} style={styles.img}/>
-                    <View>
-                        <View style={{flexDirection:'column', marginLeft:20, alignItems:'baseline'}}>
-                            <Text style={{fontSize:18, fontWeight:'bold', marginBottom: 5}}>{item.data().name}</Text>
-                            <Text style={{fontSize:12}}><Text style={{fontSize:12,fontWeight:'bold', color:'#335C67'}}>At: </Text> {item.data().location}</Text>
-                            <Text style={{fontSize:12}}><Text style={{fontSize:12,fontWeight:'bold', color:'#335C67'}}>uploaded at: </Text>{item.data().upload_date}</Text>
-                            
-                        </View> 
-                    </View>
-                    
-                </View>
-
-                <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'flex-end', marginRight: 10}}>
-                    <Pressable onPress={ () => {
-                        navigation.navigate("ShareMedicalRecordScreen", {pet:item.key});
-                    }}>
-                        <Image source={require('../assets/share.png')} style={styles.icon}/>
-
-                    </Pressable>
-                    <Pressable onPress={ () => {
-                        console.log("download pressed")  
-                        Alert.alert(`DOWNLOAD RECORD`, 'Please confirm record download.', [  
-                            {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
-                            {text: 'Confirm', onPress: () => downloadRecordPressed()}
-                        ]);
-                    }}>
-                        <Image source={require('../assets/download.png')} style={styles.icon}/>
-
-                    </Pressable>
-                    <Pressable onPress={ () => {
-                        navigation.navigate("DeleteMedicalRecordsScreen", {pet:item.key});
-                    }}>
-                        <Image source={require('../assets/delete.png')} style={styles.icon}/>
-
-                    </Pressable>
-                    
-                    {/* <Image source={require('../assets/download.png')} style={styles.icon}/>
-                    <Image source={require('../assets/delete.png')} style={styles.icon}/> */}
-                    </View>
-                
-            </View>
-        </Pressable>
-    );
 
     const ItemDivider = () => {
         return (
@@ -119,36 +35,30 @@ const ShowHistoryScreen = ({navigation, route}) => {
         )
     }
 
-    const searchFilterFunction = (text) => {
-        // Check if searched text is not blank
-        if (text) {
-          const newData = masterDataSource.filter(function (item) {
-            const itemData = item.data().name
-              ? item.data().name.toUpperCase()
-              : ''.toUpperCase();
-            const textData = text.toUpperCase();
-            return itemData.indexOf(textData) > -1;
-          });
-          setFilteredDataSource(newData);
-          setSearch(text);
-        } else {
-          setFilteredDataSource(masterDataSource);
-          setSearch(text);
-        }
-      };
+    const renderItem = ({item}) => (
+        <View style={styles.eachRow}>
+            <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                <MaterialCommunityIcons name="file-pdf-box" size={45} color="#335C67" />
+                <View>
+                    <Text style={{marginLeft:20, fontSize:15, fontWeight:'bold'}}>{item.data().reason}</Text>
+                    <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>At: {item.data().clinic}</Text>
+                    <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>Uploaded at: {item.data().date}</Text>
+                </View>
+            </View>
+            <Pressable onPress={ () => {}}>
+                <MaterialIcons name="link-off" size={28} color='#335C67' style={{alignSelf:'center'}}/>
+            </Pressable>
+        </View>
+    );
 
     return (
         <SafeAreaView style={styles.container}>
-            
-            <View style={styles.vet}>
             <FlatList
-                data={filteredDataSource}
+                data={records}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
                 ItemSeparatorComponent={ItemDivider}
             />
-            </View>
-            
         </SafeAreaView>
     );
 }
@@ -158,51 +68,37 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
-    vet: {
+    eachRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 15,
         marginBottom: 15,
+        marginRight: 22,
+        marginLeft: 22,
         alignItems: 'center'
     },
-    img: {
-        marginLeft: 22,
-        width: 50,
-        height: 50,
-        borderRadius: '10%',
-        borderWidth: 1,
-        borderColor: '#335C67',
-    },
-    icon: {
-        alignItems: 'flex-end',
-        marginLeft: 10,
-        width: 30,
-        height: 30,
-        // borderRadius: '10%',
-        // borderWidth: 1,
-        // borderColor: '#335C67',
-    },
-    textInputStyle: {
-      height: 40,
-      width: '90%',
-      alignSelf: 'center',
-      borderWidth: 1,
-      paddingLeft: 20,
-      margin: 5,
-      borderColor: '#009688',
-      backgroundColor: '#FFFFFF',
-    },
-    addVetText: {
+    pressableStyle: {
         alignSelf: 'center',
-        color:'#335C67',
-        fontWeight: 'bold',
-        textDecorationLine: "underline",
-        textDecorationStyle: "solid",
-        textDecorationColor: "#335C67",
-        marginTop: 5
+        textAlign: 'center',
+        backgroundColor: '#335C67',
+        color: '#fff',
+        // backgroundColor: '#ffffff',
+        // color: '#335C67',
+        // borderColor: '#335C67',
+        // borderStyle: 'solid',
+        // borderWidth: 1,
+        marginLeft: 22,
+        marginRight: 22,
+        marginTop: 22,
+        fontSize: 15,
+        padding: 15,
+        width: '90%',
+        fontWeight: 'bold'
     },
-    addVetView: {
-        padding: 10
+    searchBar: {
+        width: '90%',
+        alignSelf: 'center',
+        elevation: 1
     }
 });
 
