@@ -1,25 +1,56 @@
 import { SafeAreaView, StyleSheet, Text, Pressable, Alert, TextInput, View } from 'react-native';
 import { useState, useEffect } from "react";
-import { auth, db } from '../FirebaseApp';
+import { auth, db, storage, uploadBytesResumable, getDownloadURL } from '../FirebaseApp';
+import { ref } from 'firebase/storage';
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
 import * as DocumentPicker from 'expo-document-picker';
 
 const UploadNewScreen = ({navigation, route}) => {
-    const [petOwner, setPetOwner] = useState('');
-    const [loggedInUser, setLoggedInUser] = useState(null);
-    const [isOwner, setIsOwner] = useState(false);
-    const [hasError, onHasErrorChanged] = useState(false);
-    const [error, onErrorChanged] = useState('');
+    const [file, setFile] = useState("");
+    const [percent, setPercent] = useState(0);
+    const [fileName, setFileName] = useState("");
 
     const {petID, petName} = route.params;
 
     const _pickDocument = async () => {
-        console.log("Entered")
-        const result = await DocumentPicker.getDocumentAsync({
-        type: "*/*",
-        copyToCacheDirectory: true,
+        const file = await DocumentPicker.getDocumentAsync({
+            type: "*/*",
+            copyToCacheDirectory: true,
         });
+        if (file==undefined) { 
+            setFile("");
+            setFileName("");
+         }
+        else {
+            setFile(file);
+            setFileName(file.name);
+        };
+
+        if (file!="") {
+            const storageRef = ref(storage, `/files/medical-records/${file.name}`);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                    const percent = Math.round(
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                    );
+            
+                    // update progress
+                    setPercent(percent);
+                },
+                (err) => console.log("ERROR: while uploading file -> " + err),
+                () => {
+                    // download url
+                    getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                        console.log(url);
+                    });
+                }
+            );
+        }
+
         alert(result.uri);
         console.log(result);
 	}
@@ -27,6 +58,7 @@ const UploadNewScreen = ({navigation, route}) => {
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
 
+            <Text>{percent}% DONE</Text>
             <Text style={{textAlign:'center',marginTop:10, marginLeft:25, marginRight:25, fontSize:25, alignSelf: 'center', fontWeight: 'bold'}}>Upload new Medical Record </Text>
             <Text style={{textAlign:'left',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>Upload new medical report for {}
                 <Text style={{textDecorationLine:'underline', fontWeight:'bold'}}>{petName}</Text> 
@@ -43,11 +75,18 @@ const UploadNewScreen = ({navigation, route}) => {
                 numberOfLines={10}  
             />
 
-            <View style={{flexDirection:'row', alignItems:'center', alignSelf:'stretch', marginLeft:22, marginTop:22}}>
+            <View style={{flexDirection:'row', alignItems:'center', alignSelf:'stretch', marginLeft:22, marginTop:22, marginRight:22}}>
                 <Pressable onPress={_pickDocument}>
                     <Text style={styles.choosePressable}>CHOOSE FILE</Text>
                 </Pressable>
-                <Text>Upload Medical Record</Text>
+
+                {fileName=="" && (
+                    <Text style={{fontSize:13, color:'dimgray', flexShrink:1}}>Upload Medical Record</Text>
+                )}
+                {fileName!="" && (
+                    <Text style={{fontSize:13, color:'dimgray', flexShrink:1}}>{fileName}</Text>
+                )}
+
             </View>
             
             <Pressable onPress={ () => {
@@ -85,7 +124,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         backgroundColor: '#fff',
         color: '#335C67',
-        marginRight: 15,
+        marginRight: 10,
         fontSize: 13,
         padding: 10,
         borderRadius: 20,
