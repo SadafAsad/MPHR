@@ -1,8 +1,7 @@
 import { SafeAreaView, StyleSheet, Text, Pressable, Alert, TextInput, View, ActivityIndicator } from 'react-native';
-import { useState, useEffect } from "react";
-import { auth, db, storage } from '../FirebaseApp';
+import { useState } from "react";
+import { db, storage } from '../FirebaseApp';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { onAuthStateChanged } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
 import * as DocumentPicker from 'expo-document-picker';
 

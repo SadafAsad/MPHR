@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View } from 'react-native';
-import { MaterialIcons, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Searchbar } from 'react-native-paper';
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { db } from '../FirebaseApp';
-import { collection, query, where, getDoc, doc, getDocs, orderBy } from "firebase/firestore";
+import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
 
 const ShowHistoryScreen = ({navigation, route}) => {
