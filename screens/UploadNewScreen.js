@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { auth, db } from '../FirebaseApp';
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
+import * as DocumentPicker from 'expo-document-picker';
 
 const UploadNewScreen = ({navigation, route}) => {
     const [petName, setPetName] = useState('');
@@ -12,6 +13,16 @@ const UploadNewScreen = ({navigation, route}) => {
     // Not tested yet //
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, onErrorChanged] = useState('');
+
+    const _pickDocument = async () => {
+        console.log("Entered")
+        const result = await DocumentPicker.getDocumentAsync({
+        type: "*/*",
+        copyToCacheDirectory: true,
+        });
+        alert(result.uri);
+        console.log(result);
+	}
     
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
@@ -22,12 +33,14 @@ const UploadNewScreen = ({navigation, route}) => {
                 <Text style={{textAlign:'center',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>You can add new Medical Report for your pet from here.
                 </Text>
 
-                <Pressable onPress={ () => {
-                Alert.alert('Browse Local Files', 'Please confirm.', [  
-                    {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
-                    {text: 'Confirm', onPress: () => navigation.goBack()}
-                ]);
-                }}>
+                <Pressable onPress={ 
+                //     () => {
+                // Alert.alert('Browse Local Files', 'Please confirm.', [  
+                //     {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
+                //     {text: 'Confirm', onPress: () => navigation.goBack()}
+                // ]);}
+                _pickDocument
+                }>
                     <Text style={styles.choosePressable}>Choose File </Text>
                 </Pressable>
             
