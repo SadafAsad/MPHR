@@ -89,7 +89,7 @@ const DeletePetScreen = ({navigation, route}) => {
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
 
-            <Text style={{textAlign:'center',marginTop:10, marginLeft:36, marginRight:35, fontSize:20, alignSelf: 'center', fontWeight: 'bold'}}>Are you sure you want to remove {}
+            <Text style={{textAlign:'center',marginTop:10, marginLeft:25, marginRight:25, fontSize:20, alignSelf: 'center', fontWeight: 'bold'}}>Are you sure you want to remove {}
                 <Text style={{textDecorationLine:'underline'}}>{petName}</Text>
             ?
             </Text>

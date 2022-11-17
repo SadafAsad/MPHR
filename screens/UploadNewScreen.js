@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, Pressable, Alert, TextInput } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, Pressable, Alert, TextInput, View } from 'react-native';
 import { useState, useEffect } from "react";
 import { auth, db } from '../FirebaseApp';
 import { onAuthStateChanged } from "firebase/auth";
@@ -6,13 +6,13 @@ import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "fireb
 import * as DocumentPicker from 'expo-document-picker';
 
 const UploadNewScreen = ({navigation, route}) => {
-    const [petName, setPetName] = useState('');
     const [petOwner, setPetOwner] = useState('');
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [isOwner, setIsOwner] = useState(false);
-    // Not tested yet //
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, onErrorChanged] = useState('');
+
+    const {petID, petName} = route.params;
 
     const _pickDocument = async () => {
         console.log("Entered")
@@ -27,34 +27,28 @@ const UploadNewScreen = ({navigation, route}) => {
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
 
-            <Text style={{textAlign:'center',marginTop:10, marginLeft:36, marginRight:35, fontSize:25, alignSelf: 'center', fontWeight: 'bold'}}>Upload new Medical Record </Text>
+            <Text style={{textAlign:'center',marginTop:10, marginLeft:25, marginRight:25, fontSize:25, alignSelf: 'center', fontWeight: 'bold'}}>Upload new Medical Record </Text>
+            <Text style={{textAlign:'left',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>Upload new medical report for {}
+                <Text style={{textDecorationLine:'underline', fontWeight:'bold'}}>{petName}</Text> 
+                {} here.
+            </Text>
 
-            
-                <Text style={{textAlign:'center',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>You can add new Medical Report for your pet from here.
-                </Text>
+            <Text style={{marginBottom:5, marginLeft:22, marginTop: 20}}>Reason for visit *</Text>
+            <TextInput 
+                style={styles.txtInput}
+                placeholder=""
+                keyboardType=""
+                autoCapitalize="none"
+                multiline={true}
+                numberOfLines={10}  
+            />
 
-                <Pressable onPress={ 
-                //     () => {
-                // Alert.alert('Browse Local Files', 'Please confirm.', [  
-                //     {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
-                //     {text: 'Confirm', onPress: () => navigation.goBack()}
-                // ]);}
-                _pickDocument
-                }>
-                    <Text style={styles.choosePressable}>Choose File </Text>
+            <View style={{flexDirection:'row', alignItems:'center', alignSelf:'stretch', marginLeft:22, marginTop:22}}>
+                <Pressable onPress={_pickDocument}>
+                    <Text style={styles.choosePressable}>CHOOSE FILE</Text>
                 </Pressable>
-            
-
-                <Text style={{marginBottom:5, marginLeft:22, marginTop: 20}}>Note</Text>
-                <TextInput 
-                    style={styles.txtInput}
-                    placeholder=""
-                    keyboardType=""
-                    autoCapitalize="none"
-                    multiline={true}
-                    numberOfLines={10}
-                  
-                />
+                <Text>Upload Medical Record</Text>
+            </View>
             
             <Pressable onPress={ () => {
                 Alert.alert('UPLOAD NEW RECORD', 'Please confirm to upload.', [  
@@ -62,7 +56,7 @@ const UploadNewScreen = ({navigation, route}) => {
                     {text: 'Confirm', onPress: () => navigation.goBack()}
                 ]);
             }}>
-                <Text style={styles.deletePressable}>UPLOAD </Text>
+                <Text style={styles.deletePressable}>ADD MEDICAL RECORD</Text>
             </Pressable>
 
             <Pressable onPress={() => {navigation.goBack()}}>
@@ -88,18 +82,16 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     choosePressable: {
-        alignSelf: 'center',
         textAlign: 'center',
-        backgroundColor: '#335C67',
-        color: '#ffffff',
-        marginLeft: 22,
-        marginRight: 22,
-        marginTop: 22,
+        backgroundColor: '#fff',
+        color: '#335C67',
+        marginRight: 15,
         fontSize: 13,
-        padding: 15,
-        width: '25%',
-        fontWeight: 'bold',
-        borderRadius: 10,
+        padding: 10,
+        borderRadius: 20,
+        borderStyle: 'solid',
+        borderWidth: 3,
+        borderColor:'#335C67',
     },
     cancelPressable: {
         alignSelf: 'center',
@@ -131,7 +123,7 @@ const styles = StyleSheet.create({
     },
     txtInput: {
         alignSelf: 'center',
-        height: 150,
+        height: 50,
         width: '90%',
         borderWidth: 1,
         padding: 10,

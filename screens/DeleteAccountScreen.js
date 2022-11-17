@@ -100,7 +100,7 @@ const DeleteAccountScreen = ({navigation, route}) => {
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
 
-            <Text style={{textAlign:'center',marginTop:10, marginLeft:36, marginRight:35, fontSize:20, alignSelf: 'center', fontWeight: 'bold'}}>Are you sure that you want to delete your account?</Text>
+            <Text style={{textAlign:'center',marginTop:10, marginLeft:25, marginRight:25, fontSize:20, alignSelf: 'center', fontWeight: 'bold'}}>Are you sure that you want to delete your account?</Text>
             <Text style={{textAlign:'left',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>Attention: 
                 <Text style={{color:'gray'}}>This action is irreversible and will erase all the data related to your account and your pets from the My Pet Health Record app.</Text>
             </Text>

@@ -154,7 +154,7 @@ const PetProfileScreen = ({navigation, route}) => {
             </View>
             
             <View style={{marginTop:20}}>
-                <Pressable onPress={ () => {navigation.navigate('UploadNewScreen')}}>
+                <Pressable onPress={ () => {navigation.navigate('UploadNewScreen', {petId:pet, petName:pet_name})}}>
                     <Text style={styles.pressableStyle}>UPLOAD NEW</Text>
                 </Pressable>
                 <Pressable onPress={ () => {navigation.navigate('ShareMedicalRecordScreen')}}>

@@ -72,7 +72,7 @@ const AddCaregiverScreen = ({navigation, route}) => {
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
 
-            <Text style={{textAlign:'center',marginTop:10, marginLeft:36, marginRight:35, fontSize:25, alignSelf: 'center', fontWeight: 'bold'}}>Who do you want to share your pet's data with?</Text>
+            <Text style={{textAlign:'center',marginTop:10, marginLeft:25, marginRight:25, fontSize:25, alignSelf: 'center', fontWeight: 'bold'}}>Who do you want to share your pet's data with?</Text>
             <Text style={{textAlign:'left',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>An email will be sent to the other person and once confirmed he will be able to access all of {} 
                 <Text style={{textDecorationLine:'underline', fontWeight:'bold'}}>{petName}</Text>
             's medical record.
