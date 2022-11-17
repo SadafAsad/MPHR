@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, Pressable, Image, FlatList } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Pressable, Image, FlatList, Alert } from 'react-native';
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons'; 
 import { useEffect, useState } from 'react';
 import { db } from '../FirebaseApp';
@@ -180,28 +180,31 @@ const PetProfileScreen = ({navigation, route}) => {
                 <Pressable onPress={ () => {navigation.navigate('UploadNewScreen', {petId:pet, petName:pet_name})}}>
                     <Text style={styles.pressableStyle}>UPLOAD NEW</Text>
                 </Pressable>
-                <Pressable onPress={ () => {navigation.navigate('ShareMedicalRecordScreen')}}>
+                <Pressable onPress={ () => {
+                    if (lastUpload===null){
+                        Alert.alert('ATTENTION', 'You need to upload a medical record first.', [  
+                            {text: 'OK', onPress: () => console.log('OK Pressed')}
+                        ]);
+                    }
+                    else {
+                        navigation.navigate('ShareMedicalRecordScreen');
+                    }
+                }}>
                     <Text style={styles.pressableStyle}>SHARE MEDICAL RECORD</Text>
                 </Pressable>
-                <Pressable onPress={ () => {navigation.navigate('ShowHistoryScreen', {petId:pet, petName:pet_name})}}>
+                <Pressable onPress={ () => {
+                    if (lastUpload===null) {
+                        Alert.alert('ATTENTION', 'You need to upload a medical record first.', [  
+                            {text: 'OK', onPress: () => console.log('OK Pressed')}
+                        ]);
+                    }
+                    else {
+                        navigation.navigate('ShowHistoryScreen', {petId:pet, petName:pet_name});
+                    }
+                }}>
                     <Text style={styles.pressableStyle}>SHOW HISTORY</Text>
                 </Pressable>
             </View>
-
-            {/* <Pressable onPress={ () => {
-                Alert.alert('Going to records', 'Confirm',
-                    [  
-                        {  
-                            text: 'Cancel',  
-                            onPress: () => console.log('Cancel Pressed'),  
-                            style: 'cancel',  
-                        },  
-                        {text: 'OK', onPress: () => navigation.navigate("Vaccinations")},  
-                    ]  
-                    );
-                }}>
-                    <Text style={styles.deletePressable}>Vaccination Records</Text>
-            </Pressable> */}
            
         </SafeAreaView>
     );
