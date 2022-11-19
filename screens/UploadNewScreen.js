@@ -57,7 +57,6 @@ const UploadNewScreen = ({navigation, route}) => {
         try {
             const history = {
                 pet:petId,
-                name:fileName,
                 record:url,
                 reason:reason,
                 date:today.getFullYear()+"-"+today.getMonth()+"-"+today.getDate(),

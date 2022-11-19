@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View, Alert } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { db } from '../FirebaseApp';
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { db, storage } from '../FirebaseApp';
+import { ref, deleteObject } from "firebase/storage";
+import { collection, query, where, getDocs, orderBy, deleteDoc, doc } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
 
 const ShowHistoryScreen = ({navigation, route}) => {
     const [records, setRecords] = useState([]);
+    const [updated, setUpdated] = useState(false);
 
     const isFocused = useIsFocused();
 
     const {petId, petName} = route.params;
 
     useEffect(()=>{
+        setUpdated(false);
         navigation.setOptions({title:petName+' Medical Records'})
         getRecords();
-    }, [isFocused])
+    }, [isFocused, updated])
 
     const getRecords = async () => {
         try {
@@ -26,6 +29,20 @@ const ShowHistoryScreen = ({navigation, route}) => {
         } catch (err) {
             console.log("Getting Pet's Records: " + err.message);        
         }
+    }
+
+    const deleteMedicalRecord = async (url, id) => {
+        let fileRef = ref(storage, url);
+        deleteObject(fileRef)
+        .then(async () => {
+            await deleteDoc(doc(db, "history", id))
+            .then()
+            .catch((err) => {
+                console.log("ERROR: while deleting from history -> " + err.message);
+            });
+            setUpdated(true);
+        })
+        .catch((err) => {console.log("ERROR: while deleting file -> " + err.message);})
     }
 
     const ItemDivider = () => {
@@ -53,7 +70,12 @@ const ShowHistoryScreen = ({navigation, route}) => {
                 <Pressable onPress={ () => {}}>
                     <MaterialCommunityIcons name="download" size={24} color='#335C67' style={{marginRight:5}}/>
                 </Pressable>
-                <Pressable onPress={ () => {}}>
+                <Pressable onPress={ () => {
+                    Alert.alert('DELETE MEDICAL RECORD', 'Are you sure you want to delete this medical record?', [  
+                        {text: 'NO', onPress: () => console.log('NO Pressed'), style:'cancel'},  
+                        {text: 'YES', onPress: () => deleteMedicalRecord(item.data().record, item.id)}
+                    ]);
+                }}>
                     <MaterialCommunityIcons name="trash-can" size={24} color='#335C67' />
                 </Pressable>
             </View>
