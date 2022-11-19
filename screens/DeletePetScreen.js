@@ -1,7 +1,8 @@
 import { SafeAreaView, StyleSheet, Text, Pressable, Alert } from 'react-native';
 import { useState, useEffect } from "react";
-import { auth, db } from '../FirebaseApp';
+import { auth, db, storage } from '../FirebaseApp';
 import { onAuthStateChanged } from "firebase/auth";
+import { ref, deleteObject } from "firebase/storage";
 import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
 
 const DeletePetScreen = ({navigation, route}) => {
@@ -42,6 +43,7 @@ const DeletePetScreen = ({navigation, route}) => {
     const deletePetPressed = async () => {
         if (isOwner){
             deleteAllCaregivers();
+            deleteAllMedicalRecords();
             await deleteDoc(doc(db, "pets", pet))
             .then(() => navigation.pop(3))
             .catch((err) => {
@@ -61,6 +63,27 @@ const DeletePetScreen = ({navigation, route}) => {
                 onErrorChanged(err.message);
                 onHasErrorChanged(true);
             });
+        }
+    }
+
+    const deleteAllMedicalRecords = async () => {
+        try {
+            const docRef = query(collection(db, "history"), where("pet", "==", pet));
+            const querySnapshot = await getDocs(docRef);
+            const documents = querySnapshot.docs;
+            for (let i=0; i<documents.length; i++) {
+                let fileRef = ref(storage, documents[i].data().record);
+                deleteObject(fileRef)
+                .then(async () => {
+                    await deleteDoc(doc(db, "history", documents[i].id))
+                    .then()
+                    .catch((err) => {
+                        console.log("ERROR: while deleting from history -> " + err.message);
+                    });
+                })
+            }
+        } catch (err) {
+            console.log(err.message);
         }
     }
 
