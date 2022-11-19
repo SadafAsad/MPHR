@@ -3,7 +3,7 @@ import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View } from 'react
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
 import { db } from '../FirebaseApp';
-import { collection, query, where, getDoc, doc, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import { useIsFocused } from '@react-navigation/native';
 
 const ManageCareGiverScreen = ({navigation, route}) => {
@@ -25,8 +25,8 @@ const ManageCareGiverScreen = ({navigation, route}) => {
         getCaregiversInfo();
     }, [caregivers])
 
-    const removeCaregiverPressed = async (user_id, user_name) => {
-        navigation.navigate("DeleteCaregiver", {userId:user_id, userName:user_name, petId:pet, petName:pet_name});
+    const removeCaregiverPressed = async (caregiver_id, user_name) => {
+        navigation.navigate("DeleteCaregiver", {caregiverId:caregiver_id, userName:user_name, petName:pet_name});
     }
 
 
@@ -39,17 +39,10 @@ const ManageCareGiverScreen = ({navigation, route}) => {
                 const querySnapshot = await getDocs(docRef);
                 const documents = querySnapshot.docs;
 
-                try {
-                    const userDocRef = doc(db, "Users", caregivers[index].data().user);
-                    const user_data = await getDoc(userDocRef);
-
-                    info.push({key:index, 
-                        name:documents[0].data().first_name+" "+documents[0].data().last_name,
-                        email:documents[0].data().email,
-                        user_id:user_data.id});
-                } catch(err) {
-                    console.log("Getting Caregiver's Name: " + err.message);
-                }
+                info.push({key:index, 
+                    name:documents[0].data().first_name+" "+documents[0].data().last_name,
+                    email:documents[0].data().email,
+                    caregiver_id:caregivers[index].id});
             } catch(err) {
                 console.log("Getting Caregivers' Names: " + err.message);
             }
@@ -102,7 +95,7 @@ const ManageCareGiverScreen = ({navigation, route}) => {
                     <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>{item.email}</Text>
                 </View>
             </View>
-            <Pressable onPress={ () => {removeCaregiverPressed(item.user_id, item.name)}}>
+            <Pressable onPress={ () => {removeCaregiverPressed(item.caregiver_id, item.name)}}>
                 <MaterialIcons name="link-off" size={28} color='#335C67' style={{alignSelf:'center'}}/>
             </Pressable>
         </View>
@@ -113,7 +106,7 @@ const ManageCareGiverScreen = ({navigation, route}) => {
             <View  style={{marginTop:10, marginBottom:10}}> 
             <Searchbar placeholder="Search" onChangeText={(text) => searchFilterFunction(text)} value={search} style={styles.searchBar} />
                 <Pressable onPress={ () => {
-                    navigation.navigate("AddCaregiverScreen", {pet:pet});
+                    navigation.navigate("AddCaregiverScreen", {pet:pet, petName:pet_name});
                 }}>
                     <Text style={styles.pressableStyle}>ADD CAREGIVER</Text>
                 </Pressable>

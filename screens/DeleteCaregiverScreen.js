@@ -1,19 +1,16 @@
 import { SafeAreaView, StyleSheet, Text, Pressable, Alert } from 'react-native';
 import { useState } from "react";
 import { db } from '../FirebaseApp';
-import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 
 const DeleteCaregiverScreen = ({navigation, route}) => {
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, onErrorChanged] = useState('');
 
-    const {userId, userName, petId, petName} = route.params;
+    const {caregiverId, userName, petName} = route.params;
 
     const removerCaregiverPressed = async () => {
-        const userDocRef = query(collection(db, "caregiving"), where("pet", "==", petId), where("user", "==", userId));
-        const querySnapshot = await getDocs(userDocRef);
-        const documents = querySnapshot.docs;
-        await deleteDoc(doc(db, "caregiving", documents[0].id))
+        await deleteDoc(doc(db, "caregiving", caregiverId))
         .then(console.log("Caregiver removed"))
         .catch((err) => {
             console.log(err.message);

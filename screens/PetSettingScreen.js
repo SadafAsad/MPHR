@@ -7,6 +7,7 @@ import { collection, query, where, getDoc, doc, getDocs } from "firebase/firesto
 import { useIsFocused } from '@react-navigation/native';
 
 const PetSettingScreen = (props) => {
+    const [petDoc, setPetDoc] = useState(null);
     const [pet_name, setPetName] = useState('');
     const [pet_birthday, setPetBirthday] = useState('');
     const [caregivers, setCaregivers] = useState([]);
@@ -35,6 +36,7 @@ const PetSettingScreen = (props) => {
         async function getPetData() {
             const docRef = doc(db, "pets", pet);
             const pet_data = await getDoc(docRef);
+            setPetDoc(pet_data);
             setPetName(pet_data.data().name);
             setPetBirthday(pet_data.data().birthday);
             setPetOwner(pet_data.data().owner);
@@ -149,18 +151,18 @@ const PetSettingScreen = (props) => {
             
             { isOwner && (
                 <View>
-                    <Pressable onPress={ () => {props.navigation.navigate('EditPetScreen-1', {pet:pet})}}>
+                    <Pressable onPress={ () => {props.navigation.navigate('EditPetScreen-1', {pet:pet, petDoc:petDoc})}}>
                         <Text style={styles.pressableStyle}>EDIT PET</Text>
                     </Pressable>
                     <Pressable onPress={ () => {props.navigation.navigate('ManageCaregiverScreen', {pet:pet, pet_name:pet_name})}}>
                         <Text style={styles.pressableStyle}>MANAGE CAREGIVERS</Text>
                     </Pressable>
-                    <Pressable onPress={ () => {props.navigation.navigate('TransferPetOwnership', {pet:pet, user:loggedInUser.uid})}}>
+                    <Pressable onPress={ () => {props.navigation.navigate('TransferPetOwnership', {pet:pet, petDoc:petDoc, user:loggedInUser.uid})}}>
                         <Text style={styles.pressableStyle}>TRANSFER OWNERSHIP</Text>
                     </Pressable>
                 </View>
             )}
-            <Pressable onPress={ () => {props.navigation.navigate('DeletePetScreen', {pet:pet})}}>
+            <Pressable onPress={ () => {props.navigation.navigate('DeletePetScreen', {pet:pet, petDoc:petDoc})}}>
                 <Text style={styles.pressableStyle}>REMOVE PET</Text>
             </Pressable>
         </SafeAreaView>

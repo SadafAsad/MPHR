@@ -1,12 +1,9 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Image } from 'react-native';
 import SelectList from 'react-native-dropdown-select-list';
 import { AntDesign, MaterialIcons, FontAwesome5, FontAwesome } from '@expo/vector-icons'; 
-import { useState, useEffect } from 'react';
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from '../FirebaseApp';
+import { useState } from 'react';
 
-const CreatePetProfile = ({navigation}) => {
-    const [loggedInUser, setLoggedInUser] = useState(null);
+const CreatePetProfile = ({navigation, route}) => {
     const [pet_name, onPetnameChanged] = useState('');
     const [pet_birthday, onPetbirthdayChanged] = useState('');
     const [pet_gender, onPetgenderChanged] = useState('');
@@ -15,11 +12,17 @@ const CreatePetProfile = ({navigation}) => {
     const [vet_street, setVetStreet] = useState('');
     const [vet_city, setVetCity] = useState('');
 
+    const gender = [
+        {key:'1', value:'Male'}, 
+        {key:'2', value:'Female'}
+    ]
+
+    const {user} = route.params;
+
     const onSelectedVet = data => {
         var count = 0;
         for (const [key, value] of Object.entries(data)) {
             for (const [key2, value2] of Object.entries(value)) {
-                // console.log(`${key2}: ${value2}`);
                 if (count==0) { setVetId(value2); }
                 else if (count==1) { setVetName(value2); }
                 else if (count==2) { setVetStreet(value2); }
@@ -29,26 +32,9 @@ const CreatePetProfile = ({navigation}) => {
         }
     };
 
-    const gender = [
-        {key:'1', value:'Male'}, 
-        {key:'2', value:'Female'}
-    ]
-
-    useEffect(()=>{
-        const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
-        if (userFromFirebaseAuth) {
-            setLoggedInUser(userFromFirebaseAuth);
-        }
-        else {
-            setLoggedInUser(null);
-        }
-        })
-        return listener
-    }, [])
-
     const nextPressed = () => {
         const petToInsert = {
-            owner:loggedInUser.uid,
+            owner:user,
             name:pet_name,
             birthday:pet_birthday,
             gender:pet_gender,

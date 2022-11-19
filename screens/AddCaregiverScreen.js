@@ -1,27 +1,15 @@
 import { SafeAreaView, StyleSheet, Text, Pressable, Alert, TextInput } from 'react-native';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { auth, db } from '../FirebaseApp';
 import { fetchSignInMethodsForEmail } from "firebase/auth";
-import { collection, query, where, getDocs, doc, getDoc, addDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 
 const AddCaregiverScreen = ({navigation, route}) => {
-    const [petName, setPetName] = useState('');
     const [emailAddress, onEmailChanged] = useState('');
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, onErrorChanged] = useState('');
-    const [petId, setPetId] = useState(null);
 
-    const {pet} = route.params;
-
-    useEffect(()=>{
-        async function getPetData() {
-            const docRef = doc(db, "pets", pet);
-            const pet_data = await getDoc(docRef);
-            setPetName(pet_data.data().name);
-            setPetId(pet_data.id);
-        }
-        getPetData();
-    }, [])
+    const {pet, petName} = route.params;
 
     const addCaregiverPressed = async () => {
         await fetchSignInMethodsForEmail(auth, emailAddress)
@@ -58,7 +46,7 @@ const AddCaregiverScreen = ({navigation, route}) => {
     const addNewPetCaregiver = async (caregiver) => {
         try {
             const record = {
-                pet:petId,
+                pet:pet,
                 user:caregiver
             };
             const insertedRecord = await addDoc(collection(db, "caregiving"), record);

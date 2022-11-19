@@ -14,7 +14,7 @@ const DeletePetScreen = ({navigation, route}) => {
     const [error, onErrorChanged] = useState('');
     //
 
-    const {pet} = route.params;
+    const {pet, petDoc} = route.params;
 
     useEffect(()=>{
         const listener = onAuthStateChanged(auth, (userFromFirebaseAuth) => {
@@ -29,13 +29,8 @@ const DeletePetScreen = ({navigation, route}) => {
     }, [])
 
     useEffect(()=>{
-        async function getPetData() {
-            const docRef = doc(db, "pets", pet);
-            const pet_data = await getDoc(docRef);
-            setPetName(pet_data.data().name);
-            setPetOwner(pet_data.data().owner);
-        }
-        getPetData();
+        setPetName(petDoc.data().name);
+        setPetOwner(petDoc.data().owner);
     }, [])
 
     useEffect(()=>{

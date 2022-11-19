@@ -1,8 +1,8 @@
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, Pressable, Alert } from 'react-native';
 import SelectList from 'react-native-dropdown-select-list';
 import { useState, useEffect } from 'react';
 import { db } from '../FirebaseApp';
-import { updateDoc, getDoc, doc } from "firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
 
 const EditAddressScreen = ({navigation, route}) => {
     const [selectedCountry, setSelectedCountry] = useState("");
@@ -21,19 +21,18 @@ const EditAddressScreen = ({navigation, route}) => {
         {key:'3', value:'ON'}
     ]
 
-    const {userProfile} = route.params;
+    const {userProfile, profileDoc} = route.params;
 
     useEffect(() => {
         async function getProfile() {
             const docRef = doc(db, "profiles", userProfile);
-            const profileToUpdate = await getDoc(docRef);
             setDocRef(docRef);
-            setUserProfileData(profileToUpdate.data());
+            setUserProfileData(profileDoc.data());
 
-            onaddress1Changed(profileToUpdate.data().address_1);
-            onaddress2Changed(profileToUpdate.data().address_2);
-            onCityChanged(profileToUpdate.data().city);
-            onPostalcodeChanged(profileToUpdate.data().postal_code);
+            onaddress1Changed(profileDoc.data().address_1);
+            onaddress2Changed(profileDoc.data().address_2);
+            onCityChanged(profileDoc.data().city);
+            onPostalcodeChanged(profileDoc.data().postal_code);
         }
         getProfile();
     }, [])

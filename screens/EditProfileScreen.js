@@ -2,7 +2,7 @@ import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } fro
 import SelectList from 'react-native-dropdown-select-list';
 import { useState, useEffect } from 'react';
 import { db } from '../FirebaseApp';
-import { updateDoc, getDoc, doc } from "firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
 
 const EditProfileScreen = ({navigation, route}) => {
     const [selectedNumCode, setSelectedNumCode] = useState("");
@@ -14,18 +14,17 @@ const EditProfileScreen = ({navigation, route}) => {
 
     const numCode = [{key:'1',value:'+1'}];
 
-    const {userProfile} = route.params;
+    const {userProfile, profileDoc} = route.params;
 
     useEffect(() => {
         async function getProfile() {
             const docRef = doc(db, "profiles", userProfile);
-            const profileToUpdate = await getDoc(docRef);
             setDocRef(docRef);
-            setUserProfileData(profileToUpdate.data());
+            setUserProfileData(profileDoc.data());
 
-            onFirstnameChanged(profileToUpdate.data().first_name);
-            onLastnameChanged(profileToUpdate.data().last_name);
-            onPhonenumberChanged(profileToUpdate.data().phone_number.slice(-10));
+            onFirstnameChanged(profileDoc.data().first_name);
+            onLastnameChanged(profileDoc.data().last_name);
+            onPhonenumberChanged(profileDoc.data().phone_number.slice(-10));
         }
         getProfile();
     }, [])

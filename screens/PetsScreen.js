@@ -197,7 +197,7 @@ const PetsScreen = ({navigation}) => {
             <View  style={{marginTop:10, marginBottom:10}}> 
             <Searchbar placeholder="Search" onChangeText={(text) => searchFilterFunction(text)} value={search} style={styles.searchBar} />
                 <Pressable onPress={ () => {
-                    navigation.navigate("CreatePetProfile")
+                    navigation.navigate("CreatePetProfile", {user:loggedInUser.uid})
                 }}>
                     <Text style={styles.pressableStyle}>ADD PET</Text>
                 </Pressable>

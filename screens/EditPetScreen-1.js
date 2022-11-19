@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Image, Button } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Image } from 'react-native';
 import SelectList from 'react-native-dropdown-select-list';
 import { AntDesign, MaterialIcons, FontAwesome5, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { useState, useEffect } from 'react';
@@ -8,7 +8,6 @@ import { getDoc, doc } from "firebase/firestore";
 import * as ImagePicker from 'expo-image-picker';
 
 const EditPetScreen_1 = ({navigation, route}) => {
-    const [loggedInUser, setLoggedInUser] = useState(null);
     const [pet_name, onPetnameChanged] = useState('');
     const [pet_birthday, onPetbirthdayChanged] = useState('');
     const [pet_gender, onPetgenderChanged] = useState('');
@@ -18,22 +17,25 @@ const EditPetScreen_1 = ({navigation, route}) => {
     const [vet_city, setVetCity] = useState('');
     const [petData, setPetData] = useState(null);
 
-    const {pet} = route.params;
+    const {pet, petDoc} = route.params;
 
+    const gender = [
+        {key:'1', value:'Male'}, 
+        {key:'2', value:'Female'}
+    ]
 
     useEffect(()=>{
         async function getPetData() {
             const docRef = doc(db, "pets", pet);
-            const pet_data = await getDoc(docRef);
 
-            onPetnameChanged(pet_data.data().name);
-            onPetbirthdayChanged(pet_data.data().birthday);
-            if (pet_data.data().regular_clinic!=null) {
-                setVetId(pet_data.data().regular_clinic);
-                getClinic(pet_data.data().regular_clinic);
+            onPetnameChanged(petDoc.data().name);
+            onPetbirthdayChanged(petDoc.data().birthday);
+            if (petDoc.data().regular_clinic!=null) {
+                setVetId(petDoc.data().regular_clinic);
+                getClinic(petDoc.data().regular_clinic);
             }
 
-            setPetData(pet_data);
+            setPetData(petDoc);
         }
         getPetData();
     }, [])
@@ -50,7 +52,6 @@ const EditPetScreen_1 = ({navigation, route}) => {
         var count = 0;
         for (const [key, value] of Object.entries(data)) {
             for (const [key2, value2] of Object.entries(value)) {
-                // console.log(`${key2}: ${value2}`);
                 if (count==0) { setVetId(value2); }
                 else if (count==1) { setVetName(value2); }
                 else if (count==2) { setVetStreet(value2); }
@@ -59,11 +60,6 @@ const EditPetScreen_1 = ({navigation, route}) => {
             }
         }
     };
-
-    const gender = [
-        {key:'1', value:'Male'}, 
-        {key:'2', value:'Female'}
-    ]
 
     const nextPressed = () => {
         const petToUpdate = {

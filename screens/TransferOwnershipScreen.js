@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import CheckBox from "expo-checkbox";
 import { auth, db  } from "../FirebaseApp";
 import { fetchSignInMethodsForEmail } from "firebase/auth";
-import { collection, query, where, getDocs, doc, getDoc, updateDoc, addDoc, deleteDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, updateDoc, addDoc, deleteDoc } from "firebase/firestore";
 
 const TransferOwnershipScreen = ({navigation, route}) => {
     const [hasError, onHasErrorChanged] = useState(false);
@@ -14,17 +14,13 @@ const TransferOwnershipScreen = ({navigation, route}) => {
     const [petData, setPetData] = useState(null);
     const [petName, setPetName] = useState('');
 
-    const {pet, user} = route.params;
+    const {pet, petDoc, user} = route.params;
 
     useEffect(()=>{
-        async function getPetData() {
-            const docRef = doc(db, "pets", pet);
-            const pet_data = await getDoc(docRef);
-            setPetName(pet_data.data().name);
-            setPetRef(docRef);
-            setPetData(pet_data.data());
-        }
-        getPetData();
+        const docRef = doc(db, "pets", pet);
+        setPetName(petDoc.data().name);
+        setPetRef(docRef);
+        setPetData(petDoc.data());
     }, [])
 
     const transferOwnershipPressed = async () => {

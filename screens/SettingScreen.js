@@ -7,7 +7,8 @@ import { useIsFocused } from '@react-navigation/native';
 
 const SettingScreen = ({navigation, route}) => {
     const [userData, setUserData] = useState([]);
-    const [userProfileToSend, setUserProfileToSend] = useState(null);
+    const [profileToSend, setProfileToSend] = useState(null);
+    const [profileDoc, setProfileDoc] = useState(null);
 
     const isFocused = useIsFocused();
 
@@ -22,7 +23,8 @@ const SettingScreen = ({navigation, route}) => {
             const docRef = query(collection(db, "profiles"), where("userId", "==",userId));
             const querySnapshot = await getDocs(docRef);
             const userProfile = querySnapshot.docs[0];
-            setUserProfileToSend(userProfile.id);
+            setProfileToSend(userProfile.id);
+            setProfileDoc(userProfile);
             if (userProfile.data().address_2===''){
                 const user = [
                     userProfile.data().first_name+' '+userProfile.data().last_name,
@@ -68,16 +70,16 @@ const SettingScreen = ({navigation, route}) => {
             <Text style={{alignSelf:'center', fontWeight:'bold', fontSize:16}}>Account</Text>
 
             <View>
-                <Pressable onPress={ () => {navigation.navigate("EditProfileScreen", {userProfile: userProfileToSend})}}>
+                <Pressable onPress={ () => {navigation.navigate("EditProfileScreen", {userProfile:profileToSend, profileDoc:profileDoc})}}>
                     <Text style={styles.pressableStyle}>EDIT PROFILE</Text>
                 </Pressable>
-                <Pressable onPress={ () => {navigation.navigate("EditAddressScreen", {userProfile: userProfileToSend})}}>
+                <Pressable onPress={ () => {navigation.navigate("EditAddressScreen", {userProfile:profileToSend, profileDoc:profileDoc})}}>
                     <Text style={styles.pressableStyle}>EDIT ADDRESS</Text>
                 </Pressable>
                 <Pressable onPress={ () => {navigation.navigate("ChangePasswordScreen")}}>
                     <Text style={styles.pressableStyle}>CHANGE PASSWORD</Text>
                 </Pressable>
-                <Pressable onPress={ () => {navigation.navigate("DeleteAccountScreen", {user: userId})}}>
+                <Pressable onPress={ () => {navigation.navigate("DeleteAccountScreen", {user:userId, userProfile:profileToSend})}}>
                     <Text style={styles.pressableStyle}>DELETE ACCOUNT</Text>
                 </Pressable>
             </View>

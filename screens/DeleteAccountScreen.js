@@ -14,7 +14,7 @@ const DeleteAccountScreen = ({navigation, route}) => {
     //
 
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
-    const {user} = route.params;
+    const {user, profile} = route.params;
 
     const deleteAccountPressed = async () => {
         // Not tested yet //
@@ -50,16 +50,9 @@ const DeleteAccountScreen = ({navigation, route}) => {
 
     const deleteUserProfile = async () => {
         try {
-            const docRef = query(collection(db, "profiles"), where("userId", "==",user));
-            const querySnapshot = await getDocs(docRef);
-            const documents = querySnapshot.docs;
-            try {
-                await deleteDoc(doc(db, "profiles", documents[0].id));
-            } catch (err) {
-                console.log(err.message);
-            }
+            await deleteDoc(doc(db, "profiles", profile));
         } catch (err) {
-            console.log(`${err.message}`);        
+            console.log(err.message);
         }
     }
 

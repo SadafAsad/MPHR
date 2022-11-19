@@ -3,7 +3,7 @@ import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } fro
 import CheckBox from "expo-checkbox";
 import { useState, useEffect } from 'react';
 import { db } from '../FirebaseApp';
-import { updateDoc, getDoc, doc } from "firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
 
 const EditPetScreen_2 = ({navigation, route}) => {
     const [pet_specie, onSpecieChanged] = useState('');
@@ -36,7 +36,6 @@ const EditPetScreen_2 = ({navigation, route}) => {
 
     const updatePetPressed = async () => {
         const docRef = doc(db, "pets", pet_id);
-        const clinic = await getDoc(docRef);
 
         var castration = "";
         if (isSpayed) { castration = 'Neutered' }
