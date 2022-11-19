@@ -45,6 +45,16 @@ const ShowHistoryScreen = ({navigation, route}) => {
         .catch((err) => {console.log("ERROR: while deleting file -> " + err.message);})
     }
 
+    const downloadMedicalRecord = async (url) => {
+        // const xhr = new XMLHttpRequest();
+        // xhr.responseType = 'blob';
+        // xhr.onload = (event) => {
+        //     const blob = xhr.response;
+        // };
+        // xhr.open('GET', url);
+        // xhr.send();
+    }
+
     const ItemDivider = () => {
         return (
             <View style={{height: 1, width: "100%", backgroundColor: "#cccccc"}}/>
@@ -67,7 +77,7 @@ const ShowHistoryScreen = ({navigation, route}) => {
                         <MaterialIcons name="share" size={24} color='#335C67' style={{marginRight:5}}/>
                     </Pressable>
                 )}
-                <Pressable onPress={ () => {}}>
+                <Pressable onPress={ () => {downloadMedicalRecord(item.data().record)}}>
                     <MaterialCommunityIcons name="download" size={24} color='#335C67' style={{marginRight:5}}/>
                 </Pressable>
                 <Pressable onPress={ () => {
