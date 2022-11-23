@@ -1,13 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View, Image, TextInput,Alert} from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { SafeAreaView, StyleSheet, Text, Pressable, TextInput } from 'react-native';
+import { db } from "../FirebaseApp";
+import { collection, addDoc } from "firebase/firestore";
 
-import { db } from "../FirebaseApp"
-import { collection, doc, getDocs } from "firebase/firestore";
-
-
-const AddVetClinicsScreen = ({navigation}) => {
+const AddVetClinicsScreen = ({navigation, route}) => {
+    const [clinicName, setClinicName] = useState('');
     
+    const addVetPressed = async () => {
+        // add new vet to db
+        const vet = {
+            name: clinicName,
+            street: "",
+            city: ""
+        }
+        const insertedClinic = await addDoc(collection(db, "vet_list"), vet);
+
+        // send vet data back
+        const vetData = {
+            id: insertedClinic.id,
+            name: clinicName,
+            street: null,
+            city: null
+        }
+        route.params.onSelect({selectedVet: vetData});
+        navigation.goBack();
+    }
 
     return (
         <SafeAreaView style={{backgroundColor:'#fff', justifyContent:'space-between'}}>
@@ -17,24 +34,10 @@ const AddVetClinicsScreen = ({navigation}) => {
                 placeholder=""
                 keyboardType="default"
                 autoCapitalize="none"
-                // onChangeText={onPetnameChanged}
-                // value={pet_name}
+                onChangeText={setClinicName}
+                value={clinicName}
             />
-
-            <Pressable onPress={ () => {
-                    // navigation.navigate("CheckMailScreen");
-                        //navigation.dispatch(StackActions.replace('CheckMailScreen'))
-                        Alert.alert('Adding VET CLINIC', 'Confirm',
-                        [  
-                            {  
-                                text: 'Cancel',  
-                                onPress: () => console.log('Cancel Pressed'),  
-                                style: 'cancel',  
-                            },  
-                            {text: 'OK', onPress: () => navigation.navigate("CreatePetProfile")},  
-                        ]  
-                        );
-                    }}>
+            <Pressable onPress={ () => {addVetPressed()}}>
                 <Text style={styles.pressableStyle}>ADD VET CLINIC</Text>
             </Pressable>
         </SafeAreaView>
@@ -43,14 +46,13 @@ const AddVetClinicsScreen = ({navigation}) => {
   
 const styles = StyleSheet.create({
     input: {
-        height: 40,
-      width: '90%',
-      alignSelf: 'center',
-      borderWidth: 1,
-      paddingLeft: 20,
-      margin: 5,
-      borderColor: '#009688',
-      backgroundColor: '#FFFFFF',
+        alignSelf: 'center',
+        height: 45,
+        width: '90%',
+        borderWidth: 1,
+        padding: 10,
+        borderColor: '#808080',
+        borderRadius: '0%',
     },
     pressableStyle: {
         alignSelf: 'center',

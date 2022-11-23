@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View, Image, TextInput,} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { db } from "../FirebaseApp"
-import { collection, doc, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
 const VetsScreen = ({navigation, route}) => {
     const [search, setSearch] = useState('');
@@ -15,33 +15,42 @@ const VetsScreen = ({navigation, route}) => {
             // setMasterDataSource(vets);
     }, []);
 
+    const onSelectedVet = data => {
+        var count = 0;
+        for (const [key, value] of Object.entries(data)) {
+            var id;
+            var name;
+            for (const [key2, value2] of Object.entries(value)) {
+                if (count==0) { id = value2; }
+                else if (count==1) { name = value2; }
+                count = count+1;
+            }
+            sendVetData(id, name);
+        }
+    };
+
+    const sendVetData = (id, name) => {
+        const vetData = {
+            id: id,
+            name: name,
+            street: null,
+            city: null
+        }
+        route.params.onSelect({selectedVet: vetData});
+        navigation.goBack();
+    }
+
     const getVetList = async () => {
         try {
             let querySnapshot = await getDocs(collection(db, "vet_list"));
-
             let documents = querySnapshot.docs
-
-            // FOR TESTING PURPOSES
-            // for (let i = 0; i < documents.length; i++) {
-            //     const currDocument = documents[i]
-            //     console.log(`ID: ${currDocument.id}`)
-            //     console.log(currDocument.data())
-            //     console.log("------")
-            // }
-
             setFilteredDataSource(documents);
             setMasterDataSource(documents);
-
         } catch (err) {
             console.log(`${documents.id}`)    
             console.log(`${err.message}`)        
         }
     }
-    
-    const vets = [
-        {id: 1, name: "Merck Animal Health", address: "16750 route Transcanadienne\nKirkland, Quebec H9H 4M7"},
-        {id: 2, name: "Parliament Animal Hospital", address: "584 Parliament St.\nToronto, Ontario M4X 1P8"}
-    ];
 
     const vetSelected = (vet) => {
         const vetData = {
@@ -72,7 +81,6 @@ const VetsScreen = ({navigation, route}) => {
                         </View> 
                     </View>
                 </View>
-                {/* arrow right icon */}
                 <AntDesign name="right" size={20} color='#335C67' style={{marginRight:22}}/>
             </View>
         </Pressable>
@@ -105,7 +113,6 @@ const VetsScreen = ({navigation, route}) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* <Text>Vets Tab Screen!</Text>    */}
             <TextInput
                 style={styles.textInputStyle}
                 onChangeText={(text) => searchFilterFunction(text)}
@@ -113,12 +120,12 @@ const VetsScreen = ({navigation, route}) => {
                 underlineColorAndroid="transparent"
                 placeholder="Search Here"
             />
-            {/* Vet Lists */}
             <View style={styles.addVetView}>
-                <Text  onPress={() => navigation.navigate("AddVetClinicsScreen")} style={styles.addVetText}>Didn't find your clinic?</Text> 
-               
+                <Text  
+                    onPress={() => navigation.navigate("AddVetClinicsScreen", {onSelect: onSelectedVet})} 
+                    style={styles.addVetText}>Didn't find your clinic?
+                </Text> 
             </View>
-            
             <FlatList
                 data={filteredDataSource}
                 keyExtractor={item => item.id}
@@ -163,6 +170,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         color:'#335C67',
         fontWeight: 'bold',
+        fontSize: 15,
         textDecorationLine: "underline",
         textDecorationStyle: "solid",
         textDecorationColor: "#335C67",

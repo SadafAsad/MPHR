@@ -9,7 +9,7 @@ const CreatePetProfile = ({navigation, route}) => {
     const [pet_gender, onPetgenderChanged] = useState('');
     const [vet_id, setVetId] = useState(null);
     const [vet_name, setVetName] = useState('');
-    const [vet_street, setVetStreet] = useState('');
+    const [vet_street, setVetStreet] = useState(null);
     const [vet_city, setVetCity] = useState('');
 
     const gender = [
@@ -114,11 +114,20 @@ const CreatePetProfile = ({navigation, route}) => {
                             <View style={styles.smallImgView}>
                                 <Image source={require('../assets/physical-examination-1.png')} style={styles.img}/>
                             </View>
-                            <View style={{marginRight:20, marginLeft: 20}}>
-                                <Text style={{fontWeight: 'bold'}}>{vet_name}</Text>
-                                <Text>{vet_street}</Text>
-                                <Text>{vet_city}</Text>
-                            </View>
+
+                            { !(vet_street==null) && (
+                                <View style={{marginRight:20, marginLeft: 20}}>
+                                    <Text style={{fontWeight: 'bold'}}>{vet_name}</Text>
+                                    <Text>{vet_street}</Text>
+                                    <Text>{vet_city}</Text>
+                                </View>
+                            )}
+
+                            { vet_street==null && (
+                                <View style={{marginRight:20, marginLeft: 20}}>
+                                    <Text style={{fontWeight: 'bold'}}>{vet_name}</Text>
+                                </View>
+                            )}
                         </View>
                         <View style={{flexDirection:'row', justifyContent:'space-between', alignSelf:'center', alignItems:'center'}}>
                             <FontAwesome name="trash" size={24} color="black" style={{marginRight:20}}/>
