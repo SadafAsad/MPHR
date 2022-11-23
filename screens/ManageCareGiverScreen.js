@@ -25,6 +25,11 @@ const ManageCareGiverScreen = ({navigation, route}) => {
         getCaregiversInfo();
     }, [caregivers])
 
+    useEffect(()=>{
+        setFilteredDataSource(caregiversInfo);
+        setMasterDataSource(caregiversInfo);
+    }, [caregiversInfo])
+
     const removeCaregiverPressed = async (caregiver_id, user_name) => {
         navigation.navigate("DeleteCaregiver", {caregiverId:caregiver_id, userName:user_name, petName:pet_name});
     }
@@ -64,11 +69,14 @@ const ManageCareGiverScreen = ({navigation, route}) => {
 
     const searchFilterFunction = (text) => {
         // Check if searched text is not blank
+        console.log("inside filter function..");
         if (text) {
+            console.log("text is : " + text);
           const newData = masterDataSource.filter(function (item) {
-            const itemData = item.first_name
-              ? item.first_name.toUpperCase()
+            const itemData = item.name
+              ? item.name.toUpperCase()
               : ''.toUpperCase();
+              console.log("itemData is : " + itemData);
             const textData = text.toUpperCase();
             return itemData.indexOf(textData) > -1;
           });
@@ -113,7 +121,7 @@ const ManageCareGiverScreen = ({navigation, route}) => {
 
             </View>
             <FlatList
-                data={caregiversInfo}
+                data={filteredDataSource}
                 keyExtractor={item => item.key}
                 renderItem={renderItem}
                 ItemSeparatorComponent={ItemDivider}

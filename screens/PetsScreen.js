@@ -63,6 +63,11 @@ const PetsScreen = ({navigation}) => {
         getUserCaregiving();
     }, [loggedInUser, isFocused])
 
+    useEffect(()=>{
+        setFilteredDataSource(usersPets.concat(usersCaregiving));
+        setMasterDataSource(usersPets.concat(usersCaregiving));
+    }, [usersPets, usersCaregiving])
+
     const getUserPets = async () => {
         var index = 0;
         var pets = [];
@@ -115,26 +120,30 @@ const PetsScreen = ({navigation}) => {
         }
     }
 
-    useEffect(()=>{
-        setFilteredDataSource(usersPets.concat(usersCaregiving));
-    }, [usersPets, usersCaregiving])
+    
 
     const onChangeSearch = query => setSearchQuery(query);
 
     const searchFilterFunction = (text) => {
         // Check if searched text is not blank
+        console.log("inside filter function..");
         if (text) {
+            console.log("text is : " + text);
+            
           const newData = masterDataSource.filter(function (item) {
-            const itemData = item.first_name
-              ? item.first_name.toUpperCase()
+            const itemData = item.value.data().name //item.first_name
+              ? item.value.data().name.toUpperCase()
               : ''.toUpperCase();
+              console.log("itemData is : " + itemData);
             const textData = text.toUpperCase();
             return itemData.indexOf(textData) > -1;
           });
           setFilteredDataSource(newData);
+          //setMasterDataSource(newData);
           setSearch(text);
         } else {
           setFilteredDataSource(masterDataSource);
+          //setMasterDataSource(masterDataSource);
           setSearch(text);
         }
     };

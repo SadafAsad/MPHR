@@ -91,6 +91,7 @@ const VetsScreen = ({navigation, route}) => {
             const itemData = item.data().name
               ? item.data().name.toUpperCase()
               : ''.toUpperCase();
+              console.log("itemData is : " + itemData);  
             const textData = text.toUpperCase();
             return itemData.indexOf(textData) > -1;
           });
