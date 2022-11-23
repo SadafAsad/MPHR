@@ -3,7 +3,8 @@ import { UseTogglePasswordVisibility } from '../UseTogglePasswordVisibility';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from '../FirebaseApp';
+import { auth, db, storage } from '../FirebaseApp';
+import { ref, deleteObject } from "firebase/storage";
 import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 const DeleteAccountScreen = ({navigation, route}) => {
@@ -63,6 +64,28 @@ const DeleteAccountScreen = ({navigation, route}) => {
             const documents = querySnapshot.docs;
             for (let i=0; i<documents.length; i++) {
                 try {
+                    // Delete pet's medical records
+                    // Not tested yet
+                    try {
+                        const MRDocRef = query(collection(db, "history"), where("pet", "==", documents[i].id));
+                        const MRQuerySnapshot = await getDocs(MRDocRef);
+                        const MRDocuments = MRQuerySnapshot.docs;
+                        for (let j=0; i<MRDocuments.length; j++) {
+                            let fileRef = ref(storage, MRDocuments[j].data().record);
+                            deleteObject(fileRef)
+                            .then(async () => {
+                                await deleteDoc(doc(db, "history", MRDocuments[j].id))
+                                .then()
+                                .catch((err) => {
+                                    console.log("ERROR: while deleting from history -> " + err.message);
+                                });
+                            })
+                        }
+                    } catch (err) {
+                        console.log(err.message);
+                    }
+
+                    // Delete pet itself
                     await deleteDoc(doc(db, "pets", documents[i].id));
                 } catch (err) {
                     console.log(err.message);
