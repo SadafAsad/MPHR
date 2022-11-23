@@ -70,15 +70,13 @@ const VetsScreen = ({navigation, route}) => {
         }
         }>
             <View style={styles.vet}>
-                <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', flexShrink:1}}>
                     <Image source={require('../assets/physical-examination-1.png')} style={styles.img}/>
-                    <View>
-                        <View style={{flexDirection:'column', marginLeft:20, alignItems:'baseline'}}>
-                            <Text style={{fontSize:18, fontWeight:'bold'}}>{item.data().name}</Text>
-                            <Text style={{fontSize:14}}>{item.data().street_address}</Text>
-                            <Text style={{fontSize:14}}>{item.data().city_address}</Text>
-                            <Text style={{fontSize:14}}>+1 {item.data().phone_number}</Text>
-                        </View> 
+                    <View style={{flexDirection:'column', marginLeft:20, alignItems:'baseline', flexShrink:1}}>
+                        <Text style={{fontSize:18, fontWeight:'bold'}}>{item.data().name}</Text>
+                        <Text style={{fontSize:14}}>{item.data().street_address}</Text>
+                        <Text style={{fontSize:14}}>{item.data().city_address}</Text>
+                        <Text style={{fontSize:14}}>+1 {item.data().phone_number}</Text>
                     </View>
                 </View>
                 <AntDesign name="right" size={20} color='#335C67' style={{marginRight:22}}/>

@@ -63,9 +63,9 @@ const ShowHistoryScreen = ({navigation, route}) => {
 
     const renderItem = ({item, index}) => (
         <View style={styles.eachRow}>
-            <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+            <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', flexShrink:1}}>
                 <MaterialCommunityIcons name="file-pdf-box" size={45} color="#335C67" />
-                <View>
+                <View style={{flexShrink:1}}>
                     <Text style={{marginLeft:20, fontSize:15, fontWeight:'bold'}}>{item.data().reason}</Text>
                     <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>At: {item.data().clinic}</Text>
                     <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>Uploaded at: {item.data().date}</Text>
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
         marginRight: 22,
         marginLeft: 22,
         alignItems: 'center',
-        alignSelf:'stretch'
+        alignSelf:'stretch',
     },
     pressableStyle: {
         alignSelf: 'center',

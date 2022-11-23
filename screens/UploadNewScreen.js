@@ -77,7 +77,7 @@ const UploadNewScreen = ({navigation, route}) => {
                 record:url,
                 reason:reason,
                 date:today.getFullYear()+"-"+today.getMonth()+"-"+today.getDate(),
-                clinic:vet_id
+                clinic:vet_name
             };
             const insertedHistory = await addDoc(collection(db, "history"), history);
             navigation.pop();
