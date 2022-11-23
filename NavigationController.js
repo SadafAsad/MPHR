@@ -99,7 +99,7 @@ const MainNavigator = ({navigation}) => {
             <Stack.Screen name="ManageCaregiverScreen" component={ManageCaregiverScreen } options={{title:'Manage Caregiver'}}/>
             <Stack.Screen name="AddVetClinicsScreen" component={AddVetClinicsScreen} options={{title:'Add Vet Clinic'}}/>
             <Stack.Screen name="AddCaregiverScreen" component={AddCaregiverScreen} options={{title:'Add Caregiver'}}/>
-            <Stack.Screen name="UploadNewScreen" component={UploadNewScreen} options={{title:'Upload New'}}/>
+            <Stack.Screen name="UploadNewScreen" component={UploadNewScreen} options={{title:'Upload Medical Record'}}/>
             <Stack.Screen name="ShareMedicalRecordScreen" component={ShareMedicalRecordScreen} options={{title:'Share Medical Record'}}/>
             <Stack.Screen name="EditPetScreen-1" component={EditPetScreen_1} options={{title:'Edit Pet'}}/>
             <Stack.Screen name="EditPetScreen-2" component={EditPetScreen_2} options={{title:'Edit Pet'}}/>

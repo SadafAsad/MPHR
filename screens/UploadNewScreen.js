@@ -1,4 +1,5 @@
-import { SafeAreaView, StyleSheet, Text, Pressable, Alert, TextInput, View, ActivityIndicator } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, Pressable, Alert, TextInput, View, ActivityIndicator, Image } from 'react-native';
+import { AntDesign, MaterialIcons, FontAwesome5, FontAwesome } from '@expo/vector-icons'; 
 import { useState } from "react";
 import { db, storage } from '../FirebaseApp';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
@@ -10,8 +11,25 @@ const UploadNewScreen = ({navigation, route}) => {
     const [blobFile, setBlobFile] = useState(null);
     const [isLoading, setLoading] = useState(false);
     const [reason, setReason] = useState("");
+    const [vet_id, setVetId] = useState(null);
+    const [vet_name, setVetName] = useState('');
+    const [vet_street, setVetStreet] = useState(null);
+    const [vet_city, setVetCity] = useState('');
 
-    const {petId, petName} = route.params;
+    const {petId} = route.params;
+
+    const onSelectedVet = data => {
+        var count = 0;
+        for (const [key, value] of Object.entries(data)) {
+            for (const [key2, value2] of Object.entries(value)) {
+                if (count==0) { setVetId(value2); }
+                else if (count==1) { setVetName(value2); }
+                else if (count==2) { setVetStreet(value2); }
+                else if (count==3) { setVetCity(value2); }
+                count = count+1;
+            }
+        }
+    };
 
     const _pickDocument = async () => {
         const file = await DocumentPicker.getDocumentAsync({
@@ -45,7 +63,6 @@ const UploadNewScreen = ({navigation, route}) => {
 
                 // download url
                 await getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                    console.log(url);
                     addToHistory(url);
                 });
             }
@@ -60,7 +77,7 @@ const UploadNewScreen = ({navigation, route}) => {
                 record:url,
                 reason:reason,
                 date:today.getFullYear()+"-"+today.getMonth()+"-"+today.getDate(),
-                clinic:"TBA"
+                clinic:vet_id
             };
             const insertedHistory = await addDoc(collection(db, "history"), history);
             navigation.pop();
@@ -71,21 +88,7 @@ const UploadNewScreen = ({navigation, route}) => {
     }
     
     return (
-        <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
-
-            { isLoading && (
-                <View style={{marginLeft:22, marginRight:22, alignSelf:'center', alignItems:'center', marginBottom:22, fontWeight:'bold'}}>
-                    <ActivityIndicator animating={true} size="small" color="#335C67"/>
-                    <Text style={{color:'dimgray'}}>Uploading in progress</Text>
-                </View>
-            )}
-
-            <Text style={{textAlign:'center',marginTop:10, marginLeft:25, marginRight:25, fontSize:25, alignSelf: 'center', fontWeight: 'bold'}}>Upload new Medical Record </Text>
-            <Text style={{textAlign:'left',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>Upload new medical report for {}
-                <Text style={{textDecorationLine:'underline', fontWeight:'bold'}}>{petName}</Text> 
-                {} here.
-            </Text>
-
+        <SafeAreaView style={{flex:1, backgroundColor:'#fff'}}>
             <Text style={{marginBottom:5, marginLeft:22, marginTop: 20}}>Reason for visit *</Text>
             <TextInput 
                 style={styles.txtInput}
@@ -104,6 +107,57 @@ const UploadNewScreen = ({navigation, route}) => {
                 </Pressable>
                 <Text style={{fontSize:13, color:'dimgray', flexShrink:1}}>{fileName}</Text>
             </View>
+
+            <Text style={{fontSize:15, margin:22, fontWeight: 'bold'}}>Where was the diagnosis made? *</Text>
+            { vet_id==null && (
+                <View style={{alignItems:'baseline', marginLeft:22, marginRight:22}}>
+                    <View style={{flexDirection:'row', justifyContent:'space-between', alignSelf:'stretch', alignItems:'center'}}>
+                        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                            <FontAwesome5 name="clinic-medical" size={24} color="black" />
+                            <Text style={{marginRight:20, marginLeft: 20}}>No Clinic Selected</Text>
+                        </View>
+                        <Pressable onPress={ () => {
+                            navigation.navigate("VetsScreen", {onSelect: onSelectedVet});
+                        }}>
+                            <AntDesign name="plus" size={20} color="black" style={{alignSelf:'flex-end'}}/>
+                        </Pressable>
+                    </View>
+                </View>
+            )}
+
+            { !(vet_id==null) && (
+                <View style={{alignItems:'baseline', marginLeft:22, marginRight:22}}>
+                    <View style={{flexDirection:'row', justifyContent:'space-between', marginRight: 10, alignSelf:'stretch', alignItems:'center'}}>
+                        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                            <View style={styles.smallImgView}>
+                                <Image source={require('../assets/physical-examination-1.png')} style={styles.img}/>
+                            </View>
+
+                            { !(vet_street==null) && (
+                                <View style={{marginRight:20, marginLeft: 20}}>
+                                    <Text style={{fontWeight: 'bold'}}>{vet_name}</Text>
+                                    <Text>{vet_street}</Text>
+                                    <Text>{vet_city}</Text>
+                                </View>
+                            )}
+
+                            { vet_street==null && (
+                                <View style={{marginRight:20, marginLeft: 20}}>
+                                    <Text style={{fontWeight: 'bold'}}>{vet_name}</Text>
+                                </View>
+                            )}
+                        </View>
+                        <View style={{flexDirection:'row', justifyContent:'space-between', alignSelf:'center', alignItems:'center'}}>
+                            <FontAwesome name="trash" size={24} color="black" style={{marginRight:20}}/>
+                            <Pressable onPress={ () => {
+                                navigation.navigate("VetsScreen", {onSelect: onSelectedVet});
+                            }}>
+                                <MaterialIcons name="edit" size={24} color="black" style={{}}/>
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
+            )}
             
             <Pressable onPress={ () => {
                 Alert.alert('ADD MEDICAL RECORD', 'Please confirm adding medical record.', [  
@@ -111,13 +165,15 @@ const UploadNewScreen = ({navigation, route}) => {
                     {text: 'Confirm', onPress: () => addDocumentPressed()}
                 ]);
             }}>
-                <Text style={styles.deletePressable}>ADD MEDICAL RECORD</Text>
+                <Text style={styles.deletePressable}>UPLOAD MEDICAL RECORD</Text>
             </Pressable>
 
-            <Pressable onPress={() => {navigation.goBack()}}>
-                <Text style={styles.cancelPressable}>CANCEL</Text>
-            </Pressable>
-           
+            { isLoading && (
+                <View style={{marginLeft:22, marginRight:22, alignSelf:'center', alignItems:'center', marginTop:22, fontWeight:'bold'}}>
+                    <ActivityIndicator animating={true} size="small" color="#335C67"/>
+                    <Text style={{color:'dimgray'}}>Uploading in progress</Text>
+                </View>
+            )}
         </SafeAreaView>
     );
 }
@@ -184,6 +240,20 @@ const styles = StyleSheet.create({
         padding: 10,
         borderColor: '#808080',
         textAlignVertical: 'top'
+    },
+    smallImgView: {
+        width: 60,
+        height: 60,
+        borderRadius: '100%',
+        borderWidth: 1,
+        borderColor: 'black',
+        alignSelf: 'center',
+        padding: 8
+    },
+    img: {
+        width:'100%', 
+        height:undefined, 
+        aspectRatio:1
     },
 });
 
