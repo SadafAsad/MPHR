@@ -3,7 +3,7 @@ import { AntDesign, MaterialIcons, FontAwesome5, FontAwesome } from '@expo/vecto
 import { useState } from "react";
 import { db, storage } from '../FirebaseApp';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, Timestamp } from "firebase/firestore";
 import * as DocumentPicker from 'expo-document-picker';
 
 const UploadNewScreen = ({navigation, route}) => {
@@ -76,7 +76,7 @@ const UploadNewScreen = ({navigation, route}) => {
                 pet:petId,
                 record:url,
                 reason:reason,
-                date:today.getFullYear()+"-"+today.getMonth()+"-"+today.getDate(),
+                date:Timestamp.fromDate(today),
                 clinic:vet_name
             };
             const insertedHistory = await addDoc(collection(db, "history"), history);

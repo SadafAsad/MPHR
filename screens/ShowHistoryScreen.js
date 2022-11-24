@@ -22,7 +22,7 @@ const ShowHistoryScreen = ({navigation, route}) => {
 
     const getRecords = async () => {
         try {
-            const docRef = query(collection(db, "history"), where("pet", "==", petId), orderBy("date", "asc"));
+            const docRef = query(collection(db, "history"), where("pet", "==", petId), orderBy("date", "desc"));
             const querySnapshot = await getDocs(docRef);
             const documents = querySnapshot.docs;
             setRecords(documents);
@@ -55,6 +55,11 @@ const ShowHistoryScreen = ({navigation, route}) => {
         // xhr.send();
     }
 
+    const getDate = (date_obj) => {
+        const date = new Date(date_obj.toDate());
+        return date.toDateString()
+    }
+
     const ItemDivider = () => {
         return (
             <View style={{height: 1, width: "100%", backgroundColor: "#cccccc"}}/>
@@ -68,7 +73,7 @@ const ShowHistoryScreen = ({navigation, route}) => {
                 <View style={{flexShrink:1}}>
                     <Text style={{marginLeft:20, fontSize:15, fontWeight:'bold'}}>{item.data().reason}</Text>
                     <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>At: {item.data().clinic}</Text>
-                    <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>Uploaded at: {item.data().date}</Text>
+                    <Text style={{marginLeft:20, color:'dimgray', fontSize:14}}>Uploaded at: {getDate(item.data().date)}</Text>
                 </View>
             </View>
             <View style={{flexDirection:'row', justifyContent:'space-between'}}>

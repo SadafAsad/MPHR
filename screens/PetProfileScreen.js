@@ -50,7 +50,7 @@ const PetProfileScreen = ({navigation, route}) => {
     }, [caregivers])
 
     const getLastUpload = async () => {
-        const docRef = query(collection(db, "history"), where("pet", "==", pet), orderBy("date", "asc"));
+        const docRef = query(collection(db, "history"), where("pet", "==", pet), orderBy("date", "desc"));
         const querySnapshot = await getDocs(docRef);
         const documents = querySnapshot.docs;
         if (documents.length==0){
@@ -61,7 +61,8 @@ const PetProfileScreen = ({navigation, route}) => {
         }
         else {
             setLastUpload(documents[0]);
-            setLastUploadDate(documents[0].data().date);
+            const date = new Date(documents[0].data().date.toDate());
+            setLastUploadDate(date.toDateString());
             setLastUploadAt(documents[0].data().clinic);
             setLastUploadReaosn(documents[0].data().reason);
         }
