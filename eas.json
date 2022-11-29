@@ -1,0 +1,23 @@
+{
+  "cli": {
+    "version": ">= 2.7.1"
+  },
+  "build": {
+    "development": {
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {}
+  },
+  "submit": {
+    "production": {
+      "ios":{
+        "appleId":"chaki.terrier@gmail.com",
+        "ascAppId":"6444737752",
+        "appleTeamId":"5K4V79L6T8"
+      }
+    }
+  }
+}
