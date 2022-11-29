@@ -22,7 +22,6 @@ const LoginScreen = ({navigation}) => {
         storageGet()
         console.log(`userPersist: ${getPersist}`)
         if(getPersist === 'false'){
-
             signOut(auth)
         }
     })
