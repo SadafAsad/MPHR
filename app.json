@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "MPHR",
+    "name": "My Pet Health Record",
     "slug": "MPHR",
-    "version": "1.0.0",
+    "version": "2.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -29,6 +29,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b3904299-1fc0-4926-9f96-908bd517cfcd"
+      }
     }
   }
 }

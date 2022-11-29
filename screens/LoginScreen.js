@@ -1,11 +1,12 @@
 import { SafeAreaView, StyleSheet, Text, Pressable, Image, View, TextInput } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions } from '@react-navigation/native';
 import { useState, useEffect } from "react";
 import CheckBox from "expo-checkbox";
 import { UseTogglePasswordVisibility } from '../UseTogglePasswordVisibility';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { auth } from "../FirebaseApp";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 const LoginScreen = ({navigation}) => {
     const [emailAddress, onEmailChanged] = useState('');
@@ -13,11 +14,47 @@ const LoginScreen = ({navigation}) => {
     const [error, onErrorChanged] = useState('');
     const [hasError, onHasErrorChanged] = useState(false);
     const [isSelected, setSelection] = useState(false);
+    const [getPersist, setPersist] = useState('');
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
+    
+
+    useEffect(() =>{
+        storageGet()
+        console.log(`userPersist: ${getPersist}`)
+        if(getPersist === 'false'){
+
+            signOut(auth)
+        }
+    })
+
+    const storageGet = async() => {
+        try {
+                AsyncStorage.getItem('authUser').then((value) =>
+                setPersist(value)
+                )
+            //  if(result != null){
+            //     setSelection = result.authUser
+            //  }
+            
+            //  return ;
+          } catch(error) {
+            console.log(error);
+          }
+      }
 
     const loginPressed = async () => {
         try {
             onHasErrorChanged(false);
+            console.log("entered")
+            if(isSelected === true){
+                await AsyncStorage.setItem("authUser", "true")
+                console.log(`i have entered`)
+            }else{
+                await AsyncStorage.setItem("authUser", "false")
+            }
+            
+            // console.log(`user persist: ${userPersist}`)
+            console.log(`isSelected: ${isSelected}`)
             await signInWithEmailAndPassword(auth, emailAddress, password);
             navigation.dispatch(StackActions.replace('MainNavigator'));
         } catch (err) {
