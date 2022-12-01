@@ -3,8 +3,6 @@ import { useState, useEffect } from "react";
 import { auth, db } from '../FirebaseApp';
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
-import * as MailComposer from 'expo-mail-composer';
-import * as Print from 'expo-print';
 
 const ShareMedicalRecordScreen = ({navigation, route}) => {
     const [petName, setPetName] = useState('');
@@ -14,13 +12,6 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
     // Not tested yet //
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, onErrorChanged] = useState('');
-
-     // for sending mail with attachment
-     const [isAvailable, setIsAvailable] = useState(false);
-     const [recipients, setRecipients] = useState([]);
-     const [subject, setSubject] = useState(undefined);
-     const [body, setBody] = useState(undefined);
-     const [email, setEmail] = useState(undefined);
 
     //const {pet} = route.params;
 
@@ -33,20 +24,6 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
         }
         getPetData();
     }, [])
-
-    // for sending mail with attachment
-    const sendMail = async () => {
-        const { uri } = await Print.printToFileAsync({
-          html: "<h1>My pdf!</h1>"
-        });
-    
-        MailComposer.composeAsync({
-          subject: subject,
-          body: body,
-          recipients: recipients,
-          //attachments: [uri]
-        });
-      };
     
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
@@ -63,16 +40,13 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
                 placeholder="Enter email address"
                 keyboardType="default"
                 autoCapitalize="none"
-                onChangeText={setEmail}
-                value={email}
                 
             />
             
             <Pressable onPress={ () => {
                 Alert.alert('SEND NEW RECORD', 'Please confirm to send.', [  
                     {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
-                   // {text: 'Confirm', onPress: () => navigation.goBack()}
-                   {text: 'Confirm', onPress:{sendMail}}
+                    {text: 'Confirm', onPress: () => navigation.goBack()}
                 ]);
             }}>
                 <Text style={styles.deletePressable}>SEND MEDICAL RECORD </Text>
