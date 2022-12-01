@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, FlatList, Pressable, View, Alert, Linking, Share } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import * as FileSystem from 'expo-file-system';
 import { db, storage } from '../FirebaseApp';
 import { ref, deleteObject } from "firebase/storage";
 import { collection, query, where, getDocs, orderBy, deleteDoc, doc } from "firebase/firestore";
-import { useIsFocused } from '@react-navigation/native';
+import { Link, useIsFocused } from '@react-navigation/native';
 
 const ShowHistoryScreen = ({navigation, route}) => {
     const [records, setRecords] = useState([]);
@@ -46,14 +47,37 @@ const ShowHistoryScreen = ({navigation, route}) => {
     }
 
     const downloadMedicalRecord = async (url) => {
-        // const xhr = new XMLHttpRequest();
-        // xhr.responseType = 'blob';
-        // xhr.onload = (event) => {
-        //     const blob = xhr.response;
-        // };
-        // xhr.open('GET', url);
-        // xhr.send();
+        // #2
+        // const { uri: localUri } = await FileSystem.downloadAsync(url, FileSystem.documentDirectory)
+        // .then((uri) => {
+        //     console.log("The result?: " + uri.uri);
+        //     onShare(uri.uri);
+        // })
+        // .catch((err) => console.log("Error while downloading: " + err.message));
+
+        // #3 WORKS
+        Linking.openURL(url);
     }
+
+    // const onShare = async (url) => {
+    //     try {
+    //         const result = await Share.share({
+    //             url:url,
+    //             saveToFiles:true,
+    //         });
+    //         // if (result.action === Share.sharedAction) {
+    //         //     if (result.activityType) {
+    //         //         // shared with activity type of result.activityType
+    //         //     } else {
+    //         //         // shared
+    //         //     }
+    //         // } else if (result.action === Share.dismissedAction) {
+    //         //     // dismissed
+    //         // }
+    //     } catch (error) {
+    //       console.log(error.message);
+    //     }
+    // };
 
     const getDate = (date_obj) => {
         const date = new Date(date_obj.toDate());
