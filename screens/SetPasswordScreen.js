@@ -4,16 +4,25 @@ import { useState } from 'react';
 import { UseTogglePasswordVisibility } from '../UseTogglePasswordVisibility';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { updatePassword } from 'firebase/auth';
+import { PasswordMeter } from 'react-native-password-meter';
 
 const SetPasswordScreen = ({navigation, route}) => {
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
     const {user} = route.params;
-    const [password, onPasswordChanged] = useState('');
+   // const [password, onPasswordChanged] = useState('');
+
+    // for password check
+    const [password, setPassword] = useState({ value: '', error: '' });
+    const [passwordScore, setPasswordScore] = useState(0);
 
     const nextPressed = () => {
         updatePassword(user, password);
         navigation.reset({index:0, routes:[{name: 'Profile', params: {user: user}}]});
     }
+
+    const _updateScore = (val) => {
+        setPasswordScore(val);
+      };
 
     return (
         <SafeAreaView style={{flex:1}}>
@@ -61,11 +70,23 @@ const SetPasswordScreen = ({navigation, route}) => {
                     autoCapitalize="none"
                     autoCorrect={false}
                     secureTextEntry={passwordVisibility}
-                    onChangeText={onPasswordChanged}
+                    //onChangeText={onPasswordChanged}
+                    value={password.value}
+                    onChangeText={(text) => setPassword({ value: text, error: '' })}
+                    //secureTextEntry={true}
+                    
                 />
                 <Pressable onPress={handlePasswordVisibility}>
                     <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
                 </Pressable>
+                </View>
+                <View style={styles.meterBar}>
+                <PasswordMeter style={{width: '90%'}}
+                    password={password.value}
+                    onResult={(val) => {
+                    _updateScore(val);
+                    }}
+                />
                 </View>
                 <Pressable onPress={nextPressed}>
                     <Text style={styles.PressableStyle}>NEXT</Text>
@@ -153,6 +174,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: 'lightgray',
+    },
+    meterBar: {
+        alignSelf: 'center',
+        height: '44%',
+        width: '90%',
+        //borderWidth: 1,
+        //borderColor: '#808080',
+        //flexDirection: 'row',
+        alignItems: 'center',
+        //backgroundColor: 'lightgray',
     },
 });
 

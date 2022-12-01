@@ -1,8 +1,10 @@
-import { SafeAreaView, StyleSheet, Text, Pressable, Alert, TextInput } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, Pressable, Alert, TextInput, StatusBar, View } from 'react-native';
 import { useState, useEffect } from "react";
 import { auth, db } from '../FirebaseApp';
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
+import * as MailComposer from 'expo-mail-composer';
+import * as ImagePicker from 'expo-image-picker';
 
 const ShareMedicalRecordScreen = ({navigation, route}) => {
     const [petName, setPetName] = useState('');
@@ -12,6 +14,10 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
     // Not tested yet //
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, onErrorChanged] = useState('');
+
+    // for send mail with attachment
+    const [status, setStatus] = useState(null);
+    const [email, setEmail] = useState(null);
 
     //const {pet} = route.params;
 
@@ -24,6 +30,48 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
         }
         getPetData();
     }, [])
+
+    const sendEmail = async(file) => {
+        console.log("inside sendMail function")
+        var options = {}
+        if(file.length < 1){
+          options = {
+            subject: "Sharing Medical Report with attachment",
+            recipients: [email],
+            body: "Enter email body here..."
+          }
+        }else{
+          options = {
+            subject: "Sharing Medical Report with attachment",
+            recipients: [email],
+            body: "Enter email body here...",
+            attachments: file
+          }
+        }
+        let promise = new Promise((resolve, reject) => {
+            console.log("inside promise...")
+            console.log("email recieved: " + email)
+          MailComposer.composeAsync({subject: 'Sharing Medical Report',
+          body: 'Sharing Medical Report',
+          recipients: [email],
+          isHtml: true})
+          .then((result) => {
+            console.log("result is : " + result)
+            resolve(result)
+          })
+          .catch((error) => {
+            console.log("we got error : " + error)
+            reject(error)
+          })
+
+        })
+    
+        promise.then(
+            
+          result => setStatus("Status: email " + result.status),
+          error => setStatus("Status: email " + error.status)
+        )
+      }
     
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
@@ -40,13 +88,15 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
                 placeholder="Enter email address"
                 keyboardType="default"
                 autoCapitalize="none"
-                
+                onChangeText={setEmail}
+                value={email}
             />
             
             <Pressable onPress={ () => {
                 Alert.alert('SEND NEW RECORD', 'Please confirm to send.', [  
                     {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
-                    {text: 'Confirm', onPress: () => navigation.goBack()}
+                    //{text: 'Confirm', onPress: () => navigation.goBack()}
+                    {text: 'Confirm', onPress: () => sendEmail([])}
                 ]);
             }}>
                 <Text style={styles.deletePressable}>SEND MEDICAL RECORD </Text>
@@ -55,6 +105,13 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
             <Pressable onPress={() => {navigation.goBack()}}>
                 <Text style={styles.cancelPressable}>CANCEL</Text>
             </Pressable>
+            
+            {status !== null &&
+            <View style={{borderWidth: 2, borderColor: 'black', margin:20, padding: 10}}>
+                <Text>{status}</Text>
+            </View>
+            }
+            <StatusBar style="auto" />
            
         </SafeAreaView>
     );
