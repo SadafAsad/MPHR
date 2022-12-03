@@ -8,22 +8,28 @@ import { ref, deleteObject } from "firebase/storage";
 import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 const DeleteAccountScreen = ({navigation, route}) => {
-    const [password, onPasswordChanged] = useState('');
-    // Not tested yet //
+    const [password, onPasswordChanged] = useState("");
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, onErrorChanged] = useState('');
-    //
 
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
     const {user, profile} = route.params;
 
     const deleteAccountPressed = async () => {
-        // Not tested yet //
+        if (password==="") {
+            onHasErrorChanged(true);
+            onErrorChanged("Please enter your password.");
+        }
+        else {
+            deleteUser();
+        }
+    }
+
+    const finishDelete = () => {
         deleteUserCaregiving();
-        //
         deleteUserPets();
         deleteUserProfile();
-        deleteUser();
+        navigation.reset({index:0, routes:[{name: 'AuthenticationNavigator'}], key:null});
     }
 
     const deleteUser = async () => {
@@ -33,11 +39,11 @@ const DeleteAccountScreen = ({navigation, route}) => {
             user = auth.currentUser;
             try {
                 user.delete()
-                .then(() => navigation.reset({index:0, routes:[{name: 'AuthenticationNavigator'}], key:null}))
+                .then(() => finishDelete())
                 .catch((err) => console.log(err));
             } catch(err) {
                 console.log(err.message);
-                onErrorChanged(err.message);
+                onErrorChanged("Error while deleting account.");
                 onPasswordChanged("");
                 onHasErrorChanged(true);
             }

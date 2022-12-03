@@ -16,6 +16,7 @@ const EditPetScreen_1 = ({navigation, route}) => {
     const [vet_street, setVetStreet] = useState('');
     const [vet_city, setVetCity] = useState('');
     const [petData, setPetData] = useState(null);
+    const [hasError, setError] = useState(false);
 
     const {pet, petDoc} = route.params;
 
@@ -62,19 +63,24 @@ const EditPetScreen_1 = ({navigation, route}) => {
     };
 
     const nextPressed = () => {
-        const petToUpdate = {
-            owner:petData.data().owner,
-            name:pet_name,
-            birthday:pet_birthday,
-            gender:pet_gender,
-            regular_clinic:vet_id,
-            specie:petData.data().specie,
-            breed:petData.data().breed,
-            coat_color:petData.data().coat_color,
-            mark:petData.data().mark,
-            neutering:petData.data().neutering,
-        };
-        navigation.navigate('EditPetScreen-2', {pet:petToUpdate, pet_id:pet});
+        if (pet_name==="" || pet_birthday==="" || pet_gender==="") {
+            setError(true);
+        }
+        else {
+            const petToUpdate = {
+                owner:petData.data().owner,
+                name:pet_name,
+                birthday:pet_birthday,
+                gender:pet_gender,
+                regular_clinic:vet_id,
+                specie:petData.data().specie,
+                breed:petData.data().breed,
+                coat_color:petData.data().coat_color,
+                mark:petData.data().mark,
+                neutering:petData.data().neutering,
+            };
+            navigation.navigate('EditPetScreen-2', {pet:petToUpdate, pet_id:pet});
+        }
     }
     const state = {
         image: null,
@@ -196,6 +202,10 @@ const EditPetScreen_1 = ({navigation, route}) => {
                 </View>
             )}
 
+            { hasError && (
+                <Text style={styles.errorStyle}>Please fill out all the required fields.</Text>
+            )}
+
             <Pressable onPress={nextPressed}>
                 <Text style={styles.pressableStyle}>NEXT</Text>
             </Pressable>
@@ -264,6 +274,11 @@ const styles = StyleSheet.create({
         height:undefined, 
         aspectRatio:1
     },
+    errorStyle: {
+        color: '#ff0000',
+        alignSelf: 'center',
+        marginTop: 22
+    }
 });
 
 export default EditPetScreen_1;

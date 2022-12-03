@@ -15,6 +15,9 @@ const UploadNewScreen = ({navigation, route}) => {
     const [vet_name, setVetName] = useState('');
     const [vet_street, setVetStreet] = useState(null);
     const [vet_city, setVetCity] = useState('');
+    const [error, onErrorChanged] = useState('');
+    const [hasError, onHasErrorChanged] = useState(false);
+    const [noDoc, nodocChanged] = useState(true);
 
     const {petId} = route.params;
 
@@ -41,6 +44,8 @@ const UploadNewScreen = ({navigation, route}) => {
             setFileName("Upload Medical Record");
         }
         else {
+            nodocChanged(false);
+            onErrorChanged("");
             const fetched_file = await fetch(file.uri);
             const blob_file = await fetched_file.blob();
             setFileName(file.name);
@@ -49,24 +54,36 @@ const UploadNewScreen = ({navigation, route}) => {
 	}
 
     const addDocumentPressed = async () => {
-        const storageRef = ref(storage, `/medical-records/${fileName}`);
-        const uploadTask = uploadBytesResumable(storageRef, blobFile);
+        if (reason==="" || vet_name===""){
+            onHasErrorChanged(true);
+            onErrorChanged("Please fill out all the required fields.");
+        }
+        else if (noDoc){
+            onHasErrorChanged(true);
+            onErrorChanged("Please select the medical record.");
+        }
+        else {
+            onHasErrorChanged(false);
+            onErrorChanged("");
+            const storageRef = ref(storage, `/medical-records/${fileName}`);
+            const uploadTask = uploadBytesResumable(storageRef, blobFile);
 
-        uploadTask.on(
-            "state_changed",
-            () => {
-                setLoading(true);
-            },
-            (err) => console.log("ERROR: while uploading file -> " + err),
-            async () => {
-                setLoading(false);
+            uploadTask.on(
+                "state_changed",
+                () => {
+                    setLoading(true);
+                },
+                (err) => console.log("ERROR: while uploading file -> " + err),
+                async () => {
+                    setLoading(false);
 
-                // download url
-                await getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                    addToHistory(url);
-                });
-            }
-        );
+                    // download url
+                    await getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                        addToHistory(url);
+                    });
+                }
+            );
+        }
     }
 
     const addToHistory = async (url) => {
@@ -159,6 +176,10 @@ const UploadNewScreen = ({navigation, route}) => {
                 </View>
             )}
             
+            { hasError && (
+                <Text style={styles.errorStyle}>{error}</Text>
+            )}
+
             <Pressable onPress={ () => {
                 Alert.alert('ADD MEDICAL RECORD', 'Please confirm adding medical record.', [  
                     {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
@@ -255,6 +276,11 @@ const styles = StyleSheet.create({
         height:undefined, 
         aspectRatio:1
     },
+    errorStyle: {
+        color: '#ff0000',
+        alignSelf: 'center',
+        marginTop: 22
+    }
 });
 
 export default UploadNewScreen;

@@ -8,6 +8,7 @@ const ProfileInfo = ({navigation, route}) => {
     const [firstname, onFirstnameChanged] = useState('');
     const [lastname, onLastnameChanged] = useState('');
     const [phonenumber, onPhonenumberChanged] = useState('');
+    const [hasError, setError] = useState(false);
 
     const {user} = route.params;
 
@@ -15,14 +16,19 @@ const ProfileInfo = ({navigation, route}) => {
 
 
     const nextPressed = () => {
-        const profileToInsert = {
-            userId:user.uid,
-            email:user.email,
-            first_name:firstname,
-            last_name:lastname,
-            phone_number:selectedNumCode+phonenumber
-        };
-        navigation.navigate('Address', {profile: profileToInsert});
+        if (firstname==="" || lastname==="" || phonenumber==="") {
+            setError(true);
+        }
+        else {
+            const profileToInsert = {
+                userId:user.uid,
+                email:user.email,
+                first_name:firstname,
+                last_name:lastname,
+                phone_number:selectedNumCode+phonenumber
+            };
+            navigation.navigate('Address', {profile: profileToInsert});
+        }
     }
 
     return (
@@ -88,6 +94,11 @@ const ProfileInfo = ({navigation, route}) => {
                     value={phonenumber}
                 />
             </View>
+
+            { hasError && (
+                <Text style={styles.errorStyle}>Please fill out all the required fields.</Text>
+            )}
+
             <Pressable onPress={nextPressed}>
                 <Text style={styles.PressableStyle}>NEXT</Text>
             </Pressable>
@@ -154,6 +165,11 @@ const styles = StyleSheet.create({
         fontSize:30, 
         marginLeft:22, 
         marginRight:22
+    },
+    errorStyle: {
+        color: '#ff0000',
+        alignSelf: 'center',
+        marginTop: 22
     }
 });
 
