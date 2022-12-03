@@ -69,18 +69,29 @@ const VetsScreen = ({navigation, route}) => {
             vetSelected(item);
         }
         }>
-            <View style={styles.vet}>
-                <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', flexShrink:1}}>
-                    <Image source={require('../assets/physical-examination-1.png')} style={styles.img}/>
-                    <View style={{flexDirection:'column', marginLeft:20, alignItems:'baseline', flexShrink:1}}>
-                        <Text style={{fontSize:18, fontWeight:'bold'}}>{item.data().name}</Text>
-                        <Text style={{fontSize:14}}>{item.data().street_address}</Text>
-                        <Text style={{fontSize:14}}>{item.data().city_address}</Text>
-                        <Text style={{fontSize:14}}>+1 {item.data().phone_number}</Text>
+            { (item.data().city==="") && (
+                <View style={styles.vet}>
+                    <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', flexShrink:1}}>
+                        <Image source={require('../assets/physical-examination-1.png')} style={styles.img}/>
+                        <Text style={{fontSize:18, fontWeight:'bold', marginLeft:20}}>{item.data().name}</Text>
                     </View>
+                    <AntDesign name="right" size={20} color='#335C67' style={{marginRight:22}}/>
                 </View>
-                <AntDesign name="right" size={20} color='#335C67' style={{marginRight:22}}/>
-            </View>
+            )}
+            { !(item.data().city==="") && (
+                <View style={styles.vet}>
+                    <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', flexShrink:1}}>
+                        <Image source={require('../assets/physical-examination-1.png')} style={styles.img}/>
+                        <View style={{flexDirection:'column', marginLeft:20, alignItems:'baseline', flexShrink:1}}>
+                            <Text style={{fontSize:18, fontWeight:'bold'}}>{item.data().name}</Text>
+                            <Text style={{fontSize:14}}>{item.data().street_address}</Text>
+                            <Text style={{fontSize:14}}>{item.data().city_address}</Text>
+                            <Text style={{fontSize:14}}>+1 {item.data().phone_number}</Text>
+                        </View>
+                    </View>
+                    <AntDesign name="right" size={20} color='#335C67' style={{marginRight:22}}/>
+                </View>
+            )}
         </Pressable>
     );
 
