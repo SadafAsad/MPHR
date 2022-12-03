@@ -5,6 +5,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
 import * as MailComposer from 'expo-mail-composer';
 import * as ImagePicker from 'expo-image-picker';
+import * as Print from 'expo-print';
+
 
 const ShareMedicalRecordScreen = ({navigation, route}) => {
     const [petName, setPetName] = useState('');
@@ -33,27 +35,40 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
 
     const sendEmail = async(file) => {
         console.log("inside sendMail function")
+        console.log("file.length is: " + file.length)
+
+        const { uri } = await Print.printToFileAsync({
+            html: "<h1>My pdf!</h1>"
+          });
+
         var options = {}
-        if(file.length < 1){
+        if(file.length <= 0){
+            console.log("inside sendMail without attachment")
           options = {
-            subject: "Sharing Medical Report with attachment",
+            subject: "Sharing Medical Report without attachment",
             recipients: [email],
-            body: "Enter email body here..."
+            body: "hey!!"
           }
         }else{
+            console.log("inside sendMail with attachment function")
           options = {
             subject: "Sharing Medical Report with attachment",
             recipients: [email],
-            body: "Enter email body here...",
-            attachments: file
+            body: "Please refer to the attached pdf",
+            attachments: file,
           }
         }
         let promise = new Promise((resolve, reject) => {
             console.log("inside promise...")
             console.log("email recieved: " + email)
-          MailComposer.composeAsync({subject: 'Sharing Medical Report',
-          body: 'Sharing Medical Report',
+        //   MailComposer.composeAsync({subject: 'Sharing Medical Report',
+        //   body: 'Sharing Medical Report',
+        //   recipients: [email],
+        //   isHtml: true})
+          MailComposer.composeAsync({subject: options.subject,
+          body: options.body,
           recipients: [email],
+          attachments: options.attachments,
           isHtml: true})
           .then((result) => {
             console.log("result is : " + result)
@@ -71,6 +86,24 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
           result => setStatus("Status: email " + result.status),
           error => setStatus("Status: email " + error.status)
         )
+    }
+
+    const sendEmailWithAttachment = async() => {
+        //get the email. 
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: false,
+          aspect: [4, 3],
+          quality: 1,
+        });
+    
+        if (!result.cancelled) {
+          console.log(result.uri)
+          sendEmail([result.uri]);
+        }else{
+          sendEmail([])
+        }
+    
       }
     
     return (
@@ -96,7 +129,7 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
                 Alert.alert('SEND NEW RECORD', 'Please confirm to send.', [  
                     {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
                     //{text: 'Confirm', onPress: () => navigation.goBack()}
-                    {text: 'Confirm', onPress: () => sendEmail([])}
+                    {text: 'Confirm', onPress: () => sendEmailWithAttachment()}
                 ]);
             }}>
                 <Text style={styles.deletePressable}>SEND MEDICAL RECORD </Text>
