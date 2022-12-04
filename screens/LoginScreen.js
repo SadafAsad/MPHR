@@ -56,7 +56,18 @@ const LoginScreen = ({navigation}) => {
             await signInWithEmailAndPassword(auth, emailAddress, password);
             navigation.dispatch(StackActions.replace('MainNavigator'));
         } catch (err) {
-            onErrorChanged("Your email or password is incorrect. Please try again.");
+            if (err.code==="auth/invalid-email"){
+                onErrorChanged("Please enter a valid email address.");
+            }
+            else if (err.code==="auth/user-not-found"){
+                onErrorChanged("No user found with this email address.");
+            }
+            else if (err.code==="auth/wrong-password"){
+                onErrorChanged("Your password is incorrect. Try again.");
+            }
+            else {
+                onErrorChanged(err.message)
+            }
             onEmailChanged("");
             onPasswordChanged("");
             onHasErrorChanged(true);
