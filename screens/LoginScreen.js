@@ -16,7 +16,6 @@ const LoginScreen = ({navigation}) => {
     const [isSelected, setSelection] = useState(false);
     const [getPersist, setPersist] = useState('');
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
-    
 
     useEffect(() =>{
         storageGet()
@@ -66,10 +65,11 @@ const LoginScreen = ({navigation}) => {
 
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
-            <Image source={require('../assets/mphr-logo.png')} style={styles.img}/>
-            <View style={{marginTop:300}}/>
+            <View>
+                <Image source={require('../assets/mphr-logo.png')} style={styles.img}/>
+            </View>
 
-            <View style={{flex:1, alignItems:'baseline'}}>
+            <View style={{alignItems:'baseline'}}>
                 <Text style={{marginBottom:5, fontSize:15, marginLeft:22}}>Email address</Text>
                 <TextInput 
                     style={styles.input}
@@ -118,7 +118,7 @@ const LoginScreen = ({navigation}) => {
                 )}
             </View>
 
-            <View style={{marginTop:20}}>
+            <View style={{marginBottom:20}}>
                 <Pressable onPress={loginPressed}>
                     <Text style={styles.loginPressable}>LOGIN</Text>
                 </Pressable>
@@ -134,7 +134,6 @@ const LoginScreen = ({navigation}) => {
   
 const styles = StyleSheet.create({
     img: {
-        position: 'absolute',
         alignSelf: 'center',
         marginTop: 45
     },

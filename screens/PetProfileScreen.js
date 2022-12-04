@@ -15,6 +15,7 @@ const PetProfileScreen = ({navigation, route}) => {
     const [lastUploadDate, setLastUploadDate] = useState("");
     const [lastUploadAt, setLastUploadAt] = useState("");
     const [lastUploadReason, setLastUploadReaosn] = useState("");
+    const [hasMedRec, setHasMedRec] = useState(false);
 
     const {pet} = route.params;
     const isFocused = useIsFocused();
@@ -60,6 +61,7 @@ const PetProfileScreen = ({navigation, route}) => {
             setLastUploadReaosn("");
         }
         else {
+            setHasMedRec(true);
             setLastUpload(documents[0]);
             const date = new Date(documents[0].data().date.toDate());
             setLastUploadDate(date.toDateString());
@@ -159,23 +161,27 @@ const PetProfileScreen = ({navigation, route}) => {
                 </View>
             )}
 
-            <Text style={{alignSelf:'center', fontWeight:'bold', fontSize:16, marginBottom:20, marginTop:20}}>Medical Records</Text>
+            <Text style={{alignSelf:'center', fontWeight:'bold', fontSize:16, marginTop:20}}>Medical Records</Text>
 
-            <View style={styles.rowView}>
-                <MaterialCommunityIcons name="clipboard-text-clock" size={28} color="black" style={{marginRight:10}}/>
-                <Text style={{fontWeight:'bold'}}>Last Upload: {}</Text>
-                <Text>{lastUploadDate}</Text>
-            </View>
-            <View style={styles.rowView}>
-                <MaterialCommunityIcons name="hospital-marker" size={28} color="black" style={{marginRight:10}}/>
-                <Text style={{fontWeight:'bold'}}>At: {}</Text>
-                <Text>{lastUploadAt}</Text>
-            </View>
-            <View style={styles.rowView}>
-                <MaterialIcons name="chat" size={28} color="black" style={{marginRight:10}}/>
-                <Text style={{fontWeight:'bold'}}>Reason: {}</Text>
-                <Text>{lastUploadReason}</Text>
-            </View>
+            { hasMedRec && (
+                <View style={{marginTop:20}}>
+                    <View style={styles.rowView}>
+                        <MaterialCommunityIcons name="clipboard-text-clock" size={28} color="black" style={{marginRight:10}}/>
+                        <Text style={{fontWeight:'bold'}}>Last Upload: {}</Text>
+                        <Text>{lastUploadDate}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <MaterialCommunityIcons name="hospital-marker" size={28} color="black" style={{marginRight:10}}/>
+                        <Text style={{fontWeight:'bold'}}>At: {}</Text>
+                        <Text>{lastUploadAt}</Text>
+                    </View>
+                    <View style={styles.rowView}>
+                        <MaterialIcons name="chat" size={28} color="black" style={{marginRight:10}}/>
+                        <Text style={{fontWeight:'bold'}}>Reason: {}</Text>
+                        <Text>{lastUploadReason}</Text>
+                    </View>
+                </View>
+            )}
             
             <View style={{marginTop:20}}>
                 <Pressable onPress={ () => {navigation.navigate('UploadNewScreen', {petId:pet})}}>
