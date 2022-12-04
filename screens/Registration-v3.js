@@ -17,6 +17,7 @@ const Registration_v3 = ({navigation}) => {
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [verifiedUser, onVerifiedUserChanged] = useState(false);
+    const [tryLogin, setTryLogin] = useState(false);
 
     let resendTimerInterval;
 
@@ -49,23 +50,45 @@ const Registration_v3 = ({navigation}) => {
     }
 
     const sendVerificationEmailPressed = async () => {
-        try {
-            await createUserWithEmailAndPassword(auth, emailAddress, generateRandomString(8));
-            sendEmailVerification(auth.currentUser, {
-                handleCodeInApp: true,
-                url: 'https://mphr-fall2022.firebaseapp.com',
-            });
-            onHasErrorChanged(false);
-            setCodeSent(true);
-            triggerTimer(30);
-            return () => {
-                clearInterval(resendTimerInterval);
-            }
-        } catch (err) {
+        setTryLogin(false);
+        onHasErrorChanged(false);
+        if (emailAddress===""){
             onHasErrorChanged(true);
-            setError(err.message);
-            console.log(err.message);
+            setError("Enter your email address.");
         }
+        else {
+            try {
+                await createUserWithEmailAndPassword(auth, emailAddress, generateRandomString(8));
+                sendEmailVerification(auth.currentUser, {
+                    handleCodeInApp: true,
+                    url: 'https://mphr-fall2022.firebaseapp.com',
+                });
+                onHasErrorChanged(false);
+                setCodeSent(true);
+                triggerTimer(30);
+                return () => {
+                    clearInterval(resendTimerInterval);
+                }
+            } catch (err) {
+                if (err.code==="auth/email-already-in-use"){
+                    setTryLogin(true);
+                }
+                else if (err.code==="auth/invalid-email"){
+                    setError("Please enter a valid email address.");
+                    onHasErrorChanged(true);
+                }
+                else {
+                    setError(err.message);
+                    onHasErrorChanged(true);
+                }
+                onEmailChanged("");
+                console.log(err.message);
+            }
+        }
+    }
+
+    const goToLogin = () => {
+        navigation.goBack();
     }
 
     const interval = setInterval(function() {
@@ -126,6 +149,17 @@ const Registration_v3 = ({navigation}) => {
 
             { hasError && (
                 <Text style={styles.errorStyle}>{error}</Text>
+            )}
+
+            { tryLogin && (
+                <View>
+                    <Text style={styles.errorStyle}>User with this email already exists.</Text>
+                    <Pressable onPress={goToLogin}>
+                        <Text style={{textDecorationLine:'underline', fontWeight:'bold', color: '#ff0000', alignSelf: 'center', marginTop: 22}}>
+                            Click here to login
+                        </Text>
+                    </Pressable>
+                </View>
             )}
 
             { codeIsSent && (
