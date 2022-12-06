@@ -188,7 +188,7 @@ const PetProfileScreen = ({navigation, route}) => {
                         ]);
                     }
                     else {
-                        navigation.navigate('ShareMedicalRecordScreen');
+                        navigation.navigate('ShareMedicalRecordScreen', {petId:pet, petName: pet_name});
                     }
                 }}>
                     <Text style={styles.pressableStyle}>SHARE MEDICAL RECORD</Text>
