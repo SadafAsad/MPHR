@@ -11,6 +11,7 @@ const CreatePetProfile = ({navigation, route}) => {
     const [vet_name, setVetName] = useState('');
     const [vet_street, setVetStreet] = useState(null);
     const [vet_city, setVetCity] = useState('');
+    const [hasError, setError] = useState(false);
 
     const gender = [
         {key:'1', value:'Male'}, 
@@ -33,14 +34,20 @@ const CreatePetProfile = ({navigation, route}) => {
     };
 
     const nextPressed = () => {
-        const petToInsert = {
-            owner:user,
-            name:pet_name,
-            birthday:pet_birthday,
-            gender:pet_gender,
-            regular_clinic:vet_id
-        };
-        navigation.navigate('CreatePetProfile2Screen', {pet_profile: petToInsert});
+        if (pet_name==="" || pet_birthday==="" || pet_gender==="") {
+            setError(true);
+        }
+        else {
+            setError(false);
+            const petToInsert = {
+                owner:user,
+                name:pet_name,
+                birthday:pet_birthday,
+                gender:pet_gender,
+                regular_clinic:vet_id
+            };
+            navigation.navigate('CreatePetProfile2Screen', {pet_profile: petToInsert});
+        }
     }
 
     return (
@@ -84,7 +91,7 @@ const CreatePetProfile = ({navigation, route}) => {
                 onSelect={() => {onPetgenderChanged(gender[pet_gender-1].value)}}
                 boxStyles={styles.input}
                 dropdownItemStyles={styles.input}
-                dropdownStyles={{borderColor:'transparent'}}
+                dropdownStyles={styles.dropDownStyle}
                 maxHeight='100'
                 placeholder=" "
             />
@@ -141,6 +148,10 @@ const CreatePetProfile = ({navigation, route}) => {
                 </View>
             )}
 
+            { hasError && (
+                <Text style={styles.errorStyle}>Please fill out all the required fields.</Text>
+            )}
+
             <Pressable onPress={nextPressed}>
                 <Text style={styles.pressableStyle}>NEXT</Text>
             </Pressable>
@@ -166,6 +177,9 @@ const styles = StyleSheet.create({
         padding: 10,
         borderColor: '#808080',
         borderRadius: '0%',
+    },
+    dropDownStyle: {
+        borderColor: 'transparent',
     },
     pressableStyle: {
         alignSelf: 'center',
@@ -208,6 +222,11 @@ const styles = StyleSheet.create({
         width:'100%', 
         height:undefined, 
         aspectRatio:1
+    },
+    errorStyle: {
+        color: '#ff0000',
+        alignSelf: 'center',
+        marginTop: 22
     },
 });
 

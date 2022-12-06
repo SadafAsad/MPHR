@@ -12,6 +12,7 @@ const AddressInfo = ({navigation, route}) => {
     const [address2, onaddress2Changed] = useState('');
     const [city, onCityChanged] = useState('');
     const [postalcode, onPostalcodeChanged] = useState('');
+    const [hasError, setError] = useState(false);
 
     const {profile} = route.params;
 
@@ -23,25 +24,30 @@ const AddressInfo = ({navigation, route}) => {
     ]
 
     const createAccountPressed = async() => {
-        try {
-            const profileToInsert = {
-                userId:profile.userId,
-                email:profile.email,
-                first_name:profile.first_name,
-                last_name:profile.last_name,
-                phone_number:profile.phone_number,
-                address_1: address1,
-                address_2: address2,
-                city: city,
-                country: selectedCountry,
-                province: selectedProvince,
-                postal_code: postalcode
-            };
-            const insertedProfile = await addDoc(collection(db, "profiles"), profileToInsert);
-            navigation.reset({index:0, routes:[{name: 'MainNavigator'}], key:null});
+        if (address1==="" || city==="" || selectedCountry==="" || selectedProvince==="" || postalcode==="") {
+            setError(true);
         }
-        catch (err) {
-            console.log(`${err.message}`);
+        else {
+            try {
+                const profileToInsert = {
+                    userId:profile.userId,
+                    email:profile.email,
+                    first_name:profile.first_name,
+                    last_name:profile.last_name,
+                    phone_number:profile.phone_number,
+                    address_1: address1,
+                    address_2: address2,
+                    city: city,
+                    country: selectedCountry,
+                    province: selectedProvince,
+                    postal_code: postalcode
+                };
+                const insertedProfile = await addDoc(collection(db, "profiles"), profileToInsert);
+                navigation.reset({index:0, routes:[{name: 'MainNavigator'}], key:null});
+            }
+            catch (err) {
+                console.log(`${err.message}`);
+            }
         }
     }
 
@@ -125,6 +131,11 @@ const AddressInfo = ({navigation, route}) => {
                 onChangeText={onPostalcodeChanged}
                 value={postalcode}
             />
+
+            { hasError && (
+                <Text style={styles.errorStyle}>Please fill out all the required fields.</Text>
+            )}
+
             <Pressable onPress={createAccountPressed}>
                 <Text style={styles.PressableStyle}>CREATE ACCOUNT</Text>
             </Pressable>
@@ -175,6 +186,11 @@ const styles = StyleSheet.create({
         marginLeft:22, 
         marginRight:22
     },
+    errorStyle: {
+        color: '#ff0000',
+        alignSelf: 'center',
+        marginTop: 22
+    }
 });
 
 export default AddressInfo;
