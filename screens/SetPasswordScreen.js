@@ -9,6 +9,7 @@ import { PasswordMeter } from 'react-native-password-meter';
 const SetPasswordScreen = ({navigation, route}) => {
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = UseTogglePasswordVisibility();
     const {user} = route.params;
+    
    // const [password, onPasswordChanged] = useState('');
 
     // for password check

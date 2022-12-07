@@ -2,14 +2,15 @@ import { SafeAreaView, StyleSheet, Text, Pressable, Alert, TextInput, StatusBar,
 import { useState, useEffect } from "react";
 import { auth, db } from '../FirebaseApp';
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, deleteDoc, doc, getDoc, orderBy } from "firebase/firestore";
 import * as MailComposer from 'expo-mail-composer';
 import * as ImagePicker from 'expo-image-picker';
 import * as Print from 'expo-print';
+import { useIsFocused } from '@react-navigation/native';
 
 
 const ShareMedicalRecordScreen = ({navigation, route}) => {
-    const [petName, setPetName] = useState('');
+    
     const [petOwner, setPetOwner] = useState('');
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [isOwner, setIsOwner] = useState(false);
@@ -17,54 +18,85 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
     const [hasError, onHasErrorChanged] = useState(false);
     const [error, onErrorChanged] = useState('');
 
+    //const [recordPdf, setRecordPdf] = useState('');
+   
     // for send mail with attachment
     const [status, setStatus] = useState(null);
     const [email, setEmail] = useState(null);
+    const [recordPdf, setRecordPdf] = useState(null);
 
     //const {pet} = route.params;
 
+    const {pet} = route.params;
+    const isFocused = useIsFocused();
+
+    const {petName, petId, setPetName} = route.params;
+    var index = 0;
+    
     useEffect(()=>{
         async function getPetData() {
             const docRef = doc(db, "pets", pet);
             const pet_data = await getDoc(docRef);
             setPetName(pet_data.data().name);
+            console.log("pet name is: " + petId);
             // setPetOwner(pet_data.data().owner);
+            getRecords();
         }
         getPetData();
-    }, [])
+    }, [isFocused, recordPdf])
 
-    const sendEmail = async(file) => {
+    const getRecords = async () => {
+      console.log("inside get records... ");
+      
+      try {
+        console.log("pet name is: " + petId);
+          const docRef = query(collection(db, "history"), where("pet", "==", petId), orderBy("date", "desc"));
+          const pet_pdf = await getDocs(docRef);
+          const documents = pet_pdf.docs;
+          console.log("documents is: " + documents[index].data().record);
+          setRecordPdf(documents[index].data().record);
+          console.log("Getting Pet's pdf: " + documents[index].data().record);
+      } catch (err) {
+          console.log("Getting Pet's Records: " + err.message);        
+      }
+  }
+
+  useEffect(()=>{
+    
+    getRecords();
+    
+  }, [isFocused, recordPdf])
+
+  // for attaching file with thw mail. Start ------
+
+    const sendEmail = async() => {
         console.log("inside sendMail function")
-        console.log("file.length is: " + file.length)
-
-        const { uri } = await Print.printToFileAsync({
-            html: "<h1>My pdf!</h1>"
-          });
+        // console.log("file.length is: " + file.length)
+        getRecords();
 
         var options = {}
-        if(file.length <= 0){
-            console.log("inside sendMail without attachment")
-          options = {
-            subject: "Sharing Medical Report without attachment",
-            recipients: [email],
-            body: "hey!!"
-          }
-        }else{
-            console.log("inside sendMail with attachment function")
+        // if(file.length <= 0){
+          
+            console.log("inside sendMail with attachment")
+            console.log("pet's pdf is: " + recordPdf);
           options = {
             subject: "Sharing Medical Report with attachment",
             recipients: [email],
-            body: "Please refer to the attached pdf",
-            attachments: file,
+            // body: "https://firebasestorage.googleapis.com/v0/b/mphr-fall2022.appspot.com/o/medical-records%2FSugar-%231-MR.pages?alt=media&token=caf569f2-6010-4ce8-93a8-c190baeb14de"
+            body: "Hello, <br><br> Please refer to the below link for "+ petName +"'s Medical report.<br> Click on the link for the full view of the report:<br>  " + recordPdf + "<br><br> Thanks",
           }
-        }
+        // }else{
+        //     console.log("inside sendMail with attachment function")
+        //   options = {
+        //     subject: "Sharing Medical Report with attachment",
+        //     recipients: [email],
+        //     body: "Please refer to the attached pdf",
+        //     attachments: file,
+        //   }
+        // }
         let promise = new Promise((resolve, reject) => {
-            console.log("inside promise...")
-            console.log("email recieved: " + email)
-        //   MailComposer.composeAsync({subject: 'Sharing Medical Report',
-        //   body: 'Sharing Medical Report',
-        //   recipients: [email],
-        //   isHtml: true})
+          console.log("inside promise...")
+          console.log("email recieved: " + email)
           MailComposer.composeAsync({subject: options.subject,
           body: options.body,
           recipients: [email],
@@ -75,7 +107,7 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
             resolve(result)
           })
           .catch((error) => {
-            console.log("we got error : " + error)
+            console.log("we got error : " + error.message)
             reject(error)
           })
 
@@ -83,10 +115,13 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
     
         promise.then(
             
-          result => setStatus("Status: email " + result.status),
-          error => setStatus("Status: email " + error.status)
+          result => setStatus("Email is " + result.status + "!!"),
+          error => setStatus("Email is " + error.status + "!!")
         )
     }
+    // for attaching file with thw mail. End ------
+
+    // ---- for attaching image with thw mail. Start ------
 
     const sendEmailWithAttachment = async() => {
         //get the email. 
@@ -101,11 +136,12 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
           console.log(result.uri)
           sendEmail([result.uri]);
         }else{
-          sendEmail([])
+          sendEmail()
         }
     
       }
-    
+    // for attaching image with thw mail. End ------
+
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
 
@@ -129,7 +165,8 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
                 Alert.alert('SEND NEW RECORD', 'Please confirm to send.', [  
                     {text: 'Cancel', onPress: () => console.log('NO Pressed'), style:'cancel'},  
                     //{text: 'Confirm', onPress: () => navigation.goBack()}
-                    {text: 'Confirm', onPress: () => sendEmailWithAttachment()}
+                    {text: 'Confirm', onPress: () => sendEmail()},
+                    //{text: 'Confirm', onPress: () => sendEmailWithAttachment()}
                 ]);
             }}>
                 <Text style={styles.deletePressable}>SEND MEDICAL RECORD </Text>
@@ -140,8 +177,8 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
             </Pressable>
             
             {status !== null &&
-            <View style={{borderWidth: 2, borderColor: 'black', margin:20, padding: 10}}>
-                <Text>{status}</Text>
+            <View style={styles.statusView}>
+                <Text style={styles.statusBar}>{status}</Text>
             </View>
             }
             <StatusBar style="auto" />
@@ -195,6 +232,24 @@ const styles = StyleSheet.create({
         width: '90%',
         fontWeight: 'bold'
     },
+    statusView: {
+      
+    },
+    statusBar: {
+      alignSelf: 'center',
+      textAlign: 'center',
+      backgroundColor: '#335C67',
+      color: '#ffffff',
+      marginLeft: 22,
+      marginRight: 22,
+      marginTop: 22,
+      fontSize: 15,
+      padding: 15,
+      borderRadius: 5,
+      width: '75%',
+      fontWeight: 'bold',
+      
+  },
     mainView: {
         flex:1,
         flexDirection:'column',

@@ -91,7 +91,7 @@ const CreatePetProfile = ({navigation, route}) => {
                 onSelect={() => {onPetgenderChanged(gender[pet_gender-1].value)}}
                 boxStyles={styles.input}
                 dropdownItemStyles={styles.input}
-                dropdownStyles={{borderColor:'transparent'}}
+                dropdownStyles={styles.dropDownStyle}
                 maxHeight='100'
                 placeholder=" "
             />
@@ -178,6 +178,9 @@ const styles = StyleSheet.create({
         borderColor: '#808080',
         borderRadius: '0%',
     },
+    dropDownStyle: {
+        borderColor: 'transparent',
+    },
     pressableStyle: {
         alignSelf: 'center',
         textAlign: 'center',
@@ -224,7 +227,7 @@ const styles = StyleSheet.create({
         color: '#ff0000',
         alignSelf: 'center',
         marginTop: 22
-    }
+    },
 });
 
 export default CreatePetProfile;
