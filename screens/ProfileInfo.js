@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, ScrollView } from 'react-native';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import SelectList from 'react-native-dropdown-select-list';
 import { useState } from 'react';
@@ -33,6 +33,8 @@ const ProfileInfo = ({navigation, route}) => {
 
     return (
         <SafeAreaView style={{flex:1}}> 
+        <ScrollView>
+        
             <View style={{height:120}}> 
                 <ProgressSteps
                     borderWidth={3}
@@ -102,6 +104,8 @@ const ProfileInfo = ({navigation, route}) => {
             <Pressable onPress={nextPressed}>
                 <Text style={styles.PressableStyle}>NEXT</Text>
             </Pressable>
+                
+        </ScrollView>
         </SafeAreaView>
     );
 }

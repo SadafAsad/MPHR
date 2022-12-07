@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, Pressable, TextInput } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Pressable, TextInput, ScrollView } from 'react-native';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import SelectList from 'react-native-dropdown-select-list';
 import { useState } from 'react';
@@ -53,6 +53,8 @@ const AddressInfo = ({navigation, route}) => {
 
     return (
         <SafeAreaView style={{flex:1}}> 
+        <ScrollView>
+           
             <View style={{height:120}}> 
                 <ProgressSteps
                     borderWidth={3}
@@ -139,6 +141,8 @@ const AddressInfo = ({navigation, route}) => {
             <Pressable onPress={createAccountPressed}>
                 <Text style={styles.PressableStyle}>CREATE ACCOUNT</Text>
             </Pressable>
+             
+        </ScrollView>
         </SafeAreaView>
     );
 }

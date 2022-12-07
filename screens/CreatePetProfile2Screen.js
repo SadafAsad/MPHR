@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Alert, ScrollView } from 'react-native';
 import { useState } from "react";
 import CheckBox from "expo-checkbox";
 import { db } from '../FirebaseApp';
@@ -43,6 +43,7 @@ const CreatePetProfile2Screen = ({navigation, route}) => {
 
     return (
         <SafeAreaView style={{flex:1, backgroundColor:'#fff', justifyContent:'space-between'}}>
+        <ScrollView>
 
             <View>
                 <Text style={{marginBottom:5, marginLeft:22, marginTop:22}}>Pet Specie</Text>
@@ -116,6 +117,8 @@ const CreatePetProfile2Screen = ({navigation, route}) => {
                 />
 
             </View>
+
+            </ScrollView>
             
             <View style={{marginTop:10, marginBottom:22}}>
                 <Pressable onPress={() => {

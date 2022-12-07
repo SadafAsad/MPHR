@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, Pressable, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, Pressable, View, ScrollView } from 'react-native';
 import { MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
 import { useState } from 'react';
 import { UseTogglePasswordVisibility } from '../UseTogglePasswordVisibility';
@@ -27,7 +27,8 @@ const SetPasswordScreen = ({navigation, route}) => {
 
     return (
         <SafeAreaView style={{flex:1}}>
-            
+          <ScrollView>
+          
             <View style={{height:120}}> 
                 <ProgressSteps
                     borderWidth={3}
@@ -92,6 +93,7 @@ const SetPasswordScreen = ({navigation, route}) => {
                 <Pressable onPress={nextPressed}>
                     <Text style={styles.PressableStyle}>NEXT</Text>
                 </Pressable>
+                </ScrollView> 
         </SafeAreaView>
     );
 }

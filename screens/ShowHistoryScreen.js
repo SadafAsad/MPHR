@@ -102,7 +102,7 @@ const ShowHistoryScreen = ({navigation, route}) => {
             </View>
             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                 {index===0 && (
-                    <Pressable onPress={ () => {}}>
+                    <Pressable onPress={ () => {navigation.navigate('ShareMedicalRecordScreen', {})}}>
                         <MaterialIcons name="share" size={24} color='#335C67' style={{marginRight:5}}/>
                     </Pressable>
                 )}

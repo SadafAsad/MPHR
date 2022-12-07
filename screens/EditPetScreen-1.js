@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Image } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Image, ScrollView } from 'react-native';
 import SelectList from 'react-native-dropdown-select-list';
 import { AntDesign, MaterialIcons, FontAwesome5, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { useState, useEffect } from 'react';
@@ -188,6 +188,9 @@ const EditPetScreen_1 = ({navigation, route}) => {
                 </View>
             </Pressable>
 
+            <ScrollView>
+
+
             <Text style={{marginBottom:5, marginLeft:22, marginTop:30}}>Pet Name *</Text>
             <TextInput 
                 style={styles.input}
@@ -262,6 +265,8 @@ const EditPetScreen_1 = ({navigation, route}) => {
                     </View>
                 </View>
             )}
+
+</ScrollView>
 
             { hasError && (
                 <Text style={styles.errorStyle}>Please fill out all the required fields.</Text>
