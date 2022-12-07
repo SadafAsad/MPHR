@@ -81,9 +81,9 @@ const EditProfileScreen = ({navigation, route}) => {
                     setSelected={setSelectedNumCode} 
                     data={numCode} 
                     onSelect={() => {setSelectedNumCode(numCode[selectedNumCode-1].value)}}
-                    boxStyles={styles.numCodeInput}
-                    dropdownItemStyles={styles.numCodeInput}
-                    dropdownStyles={{borderColor:'transparent'}}
+                    boxStyles={styles.dropDownBoxStyle}
+                    dropdownItemStyles={styles.dropDownItemStyle}
+                    dropdownStyles={{borderColor:'transparent', marginTop:0}}
                     maxHeight='100'
                     searchPlaceholder=""
                     search={false}
@@ -121,13 +121,22 @@ const styles = StyleSheet.create({
         borderColor: '#808080',
         borderRadius: '0%',
     },
-    numCodeInput: {
+    dropDownItemStyle: {
         alignSelf: 'center',
         height: 45,
         borderWidth: 1,
         padding: 10,
         borderColor: '#808080',
         borderRadius: '0%',
+    },
+    dropDownBoxStyle: {
+        height: 45,
+        borderWidth: 1,
+        padding: 10,
+        borderColor: '#808080',
+        borderRadius: '0%',
+        // position: 'absolute',
+        // zIndex: 100
     },
     rowInput: {
         flex: 1,
@@ -150,7 +159,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         padding: 15,
         width: '90%',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     titleTxt: {
         marginTop:20, 
