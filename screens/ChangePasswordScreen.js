@@ -10,14 +10,14 @@ const ChangePasswordScreen = ({navigation}) => {
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between', alignSelf:'center'}}>
 
             <Text style={styles.title}>Reset Password</Text>
-            <Text style={{textAlign:'left',marginTop:10, marginLeft:36, marginRight:35}}> Enter the email or phone number associated with your account and we'll send you an email with instructions to reset your password.</Text>
+            <Text style={{textAlign:'left',marginTop:10, marginLeft:36, marginRight:35}}> Enter the email associated with your account and we'll send you an email with instructions to reset your password.</Text>
 
             <View style={{marginTop:50}}/>
             <View style={{flex:1, alignItems:'baseline', alignSelf:'center'}}>
                 <Text style={{marginBottom:5, fontSize:16}}>Email Address</Text>
                 <TextInput 
                     style={styles.input}
-                    placeholder="Enter first name"
+                    placeholder="Enter email"
                     keyboardType="default"
                     autoCapitalize="none"
                 />

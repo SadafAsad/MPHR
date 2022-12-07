@@ -41,6 +41,8 @@ const ResetPasswordScreen_v2 = ({navigation}) => {
 
     const sendVerificationEmailPressed = async () => {
         try {
+            navigation.reset({index:0, routes:[{name: 'ChangePasswordScreen'}]});
+            // #1
             // await auth.getUserByEmail(emailAddress)
             //     .then((userRecord) => {
             //         // See the UserRecord reference doc for the contents of userRecord.
@@ -50,22 +52,22 @@ const ResetPasswordScreen_v2 = ({navigation}) => {
             //         console.log('Error fetching user data:', error);
             //     });
 
-            // const docRef = query(collection(db, "Users"), where("email", "==",emailAddress));
-            const docRef = doc(db, "Users", 'IgOOQaJ22Ohr1twPZ93jtimCMpN2');
-            const userToUpdate = await getDoc(docRef);
-            const userData = userToUpdate.data();
-            console.log(userData);
-            // console.log(userData.email);
-            sendEmailVerification(userToUpdate, {
-                handleCodeInApp: true,
-                url: 'https://mphr-fall2022.firebaseapp.com',
-            });
-            onHasErrorChanged(false);
-            setCodeSent(true);
-            triggerTimer(30);
-            return () => {
-                clearInterval(resendTimerInterval);
-            }
+            // #2
+            // const docRef = doc(db, "Users", '3A3WEFNFn2TCi72AJYecY1o695Z2');
+            // const userToUpdate = await getDoc(docRef);
+            // // const userData = userToUpdate.data();
+            // console.log(userToUpdate.id);
+            // // console.log(userData.email);
+            // sendEmailVerification(userToUpdate, {
+            //     handleCodeInApp: true,
+            //     url: 'https://mphr-fall2022.firebaseapp.com',
+            // });
+            // onHasErrorChanged(false);
+            // setCodeSent(true);
+            // triggerTimer(30);
+            // return () => {
+            //     clearInterval(resendTimerInterval);
+            // }
         } catch (err) {
             onHasErrorChanged(true);
             setError(err.message);
