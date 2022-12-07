@@ -103,6 +103,13 @@ const UploadNewScreen = ({navigation, route}) => {
             console.log(`${err.message}`);
         }
     }
+
+    const removeClinic = () => {
+        setVetId(null);
+        setVetName("");
+        setVetStreet(null);
+        setVetCity("");
+    }
     
     return (
         <SafeAreaView style={{flex:1, backgroundColor:'#fff'}}>
@@ -145,7 +152,7 @@ const UploadNewScreen = ({navigation, route}) => {
             { !(vet_id==null) && (
                 <View style={{alignItems:'baseline', marginLeft:22, marginRight:22}}>
                     <View style={{flexDirection:'row', justifyContent:'space-between', marginRight: 10, alignSelf:'stretch', alignItems:'center'}}>
-                        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', flexShrink:1}}>
                             <View style={styles.smallImgView}>
                                 <Image source={require('../assets/physical-examination-1.png')} style={styles.img}/>
                             </View>
@@ -165,7 +172,9 @@ const UploadNewScreen = ({navigation, route}) => {
                             )}
                         </View>
                         <View style={{flexDirection:'row', justifyContent:'space-between', alignSelf:'center', alignItems:'center'}}>
-                            <FontAwesome name="trash" size={24} color="black" style={{marginRight:20}}/>
+                            <Pressable onPress={removeClinic}>
+                                <FontAwesome name="trash" size={24} color="black" style={{marginRight:20}}/>
+                            </Pressable>
                             <Pressable onPress={ () => {
                                 navigation.navigate("VetsScreen", {onSelect: onSelectedVet});
                             }}>

@@ -60,6 +60,13 @@ const EditPetScreen_1 = ({navigation, route}) => {
         setVetCity(clinic.data().city_address);
     }
 
+    const removeClinic = () => {
+        setVetId(null);
+        setVetName("");
+        setVetStreet(null);
+        setVetCity("");
+    }
+
     const onSelectedVet = data => {
         var count = 0;
         for (const [key, value] of Object.entries(data)) {
@@ -243,7 +250,7 @@ const EditPetScreen_1 = ({navigation, route}) => {
             { !(vet_id==null) && (
                 <View style={{flex:1, alignItems:'baseline', margin:22}}>
                     <Text style={{marginBottom:15, fontSize:16, fontWeight: 'bold'}}>Regular Clinic</Text>
-                    <View style={{flexDirection:'row', justifyContent:'space-between', marginRight: 10, alignSelf:'stretch', alignItems:'center'}}>
+                    <View style={{flexDirection:'row', justifyContent:'space-between', marginRight: 10, alignSelf:'stretch', alignItems:'center', flexShrink:1}}>
                         <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
                             <View style={styles.smallImgView}>
                                 <Image source={require('../assets/physical-examination-1.png')} style={styles.img}/>
@@ -255,7 +262,9 @@ const EditPetScreen_1 = ({navigation, route}) => {
                             </View>
                         </View>
                         <View style={{flexDirection:'row', justifyContent:'space-between', alignSelf:'center', alignItems:'center'}}>
-                            <FontAwesome name="trash" size={24} color="black" style={{marginRight:20}}/>
+                            <Pressable onPress={removeClinic}>
+                                <FontAwesome name="trash" size={24} color="black" style={{marginRight:20}}/>
+                            </Pressable>
                             <Pressable onPress={ () => {
                                 navigation.navigate("VetsScreen", {onSelect: onSelectedVet});
                             }}>
