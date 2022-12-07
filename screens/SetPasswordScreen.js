@@ -116,7 +116,8 @@ const styles = StyleSheet.create({
         fontSize: 15,
         padding: 15,
         width: '90%',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        
     },
     verificationCode: {
         flex:1,
