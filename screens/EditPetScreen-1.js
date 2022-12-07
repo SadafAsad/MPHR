@@ -42,7 +42,9 @@ const EditPetScreen_1 = ({navigation, route}) => {
             if (petDoc.data().regular_clinic!=null) {
                 setVetId(petDoc.data().regular_clinic);
                 getClinic(petDoc.data().regular_clinic);
-                setProfileImg(petDoc.data().petImgFile);
+                if(petDoc.data().petImgFile != null){
+                    setProfileImg(petDoc.data().petImgFile);
+                }
             }
 
             setPetData(petDoc);
@@ -111,8 +113,8 @@ const EditPetScreen_1 = ({navigation, route}) => {
             uploadImage()
         }
         else{
-            console.log('CANCELLED')
-            setFileName("Upload Medical Record");
+            // console.log('CANCELLED')
+            setFileName("Upload Image");
         }
         
         
@@ -145,9 +147,9 @@ const EditPetScreen_1 = ({navigation, route}) => {
 
                         //update pet image url in database
                         const updateDocRef = doc(db, 'pets', pet)
-                        console.log(`pet: ${pet}`)
+                        // console.log(`pet: ${pet}`)
                         updateDoc(updateDocRef, {petImgFile:url}).then(response => {
-                            console.log('field added successfully')
+                            console.log('field added/updated successfully')
                         }).catch(error => {
                             console.log(error)
                         })
@@ -156,6 +158,16 @@ const EditPetScreen_1 = ({navigation, route}) => {
             );
         }
     }
+
+    const removePicture = async () => {
+        const updateDocRef = doc(db, 'pets', pet)
+        console.log(`pet: ${pet}`)
+        updateDoc(updateDocRef, {petImgFile:null}).then(response => {
+            console.log('field updated successfully')
+        }).catch(error => {
+            console.log(error)
+        })
+}
 
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
@@ -172,7 +184,7 @@ const EditPetScreen_1 = ({navigation, route}) => {
             <Pressable>
                 <View style={{flexDirection:'row', alignItems:'center', alignSelf:'center', marginTop:15}}>
                 <MaterialCommunityIcons name="trash-can" size={24} color='#335C67' />
-                    <Text style={{color:'#335C67', fontWeight:'bold'}}>Remove photo</Text>
+                    <Text style={{color:'#335C67', fontWeight:'bold'}} onPress={removePicture}>Remove photo</Text>
                 </View>
             </Pressable>
 
