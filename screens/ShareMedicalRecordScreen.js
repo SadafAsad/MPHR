@@ -145,13 +145,13 @@ const ShareMedicalRecordScreen = ({navigation, route}) => {
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'center'}}>
 
-            <Text style={{textAlign:'center',marginTop:10, marginLeft:36, marginRight:35, fontSize:25, alignSelf: 'center', fontWeight: 'bold'}}>Who do you want to share Medical History with?</Text>
+            <Text style={{textAlign:'center',marginTop:10, marginLeft:36, marginRight:35, fontSize:25, alignSelf: 'center', fontWeight: 'bold'}}>Who do you want to share <Text style={{ fontWeight:'bold'}}>{petName}</Text>'s Medical History with?</Text>
 
             
                 <Text style={{textAlign:'center',marginTop:10, marginLeft:50, marginRight:50, fontSize:13, alignSelf: 'center', color:'dimgray'}}>Please enter the destination email and we will send the most up-to-date medical history as an attachment.
                 </Text>
 
-                <Text style={{marginBottom:5, marginLeft:22, marginTop:30}}>Email</Text>
+                <Text style={{marginBottom:5, marginLeft:22, marginTop:30,}}>Email</Text>
             <TextInput 
                 style={styles.input}
                 placeholder="Enter email address"
