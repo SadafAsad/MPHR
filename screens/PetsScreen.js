@@ -178,7 +178,9 @@ const PetsScreen = ({navigation}) => {
             <View style={styles.pet}>
                 <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
                     <View style={styles.imgView}>
-                        <Image source={require('../assets/paw.png')} style={styles.img}/>
+                        {item.value.data().petImgFile != null ?
+                        <Image source={{uri:item.value.data().petImgFile}} style={styles.img}/> : 
+                        <Image source={{uri:'https://firebasestorage.googleapis.com/v0/b/mphr-fall2022.appspot.com/o/images%2FNo_image_available.svg.png?alt=media&token=a28a2c69-fbfb-4ac7-8cb4-c6729f3c6de8'}} style={styles.img}/> }
                     </View>
                     <View>
                         <View style={{flexDirection:'row', alignItems:'baseline'}}>

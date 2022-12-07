@@ -12,6 +12,7 @@ const PetSettingScreen = (props) => {
     const [pet_birthday, setPetBirthday] = useState('');
     const [caregivers, setCaregivers] = useState([]);
     const [ownerName, setOwnerName] = useState('');
+    const [profileImg, setProfileImg] = useState("https://firebasestorage.googleapis.com/v0/b/mphr-fall2022.appspot.com/o/images%2FNo_image_available.svg.png?alt=media&token=a28a2c69-fbfb-4ac7-8cb4-c6729f3c6de8");
     const [caregiversName, setCaregiversName] = useState([]);
     const [petOwner, setPetOwner] = useState('');
     const [isOwner, setIsOwner] = useState(false);
@@ -41,6 +42,9 @@ const PetSettingScreen = (props) => {
             setPetBirthday(pet_data.data().birthday);
             setPetOwner(pet_data.data().owner);
             getOwnerName(pet_data.data().owner);
+            if(pet_data.data().petImgFile != null){
+                setProfileImg(pet_data.data().petImgFile);
+            }
         }
         getPetData();
         getCaregivers();
@@ -123,7 +127,7 @@ const PetSettingScreen = (props) => {
         <SafeAreaView style={{backgroundColor:'#fff', flex:1}}>
             <View style={styles.mainView}>
                 <View style={styles.imgView}>
-                    <Image source={require('../assets/paw.png')} style={styles.img}/>
+                    <Image source={{uri:profileImg}} style={styles.img}/>
                 </View>
                 <View style={{flex:1, marginLeft:10}}>
                     <Text style={{fontWeight:'bold', fontSize:17}}>{pet_name}</Text>

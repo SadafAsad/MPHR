@@ -10,6 +10,7 @@ const PetProfileScreen = ({navigation, route}) => {
     const [pet_birthday, setPetBirthday] = useState('');
     const [caregivers, setCaregivers] = useState([]);
     const [ownerName, setOwnerName] = useState('');
+    const [profileImg, setProfileImg] = useState("https://firebasestorage.googleapis.com/v0/b/mphr-fall2022.appspot.com/o/images%2FNo_image_available.svg.png?alt=media&token=a28a2c69-fbfb-4ac7-8cb4-c6729f3c6de8");
     const [caregiversName, setCaregiversName] = useState([]);
     const [lastUpload, setLastUpload] = useState(null);
     const [lastUploadDate, setLastUploadDate] = useState("");
@@ -40,6 +41,9 @@ const PetProfileScreen = ({navigation, route}) => {
             setPetName(pet_data.data().name);
             setPetBirthday(pet_data.data().birthday);
             getOwnerName(pet_data.data().owner);
+            if(pet_data.data().petImgFile != null){
+                setProfileImg(pet_data.data().petImgFile);
+            }
         }
         getPetData();
         getCaregivers();
@@ -137,7 +141,7 @@ const PetProfileScreen = ({navigation, route}) => {
         <SafeAreaView style={{backgroundColor:'#fff', flex:1}}>
             <View style={styles.mainView}>
                 <View style={styles.imgView}>
-                    <Image source={require('../assets/paw.png')} style={styles.img}/>
+                    <Image source={{uri:profileImg}} style={styles.img}/>
                 </View>
                 <View style={{flex:1, marginLeft:10}}>
                     <Text style={{fontWeight:'bold', fontSize:17}}>{pet_name}</Text>

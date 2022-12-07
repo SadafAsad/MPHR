@@ -2,8 +2,9 @@ import { SafeAreaView, StyleSheet, Text, View, TextInput, Pressable, Image } fro
 import SelectList from 'react-native-dropdown-select-list';
 import { AntDesign, MaterialIcons, FontAwesome5, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { useState, useEffect } from 'react';
-import { db } from '../FirebaseApp';
-import { getDoc, doc } from "firebase/firestore";
+import { db, storage } from '../FirebaseApp';
+import { getDoc, doc, updateDoc } from "firebase/firestore";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
 
 import * as ImagePicker from 'expo-image-picker';
 
@@ -17,6 +18,13 @@ const EditPetScreen_1 = ({navigation, route}) => {
     const [vet_city, setVetCity] = useState('');
     const [petData, setPetData] = useState(null);
     const [hasError, setError] = useState(false);
+    const [error, onErrorChanged] = useState('');
+    
+    const [fileName, setFileName] = useState("Upload Image");
+    const [profileImg, setProfileImg] = useState("https://firebasestorage.googleapis.com/v0/b/mphr-fall2022.appspot.com/o/images%2FNo_image_available.svg.png?alt=media&token=a28a2c69-fbfb-4ac7-8cb4-c6729f3c6de8");
+    const [blobFile, setBlobFile] = useState(null);
+    const [isLoading, setLoading] = useState(false);
+    const [noDoc, nodocChanged] = useState(true);
 
     const {pet, petDoc} = route.params;
 
@@ -34,6 +42,9 @@ const EditPetScreen_1 = ({navigation, route}) => {
             if (petDoc.data().regular_clinic!=null) {
                 setVetId(petDoc.data().regular_clinic);
                 getClinic(petDoc.data().regular_clinic);
+                if(petDoc.data().petImgFile != null){
+                    setProfileImg(petDoc.data().petImgFile);
+                }
             }
 
             setPetData(petDoc);
@@ -82,48 +93,98 @@ const EditPetScreen_1 = ({navigation, route}) => {
             navigation.navigate('EditPetScreen-2', {pet:petToUpdate, pet_id:pet});
         }
     }
-    const state = {
-        image: null,
-      };
-    let { image } = state;
+
     const _pickImage = async () => {
+        // let result = await ImagePicker.launchCameraAsync();
         let result = await ImagePicker.launchImageLibraryAsync({
-          allowsEditing: true,
-          aspect: [4, 3],
+            allowsEditing: true,
+            aspect: [4, 3],
         });
-    
-        alert(result.uri);
-        console.log(result)
-    
+        //basically "choose" button
         if (!result.cancelled) {
-          this.setState({ image: result.uri });
+            nodocChanged(false);
+            onErrorChanged("");
+            const fetched_file = await fetch(result.uri);
+            const blob_file = await fetched_file.blob();
+            // console.log(`before filename: ${result.uri.substring(result.uri.lastIndexOf('/') + 1, result.uri.length)}`)
+            setFileName(result.uri.substring(result.uri.lastIndexOf('/') + 1, result.uri.length));
+            // console.log(`after filename: ${fileName}`);
+            setBlobFile(blob_file);
+            uploadImage()
         }
-      };
+        else{
+            // console.log('CANCELLED')
+            setFileName("Upload Image");
+        }
+        
+        
+    }
+
+    const uploadImage = async () => {
+        if (noDoc){
+            setError(true);
+            onErrorChanged("Please select an image.");
+        }
+        else {
+            setError(false);
+            onErrorChanged("");
+            const storageRef = ref(storage, `/images/${fileName}`);
+            const uploadTask = uploadBytesResumable(storageRef, blobFile);
+
+            uploadTask.on(
+                "state_changed",
+                () => {
+                    setLoading(true);
+                },
+                (err) => console.log("ERROR: while uploading file -> " + err),
+                async () => {
+                    setLoading(false);
+
+                    // download url
+                    await getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                        
+                        setProfileImg(url)
+
+                        //update pet image url in database
+                        const updateDocRef = doc(db, 'pets', pet)
+                        // console.log(`pet: ${pet}`)
+                        updateDoc(updateDocRef, {petImgFile:url}).then(response => {
+                            console.log('field added/updated successfully')
+                        }).catch(error => {
+                            console.log(error)
+                        })
+                    });
+                }
+            );
+        }
+    }
+
+    const removePicture = async () => {
+        const updateDocRef = doc(db, 'pets', pet)
+        console.log(`pet: ${pet}`)
+        updateDoc(updateDocRef, {petImgFile:null}).then(response => {
+            console.log('field updated successfully')
+        }).catch(error => {
+            console.log(error)
+        })
+}
 
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
             
             <View style={styles.imgView}>
-                <Image source={require('../assets/paw.png')} style={styles.img}/>
+                <Image source={{uri:profileImg}} style={styles.img}/>
             </View>
             <Pressable>
                 <View style={{flexDirection:'row', alignItems:'center', alignSelf:'center', marginTop:15}}>
                     <MaterialIcons name="file-upload" size={24} color='#335C67' />
                     <Text style={{color:'#335C67', fontWeight:'bold'}} onPress={_pickImage}>Change photo</Text>
-                    {/* <View style={{ 'marginTop': 20}}>
-                        <Button
-                        title="Select Image"
-                        onPress={_pickImage}
-                        />
-                        {image &&
-                        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-                    </View> */}
                 </View>
             </Pressable>
             <Pressable>
                 <View style={{flexDirection:'row', alignItems:'center', alignSelf:'center', marginTop:15}}>
                 <MaterialCommunityIcons name="trash-can" size={24} color='#335C67' />
-                    <Text style={{color:'#335C67', fontWeight:'bold'}}>Remove photo</Text>
+                    <Text style={{color:'#335C67', fontWeight:'bold'}} onPress={removePicture}>Remove photo</Text>
                 </View>
             </Pressable>
 
