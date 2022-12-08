@@ -51,7 +51,7 @@ const CreatePetProfile = ({navigation, route}) => {
     }
 
     return (
-        <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
+        <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between', marginBottom: 20}}>
             
             <View style={styles.imgView}>
                 <Image source={require('../assets/paw.png')} style={styles.img}/>

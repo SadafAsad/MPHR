@@ -17,7 +17,7 @@ const ShowHistoryScreen = ({navigation, route}) => {
 
     useEffect(()=>{
         setUpdated(false);
-        navigation.setOptions({title:petName+' Medical Records'})
+        navigation.setOptions({title:petName+"'s Medical Records"})
         getRecords();
     }, [isFocused, updated])
 
@@ -102,7 +102,7 @@ const ShowHistoryScreen = ({navigation, route}) => {
             </View>
             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                 {index===0 && (
-                    <Pressable onPress={ () => {navigation.navigate('ShareMedicalRecordScreen', {})}}>
+                    <Pressable onPress={ () => {navigation.navigate('ShareMedicalRecordScreen', {petId:petId, petName: petName})}}>
                         <MaterialIcons name="share" size={24} color='#335C67' style={{marginRight:5}}/>
                     </Pressable>
                 )}

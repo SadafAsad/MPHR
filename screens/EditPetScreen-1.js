@@ -170,7 +170,7 @@ const EditPetScreen_1 = ({navigation, route}) => {
 }
 
     return (
-        <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between'}}>
+        <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between', marginBottom: 20}}>
             
             <View style={styles.imgView}>
                 <Image source={{uri:profileImg}} style={styles.img}/>
@@ -266,7 +266,7 @@ const EditPetScreen_1 = ({navigation, route}) => {
                 </View>
             )}
 
-</ScrollView>
+        </ScrollView>
 
             { hasError && (
                 <Text style={styles.errorStyle}>Please fill out all the required fields.</Text>

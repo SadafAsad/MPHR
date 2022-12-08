@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, Pressable, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, Pressable, Alert, ScrollView } from 'react-native';
 import SelectList from 'react-native-dropdown-select-list';
 import { useState, useEffect } from 'react';
 import { db } from '../FirebaseApp';
@@ -61,8 +61,10 @@ const EditAddressScreen = ({navigation, route}) => {
     }
 
     return (
-        <SafeAreaView style={{flex:1}}>
+        <SafeAreaView style={{flex:1, marginBottom: 20}}>
             <Text style={styles.screentitle}>Address</Text>
+            <ScrollView>
+            
             <Text style={styles.titleTxt}>Address</Text>
             <TextInput 
                 style={styles.input}
@@ -121,6 +123,7 @@ const EditAddressScreen = ({navigation, route}) => {
                 onChangeText={onPostalcodeChanged}
                 value={postalcode}
             />
+            </ScrollView>
             <Pressable onPress={() => {
                 Alert.alert('UPDATE ADDRESS', 'Are you sure you want to update your address?', [  
                     {text: 'NO', onPress: () => console.log('NO Pressed'), style:'cancel'},  
