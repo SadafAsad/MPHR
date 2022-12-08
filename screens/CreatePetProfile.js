@@ -50,6 +50,13 @@ const CreatePetProfile = ({navigation, route}) => {
         }
     }
 
+    const removeClinic = () => {
+        setVetId(null);
+        setVetName("");
+        setVetStreet(null);
+        setVetCity("");
+    }
+
     return (
         <SafeAreaView style={{backgroundColor:'#fff', flex:1, justifyContent:'space-between', marginBottom: 20}}>
             
@@ -118,7 +125,7 @@ const CreatePetProfile = ({navigation, route}) => {
                 <View style={{flex:1, alignItems:'baseline', margin:22}}>
                     <Text style={{marginBottom:15, fontSize:16, fontWeight: 'bold'}}>Regular Clinic</Text>
                     <View style={{flexDirection:'row', justifyContent:'space-between', marginRight: 10, alignSelf:'stretch', alignItems:'center'}}>
-                        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                        <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', flexShrink:1}}>
                             <View style={styles.smallImgView}>
                                 <Image source={require('../assets/physical-examination-1.png')} style={styles.img}/>
                             </View>
@@ -138,7 +145,9 @@ const CreatePetProfile = ({navigation, route}) => {
                             )}
                         </View>
                         <View style={{flexDirection:'row', justifyContent:'space-between', alignSelf:'center', alignItems:'center'}}>
-                            <FontAwesome name="trash" size={24} color="black" style={{marginRight:20}}/>
+                            <Pressable onPress={removeClinic}>
+                                <FontAwesome name="trash" size={24} color="black" style={{marginRight:20}}/>
+                            </Pressable>
                             <Pressable onPress={ () => {
                                 navigation.navigate("VetsScreen", {onSelect: onSelectedVet});
                             }}>
