@@ -336,7 +336,6 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         alignSelf: 'center',
         marginTop: 22,
-        padding: 30
     },
     smallImgView: {
         width: 60,
@@ -349,8 +348,8 @@ const styles = StyleSheet.create({
     },
     img: {
         width:'100%', 
-        height:undefined, 
-        aspectRatio:1
+        height:'100%', 
+        borderRadius: '100%'
     },
     errorStyle: {
         color: '#ff0000',
