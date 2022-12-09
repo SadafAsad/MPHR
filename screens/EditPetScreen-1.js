@@ -97,6 +97,7 @@ const EditPetScreen_1 = ({navigation, route}) => {
                 mark:petData.data().mark,
                 neutering:petData.data().neutering,
             };
+            uploadImage()
             navigation.navigate('EditPetScreen-2', {pet:petToUpdate, pet_id:pet});
         }
     }
@@ -108,20 +109,21 @@ const EditPetScreen_1 = ({navigation, route}) => {
             aspect: [4, 3],
         });
         //basically "choose" button
-        if (!result.cancelled) {
+        if (result.cancelled) {
+            // console.log('CANCELLED')
+            setFileName("Upload Image");
+        }
+        else{
             nodocChanged(false);
             onErrorChanged("");
             const fetched_file = await fetch(result.uri);
             const blob_file = await fetched_file.blob();
             // console.log(`before filename: ${result.uri.substring(result.uri.lastIndexOf('/') + 1, result.uri.length)}`)
             setFileName(result.uri.substring(result.uri.lastIndexOf('/') + 1, result.uri.length));
-            // console.log(`after filename: ${fileName}`);
+            setProfileImg(result.uri)
+            console.log(`after filename: ${fileName}`);
             setBlobFile(blob_file);
-            uploadImage()
-        }
-        else{
-            // console.log('CANCELLED')
-            setFileName("Upload Image");
+            // uploadImage()
         }
         
         
@@ -129,6 +131,7 @@ const EditPetScreen_1 = ({navigation, route}) => {
 
     const uploadImage = async () => {
         if (noDoc){
+            console.log(noDoc)
             setError(true);
             onErrorChanged("Please select an image.");
         }
@@ -332,7 +335,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         alignSelf: 'center',
-        marginTop: 22
+        marginTop: 22,
+        padding: 30
     },
     smallImgView: {
         width: 60,
@@ -345,8 +349,8 @@ const styles = StyleSheet.create({
     },
     img: {
         width:'100%', 
-        height:'100%', 
-        borderRadius: '100%'
+        height:undefined, 
+        aspectRatio:1
     },
     errorStyle: {
         color: '#ff0000',
