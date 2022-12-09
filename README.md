@@ -31,15 +31,15 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<!-- [![Product Name Screen Shot][product-screenshot]] -->
+<p align="center">
+  <img src="images/screenshot.png" height="300" align="center">
+  <img src="images/screenshot2.png" height="300" align="center">
+ </p>
 
 A centralized pet medical record keeper. Pet owners can manage, view and share their pet's medical records.
 
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 ### Built With
 
@@ -57,30 +57,42 @@ This project is made with:
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-Must have a VS Code installed
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+* You must have a VS Code installed.
+* Expo Go Account created.
+* Expo Go installed in your iOS device.
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+* Replace the firebase keys in the config/firebase-keys.js
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+#### Once you have replaced the firebase keys. Install npm
+
+* npm
+  ```sh
+  npm install 
+  ```
+#### Login your Expo Go Account in both the terminal and iOS device.
+
+Terminal:
+
+  ```
+  expo login
+  ```
+
+iOS device:
+
+* just proceed to login your credentials
+
+#### Once you have both credentials logged in 
+
+in your terminal run: 
+  ```
+  expo start
+  ```
+
+in your device you should the app 
+
+<img src="images/expo_go.jpeg" height="300" align="center">
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -97,28 +109,7 @@ Project Link: [https://github.com/SadafAsad/MPHR](https://github.com/SadafAsad/M
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
-
-* [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-* [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
-* [Malven's Grid Cheatsheet](https://grid.malven.co/)
-* [Img Shields](https://shields.io)
-* [GitHub Pages](https://pages.github.com)
-* [Font Awesome](https://fontawesome.com)
-* [React Icons](https://react-icons.github.io/react-icons/search)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
 <!-- MARKDOWN LINKS & IMAGES -->
-[product-screenshot]: images/screenshot.png
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
 [Expo-url]: https://expo.dev/
