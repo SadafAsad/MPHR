@@ -235,8 +235,8 @@ const styles = StyleSheet.create({
     },
     img: {
         width:'100%', 
-        height:undefined, 
-        aspectRatio:1
+        height:'100%', 
+        borderRadius: '100%'
     },
     imgView: {
         width: 60,
@@ -245,8 +245,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         alignSelf: 'center',
-        marginLeft: 22,
-        padding: 8
+        marginLeft: 22
     },
     title: {
         // textAlign: 'center',
